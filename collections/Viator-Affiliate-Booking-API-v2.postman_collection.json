@@ -1,0 +1,1353 @@
+{
+	"info": {
+		"_postman_id": "d348b6fc-e2fa-43bb-a584-4681b3a050d6",
+		"name": "Viator Partner API v2 (Full-Access + Booking Affiliate)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "/products/modified-since",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/products/modified-since?count=5",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"products",
+								"modified-since"
+							],
+							"query": [
+								{
+									"key": "modified-since",
+									"value": "2020-07-27T18:02:05.060097Z",
+									"disabled": true
+								},
+								{
+									"key": "count",
+									"value": "5"
+								},
+								{
+									"key": "cursor",
+									"value": "MTU5MjM1Mjg1OHwxMTYxNjVQMQ==",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/bulk",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\"productCodes\": [\n\"6613GRANDCELE\",\n\"5010SYDNEY\"\n]\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/products/bulk",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"products",
+								"bulk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/{product-code}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/products/2050P348",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"products",
+								"2050P348"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/tags/",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/products/tags/",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"products",
+								"tags",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/booking-questions/",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/products/booking-questions/",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"products",
+								"booking-questions",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/search",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"filtering\": {\n    \"destination\": \"732\",\n    \"tags\": [\n        21972\n    ],\n    \"flags\": [\n        \"LIKELY_TO_SELL_OUT\"\n    ],\n    \"highestPrice\": 500,\n    \"startDate\": \"2022-06-30\",\n    \"endDate\": \"2022-08-24\"\n  },\n  \"sorting\": {\n    \"sort\": \"PRICE\",\n    \"order\": \"DESCENDING\"\n  },\n  \"pagination\": {\n    \"start\": 1,\n    \"count\": 5\n  },\n  \"currency\": \"USD\"\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/products/search?campaign-value=JUNE",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "campaign-value",
+									"value": "JUNE"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/products/recommendations",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \n    \"productCodes\": [\"21100P7\", \"132218P75\"],\n    \"recommendationTypes\": [\"IS_SIMILAR_TO\"]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{papi_host}}/products/recommendations",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"partner",
+								"products",
+								"recommendations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Attractions",
+			"item": [
+				{
+					"name": "/attractions/search",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"destinationId\": 479,\n    \"pagination\": {\n        \"start\": 1,\n        \"count\": 20\n        },\n        \"sorting\": {\n            \"sort\": \"DEFAULT\"\n        }\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/attractions/search",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"attractions",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/attractions/{attraction-id}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/attractions/97",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"attractions",
+								"97"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Availability",
+			"item": [
+				{
+					"name": "/availability/check",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": \"6613GRANDCELE\",\n  \"travelDate\": \"2022-11-30\",\n  \"currency\": \"AUD\",\n  \"paxMix\": [\n    {\n      \"ageBand\": \"ADULT\",\n      \"numberOfTravelers\": 2\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/availability/check",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"availability",
+								"check"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/availability/schedules/{product-code}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/availability/schedules/5010SYDNEY",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"availability",
+								"schedules",
+								"5010SYDNEY"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/availability/schedules/bulk",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"productCodes\": [\n\t\t\"5010SYDNEY\",\n\t\t\"6613GRANDCELE\"\n\t]\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/availability/schedules/bulk",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"availability",
+								"schedules",
+								"bulk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/availability/schedules/modified-since",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/availability/schedules/modified-since?count=5",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"availability",
+								"schedules",
+								"modified-since"
+							],
+							"query": [
+								{
+									"key": "modified-since",
+									"value": "2020-06-17T03:20:45.737043Z",
+									"disabled": true
+								},
+								{
+									"key": "count",
+									"value": "5"
+								},
+								{
+									"key": "cursor",
+									"value": "MTU5MjM1Mjg1OHwxMTYxNjVQMQ==",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bookings",
+			"item": [
+				{
+					"name": "/bookings/cart/hold",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"currency\": \"AUD\",\n  \"partnerCartRef\": \"PCR-42\",\n  \"items\": [\n    {\n      \"partnerBookingRef\": \"PBR-1\",\n      \"productCode\": \"3283BWW\",\n      \"productOptionCode\": \"TG2\",\n      \"startTime\": \"11:00\",\n      \"travelDate\": \"2023-08-07\",\n      \"paxMix\": [\n        {\n          \"ageBand\": \"ADULT\",\n          \"numberOfTravelers\": 2\n        }\n      ]\n    },\n    {\n      \"partnerBookingRef\": \"PBR-2\",\n      \"productCode\": \"3283BWW\",\n      \"productOptionCode\": \"TG2\",\n      \"startTime\": \"11:00\",\n      \"travelDate\": \"2023-08-08\",\n      \"paxMix\": [\n        {\n          \"ageBand\": \"ADULT\",\n          \"numberOfTravelers\": 2\n        }\n      ]\n    }\n  ],\n  \"paymentDataSubmissionMode\": \"PARTNER_FORM\"\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/bookings/cart/hold",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"bookings",
+								"cart",
+								"hold"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/bookings/cart/book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"cartRef\": \"CR-f89f881d88bbb5359cd8ce4207e006f5\",\n  \"bookerInfo\": {\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Doe\"\n  },\n  \"communication\": {\n    \"email\": \"jane.doe@email.com\",\n    \"phone\": \"+61 555 555 55\"\n  },\n  \"items\": [\n    {\n      \"bookingRef\": \"BR-592629763\",\n      \"bookingQuestionAnswers\": [\n        {\n          \"question\": \"SPECIAL_REQUIREMENTS\",\n          \"answer\": \"No blue M&Ms\"\n        }\n      ],\n      \"languageGuide\": {\n        \"type\": \"GUIDE\",\n        \"language\": \"en\",\n        \"legacyGuide\": \"en/SERVICE_GUIDE\"\n      }\n    },\n    {\n      \"bookingRef\": \"BR-592629764\",\n      \"bookingQuestionAnswers\": [\n        {\n          \"question\": \"SPECIAL_REQUIREMENTS\",\n          \"answer\": \"No blue M&Ms\"\n        }\n      ],\n      \"languageGuide\": {\n        \"type\": \"GUIDE\",\n        \"language\": \"en\",\n        \"legacyGuide\": \"en/SERVICE_GUIDE\"\n      }\n    }\n  ],\n  \"paymentToken\": \"STK-w4bzf6mvfnfqfbjte6avyw3e44\"\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/bookings/cart/book",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"bookings",
+								"cart",
+								"book"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/bookings/status",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingRef\": \"BR-791149854\"\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/bookings/status",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"bookings",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/bookings/cancel-reasons",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/bookings/cancel-reasons",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"bookings",
+								"cancel-reasons"
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "SUPPLIER",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/bookings/{booking-reference}/cancel-quote",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/bookings/{{booking-reference}}/cancel-quote",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"bookings",
+								"{{booking-reference}}",
+								"cancel-quote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/bookings/{booking-reference}/cancel",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"reasonCode\":\"Customer_Service.Chose_a_different_cheaper_tour\"}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/bookings/{{booking-reference}}/cancel",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"bookings",
+								"{{booking-reference}}",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/bookings/modified-since",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json;version=2.0",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/bookings/modified-since?count=50",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"bookings",
+								"modified-since"
+							],
+							"query": [
+								{
+									"key": "count",
+									"value": "50"
+								},
+								{
+									"key": "cursor",
+									"value": null,
+									"disabled": true
+								},
+								{
+									"key": "modified-since",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/bookings/modified-since/acknowledge",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/bookings/modified-since/acknowledge",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"bookings",
+								"modified-since",
+								"acknowledge"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payments",
+			"item": [
+				{
+					"name": "Payment Card Tokenization",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "x-trip-requestid",
+								"value": "{{$randomUUID}}",
+								"type": "default"
+							},
+							{
+								"key": "x-trip-clientid",
+								"value": "P012345678",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"paymentAccounts\": {\n    \"creditCards\": [\n      {\n        \"number\": \"4111111111111111\",\n        \"cvv\": \"234\",\n        \"expMonth\": \"03\",\n        \"expYear\": \"2026\",\n        \"name\": \"Jane Doe\",\n        \"address\": {\n          \"country\": \"US\",\n          \"postalCode\": \"02494\"\n        }\n      }\n    ]\n  }\n}"
+						},
+						"url": {
+							"raw": "{{paymentDataSubmissionUrl}}",
+							"host": [
+								"{{paymentDataSubmissionUrl}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auxiliary",
+			"item": [
+				{
+					"name": "/search/freetext",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "default"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "default"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"searchTerm\": \"fast\",\n  \"productFiltering\": {\n    \"destination\": \"77\",\n    \"dateRange\": {\n      \"from\": \"2023-01-01\",\n      \"to\": \"2023-01-31\"\n    },\n    \"price\": {\n      \"from\": 0,\n      \"to\": 1000\n    },\n    \"rating\": {\n      \"from\": 0,\n      \"to\": 5\n    },\n    \"durationInMinutes\": {\n      \"from\": 0,\n      \"to\": 1000\n    },\n    \"flags\": [\n      \"LIKELY_TO_SELL_OUT\"\n    ],\n    \"includeAutomaticTranslations\": true\n  },\n  \"productSorting\": {\n    \"sort\": \"PRICE\",\n    \"order\": \"DESCENDING\"\n  },\n  \"searchTypes\": [\n    {\n      \"searchType\": \"PRODUCTS\",\n      \"pagination\": {\n        \"start\": 1,\n        \"count\": 10\n      }\n    }\n  ],\n  \"currency\": \"USD\"\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/search/freetext",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"search",
+								"freetext"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/locations/bulk",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"locations\": [\n    \"LOC-6eKJ+or5y8o99Qw0C8xWyLZq7TSQT++LPZ7dk4z18Ls=\",\n    \"LOC-6eKJ+or5y8o99Qw0C8xWyDqh8JwkYr6VZRumIvyTTvA=\",\n    \"LOC-o0AXGEKPN4wJ9sIG0RAn5HJ50dRnnDILDxHC0aDaFxp7pTMyhWhGCLGcIKI9V5BA\",\n    \"CONTACT_SUPPLIER_LATER\",\n    \"MEET_AT_DEPARTURE_POINT\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/locations/bulk",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"locations",
+								"bulk"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/exchange-rates",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"sourceCurrencies\": [\n    \"AUD\",\n    \"EUR\",\n    \"USD\",\n    \"GBP\"\n  ],\n  \"targetCurrencies\": [\n    \"AUD\",\n    \"EUR\",\n    \"USD\",\n    \"GBP\"\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/exchange-rates",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"exchange-rates"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/reviews/product",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCode\": \"5010SYDNEY\",\n  \"count\": 10,\n  \"start\": 1,\n  \"provider\": \"ALL\",\n  \"showMachineTranslated\": true,\n  \"reviewsForNonPrimaryLocale\": true,\n  \"ratings\": [\n    1,\n    2,\n    3,\n    4,\n    5\n  ],\n  \"sortBy\": \"MOST_RECENT_PER_LOCALE\"\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/reviews/product",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"reviews",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/suppliers/search/product-codes",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"productCodes\": \n  [\"5010SYDNEY\"]\n}"
+						},
+						"url": {
+							"raw": "{{papi_host}}/suppliers/search/product-codes",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"suppliers",
+								"search",
+								"product-codes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/destinations",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/destinations/",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"destinations",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Amendment",
+			"item": [
+				{
+					"name": "/amendment/check/{booking-reference}",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{papi_host}}/amendment/check/BR-{{booking-id}}",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"partner",
+								"amendment",
+								"check",
+								"BR-{{booking-id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/amendment/quote - PaxMix",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingRef\": \"BR-123456789\",\n    \"updatePaxMix\": {\n        \"removePaxMix\": [\n            {\n                \"travelerNum\": 2\n            }\n        ],\n        \"addPaxMix\": [\n            {\n                \"ageBand\": \"ADULT\",\n                \"travelerNum\": 4,\n                \"bookingQuestions\": [\n                    {\n                        \"question\": \"WEIGHT\",\n                        \"answer\": \"78\",\n                        \"unit\": \"kg\"\n                    },\n                    {\n                        \"question\": \"HEIGHT\",\n                        \"answer\": \"170\",\n                        \"unit\": \"cm\"\n                    },\n                    {\n                        \"question\": \"FULL_NAMES_FIRST\",\n                        \"answer\": \"Tiago\"\n                    },\n                    {\n                        \"question\": \"FULL_NAMES_LAST\",\n                        \"answer\": \"Mendes\"\n                    }\n                ]\n            },\n            {\n                \"ageBand\": \"ADULT\",\n                \"travelerNum\": 5,\n                \"bookingQuestions\": [\n                    {\n                        \"question\": \"WEIGHT\",\n                        \"answer\": \"55\",\n                        \"unit\": \"kg\"\n                    },\n                    {\n                        \"question\": \"HEIGHT\",\n                        \"answer\": \"177\",\n                        \"unit\": \"cm\"\n                    },\n                    {\n                        \"question\": \"FULL_NAMES_FIRST\",\n                        \"answer\": \"Francisco\"\n                    },\n                    {\n                        \"question\": \"FULL_NAMES_LAST\",\n                        \"answer\": \"Mendes\"\n                    }\n                ]\n            }\n        ]\n    },\n    \"voucherFormat\": \"PDF\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{papi_host}}/amendment/quote",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"partner",
+								"amendment",
+								"quote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/amendment/quote - Booking Details",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingRef\": \"BR-123456789\",\n    \"bookingDetails\": {\n        \"productOptionCode\": \"TG2\",\n        \"travelDate\": \"2025-07-17\",\n        \"startTime\": \"14:00\"\n    },\n    \"voucherFormat\": \"PDF\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{papi_host}}/amendment/quote",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"partner",
+								"amendment",
+								"quote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/amendment/quote - Per Traveller Questions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingRef\": \"BR-123456789\",\n    \"perTravelerQuestions\": [\n        {\n            \"travelerNum\": 1,\n            \"bookingQuestions\": [\n                {\n                    \"question\": \"WEIGHT\",\n                    \"answer\": \"70\",\n                    \"unit\": \"kg\"\n                }\n            ]\n        }\n    ],\n    \"voucherFormat\": \"PDF\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{papi_host}}/amendment/quote",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"partner",
+								"amendment",
+								"quote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/amendment/quote - Per Booking Questions",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bookingRef\": \"BR-123456789\",\n    \"perBookingQuestions\": [\n      {\n        \"question\": \"PICKUP_POINT\",\n        \"answer\": \"LOC-6eKJ+or5y8o99Qw0C8xWyB7UDvaKAOW2L68zZuCNR4c=\",\n        \"unit\": \"LOCATION_REFERENCE\"\n      },\n      {\n        \"question\": \"TRANSFER_ARRIVAL_MODE\",\n        \"answer\": \"AIR\"\n      },\n      {\n        \"question\": \"TRANSFER_AIR_ARRIVAL_AIRLINE\",\n        \"answer\": \"TAP Air Portugal\"\n      },\n      {\n        \"question\": \"TRANSFER_AIR_ARRIVAL_FLIGHT_NO\",\n        \"answer\": \"TP123\"\n      },\n      {\n        \"question\": \"TRANSFER_ARRIVAL_TIME\",\n        \"answer\": \"08:54\"\n      },\n      {\n        \"question\": \"TRANSFER_ARRIVAL_DROP_OFF\",\n        \"answer\": \"LOC-o0AXGEKPN4wJ9sIG0RAn5GcM3OoHA6x9JMTjotWt0OophHaSJCSiK1td+wwtqWAP\",\n        \"unit\": \"LOCATION_REFERENCE\"\n      },\n      {\n        \"question\": \"TRANSFER_DEPARTURE_MODE\",\n        \"answer\": \"SEA\"\n      },\n      {\n        \"question\": \"TRANSFER_PORT_CRUISE_SHIP\",\n        \"answer\": \"Queen Mary 2\"\n      },\n      {\n        \"question\": \"TRANSFER_DEPARTURE_DATE\",\n        \"answer\": \"08/13/25\"\n      },\n      {\n        \"question\": \"TRANSFER_PORT_DEPARTURE_TIME\",\n        \"answer\": \"10:00\"\n      },\n      {\n        \"question\": \"TRANSFER_DEPARTURE_PICKUP\",\n        \"answer\": \"LOC-o0AXGEKPN4wJ9sIG0RAn5GcM3OoHA6x9JMTjotWt0OophHaSJCSiK1td+wwtqWAP\",\n        \"unit\": \"LOCATION_REFERENCE\"\n      }\n    ],\n    \"voucherFormat\": \"PDF\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{papi_host}}/amendment/quote",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"partner",
+								"amendment",
+								"quote"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/amendment/amend/{quote-reference} - PaxMix",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json;version={{version}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{papi_host}}/amendment/amend/{{quote-reference}}",
+							"host": [
+								"{{papi_host}}"
+							],
+							"path": [
+								"partner",
+								"amendment",
+								"amend",
+								"{{quote-reference}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "exp-api-key",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "papi_host",
+			"value": "https://api.sandbox.viator.com/partner"
+		},
+		{
+			"key": "version",
+			"value": "2.0"
+		},
+		{
+			"key": "booking-reference",
+			"value": ""
+		},
+		{
+			"key": "product_code",
+			"value": "5010SYDNEY"
+		}
+	]
+}

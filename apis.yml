@@ -1,0 +1,238 @@
+aid: viator
+url: https://raw.githubusercontent.com/api-evangelist/viator/refs/heads/main/apis.yml
+name: Viator
+kind: company
+description: >-
+  Viator is a Tripadvisor company and the largest online marketplace for tours, activities and
+  travel experiences, headquartered in the United States and listing more than 300,000 bookable
+  products across roughly 2,500 destinations. It sits on the demand side of the travel
+  distribution chain as an aggregator and reseller of third-party operator inventory, and on the
+  supply side as the channel counterparty that tour operators' reservation systems connect into.
+  Its API posture is unusually open for travel: the full Viator Partner API v2 OpenAPI, the legacy
+  v1 affiliate and merchant specifications, the Viator Reservation System (supplier) API and four
+  Postman collections are all published without a login at docs.viator.com, and Basic Access
+  affiliate keys are issued self-serve at no cost on account creation. Everything beyond that is
+  gated - Full Access, Full Access plus Booking, Merchant and supplier connectivity all require
+  qualification by Viator and, for transactional integrations, passing a two-part front-end and
+  back-end certification. No open travel standard is referenced anywhere in the specifications:
+  the contract is entirely Viator-proprietary, product identifiers are Viator-internal, and
+  partners are contractually required to prevent search engines indexing Viator reviews and
+  unique content.
+image: https://partnerresources.viator.com/wp-content/uploads/2023/08/V-logo_Green.png
+tags:
+- Travel
+- United States
+- Tours and Activities
+- Experiences
+- OTA
+- Booking
+- Distribution
+- Marketplace
+- Affiliate
+- Hospitality
+created: '2026-07-28'
+modified: '2026-07-28'
+specificationVersion: '0.19'
+apis:
+- aid: viator:viator-partner-products-api
+  name: Viator Partner Products API
+  description: >-
+    Product content and catalogue ingestion for the Viator Partner API v2 - full product detail,
+    bulk retrieval, incremental modified-since ingestion, the product tag taxonomy, booking
+    questions, product search and product-to-product recommendations.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Products
+  - Catalog
+  - Content
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-partner-api-v2-openapi.json
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+- aid: viator:viator-partner-availability-api
+  name: Viator Partner Availability API
+  description: >-
+    Real-time availability and price checking plus availability-schedule retrieval for a single
+    product, in bulk, or incrementally by modification date, so partners can hold a local mirror
+    of bookable capacity and pricing.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Availability
+  - Pricing
+  - Schedules
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-partner-api-v2-openapi.json
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+- aid: viator:viator-partner-bookings-api
+  name: Viator Partner Bookings API
+  description: >-
+    Transactional booking surface - cart and single-item hold and book, booking status, cancel
+    reasons, cancellation quote and cancellation, amendment check, quote and amend, and the
+    modified-since booking feed with an acknowledgement cursor for pulling a partner's own
+    booking records.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Bookings
+  - Orders
+  - Cancellation
+  - Amendments
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-partner-api-v2-openapi.json
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+- aid: viator:viator-partner-payments-api
+  name: Viator Partner Payments API
+  description: >-
+    Checkout-session payment account endpoint used by Full Access plus Booking affiliate partners
+    to pass traveller payment details to Viator in a PCI-compliant way when Viator remains the
+    merchant of record.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Payments
+  - Checkout
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-partner-api-v2-openapi.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+- aid: viator:viator-partner-attractions-api
+  name: Viator Partner Attractions API
+  description: >-
+    Attraction search and attraction detail endpoints, letting partners build attraction landing
+    pages and tie Viator's bookable products back to the places they visit.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Attractions
+  - Places
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-partner-api-v2-openapi.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+- aid: viator:viator-partner-auxiliary-api
+  name: Viator Partner Auxiliary API
+  description: >-
+    Supporting reference and content services for the Partner API v2 - free-text search across
+    products, destinations and attractions, bulk location resolution, exchange rates, product
+    reviews, supplier product-code lookup and the destination taxonomy.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Search
+  - Locations
+  - Reviews
+  - Exchange Rates
+  - Destinations
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-partner-api-v2-openapi.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+- aid: viator:viator-reservation-system-api
+  name: Viator Reservation System API
+  description: >-
+    The supplier-side connectivity contract, formerly the Viator Supplier API. This specification
+    is inverted - it defines the endpoints a tour operator's reservation system or booking
+    software must itself implement and expose for Viator to call, covering tour list mapping,
+    real-time and batch availability, batch pricing, reserve, booking, amendment, cancellation
+    and redemption, alongside the Viator-hosted event and special-offer notification endpoints.
+    It carries published uptime, latency and error-rate SLAs and Viator-operated circuit breakers.
+  humanURL: https://docs.viator.com/supplier-api/technical/
+  tags:
+  - Supplier
+  - Connectivity
+  - Channel Manager
+  - Inventory
+  - Reservation System
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-reservation-system-api-openapi.json
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+- aid: viator:viator-merchant-api-v1
+  name: Viator Merchant API v1
+  description: >-
+    The legacy v1 merchant-partner specification still published by Viator, exposing taxonomy,
+    product, photo, review, availability, pricing-matrix, booking, voucher and cancellation
+    services under viatorapi.viator.com/service. Superseded by the Partner API v2 but retained in
+    the public documentation.
+  humanURL: https://docs.viator.com/partner-api/merchant/technical/
+  baseURL: https://viatorapi.viator.com/service
+  tags:
+  - Merchant
+  - Legacy
+  - Bookings
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-merchant-api-v1-openapi.json
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+- aid: viator:viator-affiliate-api-v1
+  name: Viator Affiliate API v1
+  description: >-
+    The legacy v1 affiliate-partner specification, a non-transactional subset covering utility
+    services, destination and category taxonomy, product and attraction search, product detail,
+    reviews and photos under viatorapi.viator.com/service. Superseded by the Partner API v2.
+  humanURL: https://docs.viator.com/partner-api/affiliate/technical/
+  baseURL: https://viatorapi.viator.com/service
+  tags:
+  - Affiliate
+  - Legacy
+  - Products
+  - Attractions
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-affiliate-api-v1-openapi.json
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+common:
+- type: Website
+  url: https://www.viator.com/
+- type: Documentation
+  url: https://docs.viator.com/partner-api/technical/
+- type: Portal
+  url: https://partnerresources.viator.com/
+- type: Support
+  url: https://partnerhelp.viator.com/en
+- type: Blog
+  url: https://partnerresources.viator.com/blog/
+- type: LinkedIn
+  url: https://www.linkedin.com/company/viator
+- type: PostmanCollection
+  url: collections/Viator-Basic-Access-Affiliate-API-v2.postman_collection.json
+- type: PostmanCollection
+  url: collections/Viator-Affiliate-API-v2.postman_collection.json
+- type: PostmanCollection
+  url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+- type: PostmanCollection
+  url: collections/Viator-Merchant-API-v2.postman_collection.json
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

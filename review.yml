@@ -1,0 +1,518 @@
+aid: viator
+name: Viator
+review:
+  question: >-
+    What would it cost a Viator API customer - an affiliate, a merchant partner, or a tour
+    operator's reservation system - to leave?
+  answer: >-
+    A rebuild. Viator publishes a genuinely open, unauthenticated, complete set of OpenAPI
+    definitions and Postman collections, and hands out Basic Access affiliate keys self-serve at
+    no cost. But nothing in those definitions references an open travel standard. There is no
+    OpenTravel/OTA, no HTNG, no NDC, no IATA identifier anywhere in any of the four harvested
+    specifications. Every contract is Viator's own shape, every catalogue key is a Viator-internal
+    code, and the content flowing across the interface is licensed rather than owned. A partner
+    can pull its own booking records out cleanly; it cannot take the catalogue, the identifiers,
+    or the integration with it.
+  date: '2026-07-28'
+  reviewer: API Evangelist
+  tier: ota-metasearch
+  homeMarket: United States
+  parentCompany: Tripadvisor, Inc.
+
+switchingCost:
+
+  interfaceShape:
+    value: proprietary-documented
+    standardNamed: none
+    evidence: >-
+      Four OpenAPI documents were harvested verbatim from Viator's own Redoc-rendered
+      documentation. None of them contains a single occurrence of "OpenTravel", "OTA",
+      "NDC", "IATA", "GDS", or "HTNG" - each string was searched for explicitly across the full
+      info.description and the paths/components of every spec and returned zero matches. The
+      Partner API v2 is OpenAPI 3.0.2 with a bespoke resource model (/products, /availability,
+      /bookings, /attractions, /exchange-rates, /destinations). The supplier-side Viator
+      Reservation System API is OpenAPI 3.0.0 and is inverted - it specifies the endpoints the
+      operator's own reservation system must build and expose for Viator to call.
+    note: >-
+      Documentation quality is high and the interface is unusually transparent for this sector -
+      public specs, a sandbox host, four Postman collections, and a Dockerised self-service
+      contract-testing tool published to a public ECR image. That transparency lowers the cost of
+      arriving. It does nothing to lower the cost of leaving, because the shape is unique to
+      Viator.
+    specs:
+    - file: openapi/viator-partner-api-v2-openapi.json
+      title: Viator Partner API
+      version: '2.0'
+      openapi: 3.0.2
+      paths: 33
+      tags: [Products, Attractions, Availability, Bookings, Payments, Auxiliary]
+      servers:
+      - https://api.viator.com/partner
+      - https://api.sandbox.viator.com/partner
+      securityScheme: apiKey header exp-api-key
+      license: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/au/)
+    - file: openapi/viator-reservation-system-api-openapi.json
+      title: Viator Reservation System API
+      openapi: 3.0.0
+      paths: 15
+      direction: inbound-to-supplier
+      securityScheme: apiKey header X-Api-Key
+      note: >-
+        servers is https://your-reservation-system.example.com - a placeholder, because the
+        implementing host is the supplier's, not Viator's. No baseURL is recorded in apis.yml for
+        this API for that reason.
+    - file: openapi/viator-merchant-api-v1-openapi.json
+      title: Viator API Documentation & Specification - Merchant Partners
+      version: 1.0.0
+      openapi: 3.0.1
+      paths: 28
+      servers:
+      - https://viatorapi.viator.com/service
+      - https://viatorapi.sandbox.viator.com/service
+      securityScheme: apiKey header exp-api-key, plus legacy apiKey query parameter
+    - file: openapi/viator-affiliate-api-v1-openapi.json
+      title: Viator API Documentation & Specification - Affiliate Partners
+      version: '1.0'
+      openapi: 3.0.2
+      paths: 20
+      servers:
+      - https://viatorapi.viator.com/service
+      securityScheme: apiKey header exp-api-key, plus legacy apiKey query parameter
+
+  secondSource:
+    value: alternatives-with-migration
+    alternativesConsidered:
+    - GetYourGuide Partner API
+    - Klook Partner/Affiliate API
+    - Tiqets Distribution API
+    - Musement / TUI Musement API
+    - Civitatis affiliate API
+    - Expedia Local Expert / Expedia Group activities
+    - Rezdy, Checkfront, FareHarbor and Bokun channel/reseller APIs on the operator side
+    reasoning: >-
+      Tours-and-activities supply is genuinely multi-sourced - a distributor can obtain comparable
+      inventory from several marketplaces. What is not interchangeable is the integration. Every
+      one of the alternatives above publishes its own proprietary contract; none of them and none
+      of Viator's endpoints implement a shared schema, so moving means re-mapping the product
+      model, re-mapping identifiers, and re-certifying. Two Viator-specific assets have no second
+      source at all: Viator's own product catalogue depth (Viator states 300,000+ products across
+      2,500+ destinations on its partner resources site) and the Tripadvisor review corpus
+      surfaced through /reviews/product and the viatorUniqueContent element, which is Viator's
+      alone by virtue of the Tripadvisor parent.
+    onTheSupplySide: >-
+      For a tour operator, Viator is one channel among several and is replaceable in principle.
+      But the reservation system - not the operator - carries the integration, so an operator's
+      practical ability to leave depends on which channels its booking software already supports.
+
+  exitPath:
+    value: bulk-export-documented
+    operationsCited:
+    - GET /bookings/modified-since - incremental feed of the partner's own bookings
+    - POST /bookings/modified-since/acknowledge - acknowledgement cursor so the feed can be
+      consumed reliably to completion
+    - GET /products/modified-since and POST /products/bulk - bulk catalogue ingestion
+    - GET /availability/schedules/modified-since and POST /availability/schedules/bulk - bulk
+      availability ingestion
+    - POST /locations/bulk and GET /destinations - bulk reference data
+    honestReading: >-
+      Transactional data is genuinely portable: a partner can pull every booking it has made,
+      incrementally and with an acknowledgement cursor, using documented endpoints. That is a real
+      export path and better than most of this sector publishes. The catalogue endpoints are a
+      different thing - they are ingestion of Viator's licensed content, not export of the
+      partner's own asset, and Viator restricts what may be done with it (see contractualLockIn).
+      No GDPR or consumer data-portability endpoint is published in any specification.
+
+  identifierPortability:
+    summary: >-
+      Viator-internal product codes and destination/attraction IDs on the demand side; the
+      supplier's own product codes on the supply side; ISO currency and BCP-47 language tags for
+      reference data. No IATA, ARC, GIATA, chain code, PNR or any other cross-industry travel
+      identifier appears anywhere.
+    demandSide:
+    - productCode - Viator-proprietary opaque code (documented examples 5010SYDNEY, 46334P42,
+      265910P1); appears 116 times in the Partner API v2 spec and is the primary key for
+      everything a partner stores
+    - destinationId - Viator numeric destination taxonomy ID
+    - attractionId - Viator attraction ID
+    - bookingRef - Viator booking reference, the key for status, cancel, cancel-quote and amend
+    - partnerBookingRef - the partner's own reference, echoed back by Viator; the one genuinely
+      portable key on the demand side
+    supplySide:
+    - SupplierProductCode - "the only mandatory product identification field in Viator APIs",
+      max 50 characters, no pipe character; this is the SUPPLIER's key, not Viator's
+    - SupplierOptionCode - optional supplier-side product option/variant key
+    - SupplierId - assigned by Viator, uniquely identifies an operator in Viator systems
+    - ResellerId - assigned by Viator, v1.0 APIs only
+    assessment: >-
+      Asymmetric, and the asymmetry is the point. Viator calls the supplier using the supplier's
+      own product codes, which means an operator's reservation system keeps its keys and Viator
+      absorbs the mapping cost. A distributor consuming the Partner API gets the opposite deal -
+      it must persist Viator's opaque product codes as the spine of its own catalogue, and those
+      codes mean nothing to GetYourGuide, Klook or anyone else.
+    industryIdentifiersSearchedAndNotFound: [IATA, ARC, GIATA, PNR, chain code, GDS record locator,
+      OpenTravel code list]
+
+  contractualLockIn:
+    published:
+    - clause: Protecting unique content
+      source: Partner API v2 specification, Key concepts section
+      verbatim: >-
+        "In order to prevent our unique content from being utilized by unauthorized third parties,
+        we require that you design your site in such a way that this content will not be indexed
+        by search engines. The content that must be protected comprises: Product reviews - This
+        includes all review text (from any provider) as obtained via the /reviews/product
+        endpoint; and, that in the reviews element in the product content response. Viator unique
+        content - This includes all data in all elements within the viatorUniqueContent element in
+        the product content response."
+      effect: >-
+        A published, machine-adjacent usage restriction with a concrete technical test. Viator
+        requires the protected content be loaded via an external JavaScript blocked in robots.txt
+        and states the implementation is non-compliant if the text appears anywhere in page
+        source. In practice this means a partner can never build durable SEO equity on Viator
+        content, which is a direct suppression of the asset a distributor would most want to keep
+        if it later left.
+    - clause: Merchant site certification
+      source: Partner API v2 specification, Onboarding / integration section
+      verbatim: >-
+        "If you are a merchant partner, once your API integration has been completed, it must pass
+        certification prior to going live in order to ensure data integrity and the appropriate
+        use of API services."
+      effect: >-
+        Two certification forms - a front-end form and a back-end form - must be completed and
+        emailed to the API onboarding team, and Viator must verify every requirement before
+        launch. Certification is a repeatable sunk cost paid to Viator, not to a standard.
+    - clause: Supplier connectivity prerequisites
+      source: Viator Reservation System API specification, Prerequisites section
+      verbatim: >-
+        "Access is restricted to operators registered with Viator and their authorized reservation
+        system providers. Integration workflows may only proceed following technical evaluation
+        and formal approval by Viator. Furthermore, development may only commence if Viator
+        registered operators are using the reservation system."
+      effect: >-
+        A reservation system cannot even begin building unless it already has Viator-registered
+        operators on it. That is a demand precondition on the supply-side integration.
+    - clause: Mandatory supplier capabilities
+      source: Viator Reservation System API specification, Connectivity overview
+      verbatim: >-
+        "Support for the following APIs is a mandatory integration requirement"
+      effect: >-
+        The availability and pricing APIs are not optional; a reservation system must implement
+        Viator's shape for them to connect at all.
+    - clause: Supplier SLAs and unilateral circuit breakers
+      source: Viator Reservation System API specification, SLAs and Circuit breakers sections
+      verbatim: >-
+        "Viator and integrated reservation systems must guarantee a target API availability of:
+        For critical, synchronous APIs like Real-Time Availability and Booking and also for Viator
+        Inbound APIs expected target of 99.8%." ... "Circuit breakers are implemented to preserve
+        system stability by isolating reservation systems experiencing functional degradation. A
+        circuit breaker will OPEN (stopping all requests) when a capability's performance crosses
+        an unacceptable threshold."
+      effect: >-
+        Published, quantified obligations flowing one way, with named thresholds (Availability
+        Check P90 under 1s, Booking error rate under 0.75% monthly, circuit-breaker failure-rate
+        threshold 70%). Viator can unilaterally cut a supplier's distribution off for performance.
+    - clause: No signup or access cost
+      source: partnerresources.viator.com affiliate FAQ
+      verbatim: >-
+        "Are there any signup costs? No. There are no costs to sign up and there are no costs to
+        get additional API access."
+      effect: >-
+        There is no fee wall. The cost is entirely integration and certification labour, plus
+        commission economics that are not published as rates.
+    notPublished:
+    - Minimum term or contract length
+    - Exclusivity or full-content obligations
+    - Termination notice period
+    - Commission rates or segment fees (the affiliate page says only "a standard commission rate")
+    - API key revocation terms on account closure
+    - Any machine-readable terms-of-service or licence artifact
+    note: >-
+      www.viator.com returned HTTP 403 to every direct fetch (bot protection), including
+      /partner-terms and /developers, so the affiliate and merchant partner agreements could not
+      be read and nothing about their commercial terms is asserted here. Only the docs.viator.com
+      and partnerresources.viator.com surfaces, which returned 200, are cited.
+
+  accessGate:
+    value: self-serve
+    honestQualification: >-
+      Self-serve is true only of the entry tier and it is genuinely self-serve. Every tier above
+      it is application-approval, and the transactional tiers add certification.
+    tiers:
+    - tier: Basic Access Affiliate
+      gate: self-serve
+      evidence: >-
+        Viator's affiliate FAQ states "By creating an affiliate account, you'll immediately get
+        Basic Access to our API." No cost, no prequalification. Limited to non-transactional
+        endpoints - the Partner API v2 access matrix marks /products/modified-since and
+        /products/bulk as unavailable to this tier.
+    - tier: Full Access Affiliate
+      gate: application-approval
+      evidence: >-
+        "To request additional access (e.g. Full or Full+Booking Access), you will need to meet
+        basic qualifications." All non-transactional endpoints. Same model applies to whitelabel
+        partners.
+    - tier: Full Access + Booking Affiliate
+      gate: application-approval plus certification
+      evidence: >-
+        Adds cart booking, booking hold and cancellation. Certification page states this tier "is
+        responsible for sharing customer's payment information with Viator in a PCI-compliant
+        way, in order for Viator to process the payment" - Viator remains merchant of record.
+    - tier: Merchant Partner
+      gate: application-approval plus certification
+      evidence: >-
+        Four published stages - Registration, Qualification, Development, Certification. "Yes, all
+        applicants will be evaluated and qualified by Viator." Partner becomes merchant of record
+        and owns customer support. Access to all endpoints.
+    - tier: Supplier / reservation system connectivity
+      gate: partner-only
+      evidence: >-
+        Formal approval by Viator required, and development may only commence if Viator-registered
+        operators already use that reservation system.
+    whatADeveloperMustSign: >-
+      Nothing to read the specifications - they are entirely public. To transact: create a Viator
+      Partner Program account, be qualified by Viator for the tier requested, and for any
+      booking-capable integration complete and email both the front-end and back-end certification
+      forms to the API onboarding team (affiliateapi@tripadvisor.com) and pass Viator's review. No
+      IATA, ARC or other industry accreditation is required at any tier.
+    authentication:
+      scheme: API key
+      header: exp-api-key
+      scope: one key per organisation
+      verbatim: >-
+        "Access to the API is managed using an API key that is included as a header parameter to
+        every call made to all API endpoints described in this document. ... If you do not know the
+        API key for your organization, please contact your business development account manager
+        for these details."
+      note: >-
+        No OAuth, no scopes, no per-user delegation. Localisation moved from being keyed on the
+        API key to a per-call Accept-Language header. Legacy v1 specs additionally accept the key
+        as an apiKey query parameter.
+
+  distributionModel:
+    value: aggregator-reseller
+    description: >-
+      Viator is a two-sided marketplace. Downstream it distributes through affiliates, whitelabel
+      partners and merchant partners via the Partner API; upstream it aggregates operator
+      inventory either through the Viator supply centre extranet or through the Reservation System
+      API implemented by the operator's booking software. On the upstream leg Viator occupies
+      exactly the channel-manager seat - it defines the contract, holds the SLA, does the product
+      mapping, and can open a circuit breaker on a misbehaving reservation system.
+    ndcPosture: >-
+      Not applicable. Viator sells no air content. No NDC, IATA or GDS reference appears in any of
+      the four harvested specifications, and no airline distribution surface exists.
+    gdsRelationship: none published
+
+  rateLimiting:
+    published: true
+    model: per-endpoint per-PUID (Partner Unique ID), plus an IP-based burst layer
+    headers: [RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, Retry-After]
+    window: rolling 10 second window
+    verbatim: >-
+      "We do not have a universal rate limit that applies to all users. The rate limit you are
+      required to operate within is based on a standard commensurate with the scale of your
+      operation."
+    note: >-
+      Rate limits are negotiated with an account manager rather than published as numbers - a soft
+      form of relationship dependency.
+
+findings:
+  summary: >-
+    Viator is the counter-example to the assumption that travel lock-in comes from opacity. Its
+    developer surface is one of the most open in the sector: four complete OpenAPI documents and
+    four Postman collections downloadable without a login, a named sandbox host, a Dockerised
+    contract-testing tool on public ECR, and a free self-serve Basic Access tier. The lock-in is
+    not in the gate. It is in the shape. No open travel standard is referenced anywhere; the
+    catalogue hangs on Viator-proprietary product codes; the highest-value content - Tripadvisor
+    reviews and viatorUniqueContent - is licensed under a published restriction that forbids
+    letting search engines index it; and any booking-capable integration must pass a Viator-run
+    certification. A partner leaving Viator keeps its own booking history, because
+    /bookings/modified-since documents a real export, and keeps nothing else.
+  strengths:
+  - Complete OpenAPI 3.0.x definitions published publicly and rendered, for both the demand side
+    and the inverted supply side
+  - Spec licensed CC BY 4.0
+  - Named production and sandbox servers
+  - Four tier-specific Postman collections
+  - Documented, quantified SLAs, latency targets, error budgets and circuit-breaker thresholds on
+    the supplier side - rare transparency
+  - A documented, cursor-acknowledged export of the partner's own booking records
+  - Free, immediate, self-serve entry tier with no prequalification
+  gaps:
+  - No conformance to any open travel standard (OpenTravel/OTA, HTNG, NDC) - zero references
+  - No machine-readable terms of service, licence, or partner agreement
+  - Commercial terms - commission rates, term, termination, exclusivity - not published anywhere
+    reachable
+  - No OAuth, no scopes, no per-user identity; a single organisation-wide API key
+  - No published GDPR or consumer data-portability endpoint
+  - Rate limits are relationship-negotiated rather than published
+  - No /.well-known/, no security.txt reachable, no discoverable apis.json
+  - www.viator.com blocks automated fetches (403), so the partner agreements are not verifiable
+
+probes:
+- url: https://www.viator.com/
+  status: 403
+  note: bot protection; every www.viator.com path returned 403 to a browser user agent
+- url: https://developer.viator.com/
+  status: DNS_NXDOMAIN
+- url: https://developers.viator.com/
+  status: DNS_NXDOMAIN
+- url: https://docs.viator.com/
+  status: 200
+  note: single link, to /partner-api
+- url: https://docs.viator.com/partner-api/
+  status: 200
+- url: https://docs.viator.com/partner-api/technical/
+  status: 200
+  note: 8.2MB Redoc page; OpenAPI 3.0.2 recovered verbatim from the embedded __redoc_state
+- url: https://docs.viator.com/partner-api/merchant/technical/
+  status: 200
+  note: 4.4MB Redoc page; legacy v1 merchant spec recovered
+- url: https://docs.viator.com/partner-api/affiliate/technical/
+  status: 200
+  note: 3.1MB Redoc page; legacy v1 affiliate spec recovered
+- url: https://docs.viator.com/supplier-api/technical/
+  status: 200
+  note: 1.1MB Redoc page; Viator Reservation System API recovered
+- url: https://docs.viator.com/supplier-api/
+  status: 403
+- url: https://docs.viator.com/supplier-api/technical/api-overview/
+  status: 200
+- url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  status: 200
+- url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  status: 200
+- url: https://docs.viator.com/partner-api/technical/Viator-Merchant-API-v2.postman_collection.json
+  status: 200
+  note: 37211 bytes, valid Postman 2.1
+- url: https://docs.viator.com/partner-api/technical/Viator-Affiliate-API-v2.postman_collection.json
+  status: 200
+  note: 17416 bytes, valid Postman 2.1
+- url: https://docs.viator.com/partner-api/technical/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  status: 200
+  note: 35074 bytes, valid Postman 2.1
+- url: https://docs.viator.com/partner-api/technical/Viator-Basic-Access-Affiliate-API-v2.postman_collection.json
+  status: 200
+  note: 10269 bytes, valid Postman 2.1
+- url: https://docs.viator.com/partner-api/technical/openapi.json
+  status: 403
+- url: https://docs.viator.com/partner-api/technical/openapi.yaml
+  status: 403
+- url: https://docs.viator.com/openapi.json
+  status: 403
+- url: https://docs.viator.com/.well-known/
+  status: 403
+- url: https://www.viator.com/.well-known/security.txt
+  status: 403
+- url: https://api.viator.com/
+  status: 404
+- url: https://api.viator.com/partner/
+  status: 400
+  note: host live and answering; 400 without an exp-api-key header, consistent with the spec
+- url: https://api.sandbox.viator.com/partner/products/tags
+  status: 400
+  note: sandbox host live and answering
+- url: https://partnerresources.viator.com/
+  status: 200
+- url: https://partnerresources.viator.com/travel-commerce/affiliate/
+  status: 200
+  note: source of the self-serve Basic Access and no-signup-cost statements
+- url: https://partnerresources.viator.com/travel-commerce/merchant/
+  status: 200
+  note: source of the Registration/Qualification/Development/Certification stages
+- url: https://partnerresources.viator.com/travel-commerce/merchant/certification/
+  status: 200
+  note: source of the two certification forms and merchant-of-record language
+- url: https://partnerresources.viator.com/travel-commerce/implementation/
+  status: 200
+- url: https://partnerresources.viator.com/travel-commerce/technical-guide/
+  status: 200
+- url: https://partnerresources.viator.com/blog/
+  status: 200
+- url: https://partnerhelp.viator.com/en
+  status: 200
+- url: https://supplier.viator.com/sign-up-info
+  status: 403
+  note: referenced from the Reservation System API prerequisites; bot-blocked
+- url: https://www.linkedin.com/company/viator
+  status: 200
+- url: https://github.com/viator
+  status: 200
+  note: an unrelated personal account with zero public repositories - deliberately NOT recorded
+    as Viator's GitHub organisation
+
+sources:
+- url: https://docs.viator.com/partner-api/technical/
+  type: APIReference
+  fetched: '2026-07-28'
+  status: 200
+  note: Viator Partner API v2, OpenAPI 3.0.2, 33 paths, licensed CC BY 4.0
+- url: https://docs.viator.com/supplier-api/technical/
+  type: APIReference
+  fetched: '2026-07-28'
+  status: 200
+  note: Viator Reservation System API, OpenAPI 3.0.0, 15 paths
+- url: https://docs.viator.com/partner-api/merchant/technical/
+  type: APIReference
+  fetched: '2026-07-28'
+  status: 200
+  note: legacy v1 merchant spec, OpenAPI 3.0.1, 28 paths
+- url: https://docs.viator.com/partner-api/affiliate/technical/
+  type: APIReference
+  fetched: '2026-07-28'
+  status: 200
+  note: legacy v1 affiliate spec, OpenAPI 3.0.2, 20 paths
+- url: https://partnerresources.viator.com/travel-commerce/affiliate/
+  type: Documentation
+  fetched: '2026-07-28'
+  status: 200
+- url: https://partnerresources.viator.com/travel-commerce/merchant/
+  type: Documentation
+  fetched: '2026-07-28'
+  status: 200
+- url: https://partnerresources.viator.com/travel-commerce/merchant/certification/
+  type: Documentation
+  fetched: '2026-07-28'
+  status: 200
+
+provenance:
+  method: >-
+    Viator does not serve a standalone OpenAPI file - every attempt at /openapi.json,
+    /openapi.yaml and /api-docs returned 403. All four specifications were recovered verbatim from
+    the __redoc_state JSON that Viator's own Redoc-rendered documentation pages embed and hydrate
+    in the browser. Each was parsed with the standard JSON decoder, confirmed to carry an openapi
+    version, info, servers, paths and components, and written unmodified. Nothing was synthesised,
+    inferred, or completed by hand.
+  harvestedOn: '2026-07-28'
+  artifacts:
+  - path: openapi/viator-partner-api-v2-openapi.json
+    sourceURL: https://docs.viator.com/partner-api/technical/
+    httpStatus: 200
+    parses: true
+  - path: openapi/viator-reservation-system-api-openapi.json
+    sourceURL: https://docs.viator.com/supplier-api/technical/
+    httpStatus: 200
+    parses: true
+  - path: openapi/viator-merchant-api-v1-openapi.json
+    sourceURL: https://docs.viator.com/partner-api/merchant/technical/
+    httpStatus: 200
+    parses: true
+  - path: openapi/viator-affiliate-api-v1-openapi.json
+    sourceURL: https://docs.viator.com/partner-api/affiliate/technical/
+    httpStatus: 200
+    parses: true
+  - path: collections/Viator-Merchant-API-v2.postman_collection.json
+    sourceURL: https://docs.viator.com/partner-api/technical/Viator-Merchant-API-v2.postman_collection.json
+    httpStatus: 200
+    parses: true
+  - path: collections/Viator-Affiliate-API-v2.postman_collection.json
+    sourceURL: https://docs.viator.com/partner-api/technical/Viator-Affiliate-API-v2.postman_collection.json
+    httpStatus: 200
+    parses: true
+  - path: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+    sourceURL: https://docs.viator.com/partner-api/technical/Viator-Affiliate-Booking-API-v2.postman_collection.json
+    httpStatus: 200
+    parses: true
+  - path: collections/Viator-Basic-Access-Affiliate-API-v2.postman_collection.json
+    sourceURL: https://docs.viator.com/partner-api/technical/Viator-Basic-Access-Affiliate-API-v2.postman_collection.json
+    httpStatus: 200
+    parses: true
