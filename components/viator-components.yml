@@ -1,0 +1,63 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://partnerresources.viator.com/travel-content/widgets/,
+  https://partnerresources.viator.com/travel-content/banners/,
+  https://partnerresources.viator.com/travel-content/links/ and
+  https://partnerresources.viator.com/selector/
+summary: >-
+  Viator ships a no-code embeddable layer alongside the API, aimed at affiliate partners who do not
+  want to build against the Partner API v2 at all. Every component is generated inside the Viator
+  Partner Program dashboard and pasted into the partner's page as markup - there is no published
+  JavaScript element library, no npm loader package and no documented component API, so these are
+  hosted/prebuilt surfaces rather than a developer component SDK. All of them monetise through the
+  same 30-day cookie window and a published 8% commission on completed bookings.
+families:
+- name: Widgets
+  kind: hosted-embed
+  url: https://partnerresources.viator.com/travel-content/widgets/
+  description: >-
+    A responsive, customisable embed showing up to 30 Viator experiences on a partner page. Created
+    in the Widgets tab of the Tools section of the Partner Program dashboard, embedded by copying
+    and pasting the generated code. Edits to a live widget propagate immediately. Clicking "Book
+    now" redirects the traveller to viator.com.
+  customisation: [selected experiences, Book now button, free-cancellation icon, border design]
+  limit_per_widget: 30 experiences
+  loader_library: null
+  responsive: true
+- name: Banners
+  kind: hosted-embed
+  url: https://partnerresources.viator.com/travel-content/banners/
+  description: >-
+    Display banner ads built with Viator's Banner Builder. Viator supplies the imagery, the ad copy
+    and human translations, so the partner supplies no design assets.
+  languages: [English, Spanish, French, Italian]
+  loader_library: null
+- name: Affiliate links
+  kind: link
+  url: https://partnerresources.viator.com/travel-content/links/
+  description: >-
+    In-text hyperlinks to any active viator.com URL - product, destination, attraction, category,
+    language/PoS subdomain or microsite. The lowest-effort integration Viator offers.
+  loader_library: null
+- name: Viator Selector
+  kind: hosted-tool
+  url: https://selector.viator.com/
+  docs: https://partnerresources.viator.com/selector/
+  description: >-
+    A hosted search-filter-and-generate tool for finding experiences and producing affiliate links,
+    with Viator's Excellent Quality and Best Conversion badges as filters. It is the authoring tool
+    behind the link and widget families rather than an embeddable component itself.
+  loader_library: null
+attribution:
+  cookie_window_days: 30
+  commission_published: 8%
+  commission_scope: >-
+    Published on the affiliate links and banners pages as 8% per product booked within the 30-day
+    window. Merchant and supplier commercial terms are not published anywhere reachable.
+developer_component_library: false
+npm_loader_package: false
+web_components: false
+note: >-
+  Distinct from packages/viator-packages.yml, which records that Viator publishes no server-side
+  SDKs in any registry either.

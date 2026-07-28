@@ -213,6 +213,12 @@ apis:
   - type: Documentation
     url: https://docs.viator.com/partner-api/affiliate/technical/
 common:
+- type: AgenticAccess
+  url: agentic-access/viator-agentic-access.yml
+- type: DomainSecurity
+  url: security/viator-domain-security.yml
+- type: Authentication
+  url: authentication/viator-authentication.yml
 - type: Website
   url: https://www.viator.com/
 - type: Documentation
@@ -233,6 +239,64 @@ common:
   url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
 - type: PostmanCollection
   url: collections/Viator-Merchant-API-v2.postman_collection.json
+- type: APIReference
+  url: https://docs.viator.com/partner-api/technical/
+- type: DeveloperPortal
+  url: https://partnerresources.viator.com/
+- type: GettingStarted
+  url: https://partnerresources.viator.com/travel-commerce/affiliate/basic-access/golden-path/
+- type: Pricing
+  url: https://partnerresources.viator.com/travel-commerce/levels-of-access/
+- type: SignUp
+  url: https://partners.viator.com/signup?mcid=66150&program=affiliate
+- type: Login
+  url: https://partners.viator.com/login
+- type: TermsOfService
+  url: https://www.viator.com/support/termsAndConditions
+- type: PrivacyPolicy
+  url: https://www.viator.com/support/privacyPolicy
+- type: Conventions
+  url: conventions/viator-conventions.yml
+- type: Idempotency
+  url: conventions/viator-conventions.yml
+- type: ErrorCatalog
+  url: errors/viator-problem-types.yml
+- type: RateLimits
+  url: rate-limits/viator-rate-limits.yml
+- type: Lifecycle
+  url: lifecycle/viator-lifecycle.yml
+- type: Deprecation
+  url: https://docs.viator.com/partner-api/technical/#section/Localization/API-versioning-strategy
+- type: ChangeLog
+  url: changelog/viator-changelog.yml
+- type: Conformance
+  url: conformance/viator-conformance.yml
+- type: DataModel
+  url: data-model/viator-data-model.yml
+- type: Sandbox
+  url: sandbox/viator-sandbox.yml
+- type: Packages
+  url: packages/viator-packages.yml
+- type: Components
+  url: components/viator-components.yml
+- type: Webhooks
+  url: asyncapi/viator-events.yml
+- type: MCPServer
+  url: mcp/viator-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/viator-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/viator-llms.txt
+- type: Overlay
+  url: overlays/viator-partner-api-v2-overlay.yaml
+- type: Overlay
+  url: overlays/viator-reservation-system-api-overlay.yaml
+- type: Overlay
+  url: overlays/viator-merchant-api-v1-overlay.yaml
+- type: Overlay
+  url: overlays/viator-affiliate-api-v1-overlay.yaml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

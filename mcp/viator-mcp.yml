@@ -1,0 +1,203 @@
+generated: '2026-07-28'
+method: derived
+status: candidate
+source: openapi/viator-partner-api-v2-openapi.json
+search:
+  summary: >-
+    No official Viator MCP server exists. npm, the docs host and partnerresources.viator.com were
+    searched; the only MCP servers wrapping the Viator Partner API are community projects with no
+    Viator endorsement, and no remote/hosted MCP endpoint is advertised on any Viator surface.
+  official_server_found: false
+  third_party:
+  - name: '@chrischall/viator-mcp'
+    registry: npm
+    url: https://www.npmjs.com/package/@chrischall/viator-mcp
+    repository: https://github.com/chrischall/viator-mcp
+    transport: stdio
+    official: false
+  - name: autonomad-travel
+    registry: npm
+    url: https://www.npmjs.com/package/autonomad-travel
+    official: false
+    note: Multi-provider travel MCP that includes Viator among its sources.
+  probes:
+  - {url: 'https://mcp.viator.com/', result: DNS_NXDOMAIN}
+  - {url: 'https://api.viator.com/.well-known/ai-plugin.json', status: 404}
+  - {url: 'https://api.viator.com/.well-known/oauth-protected-resource', status: 404}
+server:
+  name: viator
+  transport: http
+  url: null
+  note: >-
+    Candidate only. This is the tool surface a Viator-operated MCP server would expose if it were
+    projected one-to-one from the published Partner API v2 OpenAPI. It is not a live endpoint.
+auth:
+  scheme: apiKey
+  header: exp-api-key
+  version_header: 'Accept: application/json;version=2.0'
+  note: >-
+    One organisation-wide key, no OAuth and no scopes, so an MCP deployment cannot delegate
+    per-user authority - every tool call carries the full authority of the partner account. Tool
+    exposure must therefore be gated by the partner access tier (see
+    conventions/viator-conventions.yml access_tiers) and, for the booking tools, by human approval.
+tools:
+- name: get_product
+  description: Retrieve full product content for one Viator product code.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#products
+  read_only: true
+- name: get_products_bulk
+  description: Retrieve product content for up to a list of product codes in one call.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#productsBulk
+  read_only: true
+- name: list_products_modified_since
+  description: Cursored delta feed of product content changes for catalogue ingestion.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#productsModifiedSince
+  read_only: true
+- name: list_product_tags
+  description: Retrieve the Viator product tag taxonomy.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#productsTags
+  read_only: true
+- name: list_booking_questions
+  description: Retrieve the booking-question catalogue.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#productsBookingQuestions
+  read_only: true
+- name: search_products
+  description: Filter and sort bookable products by destination, tags, flags, price, date and rating.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#productsSearch
+  read_only: true
+- name: get_product_recommendations
+  description: Product-to-product recommendations for a list of product codes.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#productsRecommendations
+  read_only: true
+- name: search_freetext
+  description: Free-text search across products, destinations and attractions.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#searchFreeText
+  read_only: true
+- name: search_attractions
+  description: Search attractions within a destination.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#attractionsSearch
+  read_only: true
+- name: get_attraction
+  description: Retrieve one attraction by id.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#attractions
+  read_only: true
+- name: list_destinations
+  description: Retrieve the Viator destination taxonomy.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#destinations
+  read_only: true
+- name: resolve_locations
+  description: Resolve a batch of opaque LOC- location references to structured addresses.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#locationsBulk
+  read_only: true
+- name: get_exchange_rates
+  description: Retrieve exchange rates between a set of source and target currencies.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#exchangeRates
+  read_only: true
+- name: get_product_reviews
+  description: Retrieve reviews for a product.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#reviewsProduct
+  read_only: true
+  caution: >-
+    Review text is covered by Viator's "Protecting unique content" restriction - it must not be
+    rendered anywhere a search engine can index it.
+- name: lookup_supplier_by_product
+  description: Resolve supplier details for a list of product codes.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#suppliersSearchProductCodes
+  read_only: true
+- name: check_availability
+  description: Real-time availability and price check for a product, date and passenger mix.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#availabilityCheck
+  read_only: true
+- name: get_availability_schedule
+  description: Availability schedule for one product.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#availabilitySchedules
+  read_only: true
+- name: get_availability_schedules_bulk
+  description: Availability schedules for a list of product codes.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#availabilitySchedulesBulk
+  read_only: true
+- name: list_availability_schedules_modified_since
+  description: Cursored delta feed of availability-schedule changes.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#availabilitySchedulesModifiedSince
+  read_only: true
+- name: hold_booking
+  description: Place a hold on a single bookable item.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsHold
+  read_only: false
+  consequence: write
+- name: hold_cart
+  description: Place a hold on a multi-item cart.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsCartHold
+  read_only: false
+  consequence: write
+- name: book
+  description: Confirm a held single-item booking.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsBook
+  read_only: false
+  consequence: financial
+  human_in_the_loop: recommended
+  idempotency_key: partnerBookingRef
+- name: book_cart
+  description: Confirm a held cart booking with a payment token.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsCartBook
+  read_only: false
+  consequence: financial
+  human_in_the_loop: recommended
+  idempotency_key: partnerBookingRef
+- name: get_booking_status
+  description: Retrieve the status of a booking by Viator or partner reference.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsStatus
+  read_only: true
+- name: list_cancel_reasons
+  description: Retrieve the cancellation reason-code list.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsCancelReasons
+  read_only: true
+- name: get_cancellation_quote
+  description: Quote the refund for cancelling a booking, before committing.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsCancelQuote
+  read_only: true
+- name: cancel_booking
+  description: Cancel a booking with a reason code.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsCancel
+  read_only: false
+  consequence: financial
+  human_in_the_loop: recommended
+- name: list_booking_events
+  description: Cursored feed of booking events (confirmations, rejections, amendments, cancellations).
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsModifiedSince
+  read_only: true
+- name: acknowledge_booking_events
+  description: Acknowledge booking event transactionRefs.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsModifiedSinceAcknowledge
+  read_only: false
+  consequence: write
+  caution: >-
+    Acknowledging a supplier CANCELLATION event transfers the customer-communication obligation to
+    the partner. Not a neutral write.
+- name: check_amendment
+  description: Check whether a booking can be amended.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#amendmentCheck
+  read_only: true
+- name: quote_amendment
+  description: Quote the price impact of a booking amendment.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#amendmentQuote
+  read_only: true
+- name: apply_amendment
+  description: Apply a previously quoted amendment.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#amendmentAmend
+  read_only: false
+  consequence: financial
+  human_in_the_loop: recommended
+- name: create_payment_account
+  description: Tokenise traveller card details against a checkout session.
+  source_operation: openapi/viator-partner-api-v2-openapi.json#paymentsCreateToken
+  read_only: false
+  consequence: financial
+  caution: >-
+    Handles raw PAN data. Only Full-access + Booking affiliates may call it and only in a
+    PCI-compliant context. Should not be exposed as an agent tool.
+coverage:
+  rest_operations_total: 33
+  tools_derived: 33
+  excluded: 0
+crosswalk: mcp/viator-tool-crosswalk.yml

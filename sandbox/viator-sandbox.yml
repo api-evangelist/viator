@@ -1,0 +1,147 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://docs.viator.com/partner-api/technical/ (Testing, Booking confirmation types / Building in
+  the sandbox environment sections), the four published Postman collections, and
+  https://docs.viator.com/supplier-api/technical/ (Contract testing section)
+summary: >-
+  Viator runs a named, fully separate sandbox environment that mirrors production products and
+  functionality, and mandates that all partner testing happens there. There are no test-mode key
+  prefixes - the same organisation exp-api-key is used against a different host - and no test cards
+  are published for the demand-side booking flow. Behaviour simulation is done with the exp-demo
+  request header, and the final supplier decision on a manual-confirmation test booking is set by
+  Viator support on request. On the supplier side Viator ships a Dockerised contract-testing tool
+  instead of a sandbox.
+environments:
+- name: sandbox
+  base_url: https://api.sandbox.viator.com/partner
+  api: Viator Partner API v2
+  declared_in: openapi/viator-partner-api-v2-openapi.json servers[1]
+  live: true
+  probe:
+    url: https://api.sandbox.viator.com/partner/products/tags
+    status: 400
+    note: host answers; 400 is the documented response when the version header is absent
+- name: production
+  base_url: https://api.viator.com/partner
+  api: Viator Partner API v2
+  declared_in: openapi/viator-partner-api-v2-openapi.json servers[0]
+- name: sandbox
+  base_url: https://viatorapi.sandbox.viator.com/service
+  api: Viator Merchant API v1 (legacy)
+  declared_in: openapi/viator-merchant-api-v1-openapi.json servers[1]
+- name: production
+  base_url: https://viatorapi.viator.com/service
+  api: Viator Merchant API v1 and Affiliate API v1 (legacy)
+key_separation:
+  model: same-key-different-host
+  test_key_prefix: null
+  note: >-
+    Viator issues one API key per organisation. There is no separate test key and no key prefix that
+    distinguishes test from live; the environment is selected by hostname alone.
+policy:
+  verbatim: >-
+    "All testing must be done in Sandbox. Production endpoints are for live bookings only and must
+    not be used for testing under any circumstances. Sandbox provides access to the same products
+    and functionality as Production unless stated otherwise."
+  source: https://docs.viator.com/partner-api/technical/#section/Testing
+behaviour_simulation:
+  header: exp-demo
+  in: header
+  description: >-
+    Marks a request as a demo/test booking. Demo bookings send no notifications and are
+    automatically confirmed, and manual-confirmation products behave as if they were instant
+    confirmation.
+  values:
+  - value: 'true'
+    effect: demo booking; no notifications; auto-confirmed
+  - value: 'false'
+    effect: >-
+      In sandbox, forces manual-confirmation products to return bookingStatus = PENDING, which is
+      the real production behaviour for those products.
+    applies_to_operations: [bookingsBook, bookingsCartBook]
+  source: https://docs.viator.com/partner-api/technical/#section/Booking-concepts/Booking-confirmation-types
+manual_confirmation_test_flow:
+  steps:
+  - Make the booking in sandbox with exp-demo set to false and observe bookingStatus = PENDING.
+  - >-
+    Email apitechsupport@viator.com with the bookingRef and request the status be moved to CONFIRMED
+    or REJECTED.
+  - Poll bookingsStatus to observe the resolved state.
+  note: >-
+    The final supplier decision cannot be self-served; Viator support flips it. There is no test
+    clock or time-simulation facility.
+  source: https://docs.viator.com/partner-api/technical/#section/Booking-concepts/Booking-confirmation-types
+published_test_values:
+  note: >-
+    These are the values Viator itself ships in its public Postman collections, which are configured
+    against the sandbox host. Recorded verbatim; nothing here was invented.
+  product_codes:
+  - '5010SYDNEY'
+  - '6613GRANDCELE'
+  - '2050P348'
+  - '3283BWW'
+  - '5307DISNEYMAGIC'
+  - '2280AAHT'
+  - '21100P7'
+  - '132218P75'
+  product_option_codes: ['TG2', 'TG39', '48HOUR']
+  destination_ids: ['732', '77', '479']
+  attraction_id: '97'
+  tag_id: 21972
+  booking_refs: ['BR-592629763', 'BR-592629764', 'BR-791149854', 'BR-123456789']
+  cart_ref: 'CR-f89f881d88bbb5359cd8ce4207e006f5'
+  partner_refs: ['PCR-42', 'PBR-1', 'PBR-2']
+  payment_token: 'STK-w4bzf6mvfnfqfbjte6avyw3e44'
+  cursor: 'MTU5MjM1Mjg1OHwxMTYxNjVQMQ=='
+  location_references:
+  - 'LOC-6eKJ+or5y8o99Qw0C8xWyLZq7TSQT++LPZ7dk4z18Ls='
+  - 'CONTACT_SUPPLIER_LATER'
+  - 'MEET_AT_DEPARTURE_POINT'
+  cancellation_reason_code: 'Customer_Service.Chose_a_different_cheaper_tour'
+  test_card:
+    number: '4111111111111111'
+    cvv: '234'
+    exp_month: '03'
+    exp_year: '2026'
+    name: Jane Doe
+    country: US
+    postal_code: '02494'
+    note: >-
+      Published by Viator in the Full-access + Booking affiliate Postman collection as the payload
+      for the card-tokenisation call. This is the industry-standard Visa test PAN, not a live card.
+    source: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+postman_collections:
+- file: collections/Viator-Basic-Access-Affiliate-API-v2.postman_collection.json
+  tier: Basic-access Affiliate
+  host_variable: https://api.sandbox.viator.com/partner
+- file: collections/Viator-Affiliate-API-v2.postman_collection.json
+  tier: Full-access Affiliate
+  host_variable: https://api.sandbox.viator.com/partner
+- file: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  tier: Full-access + Booking Affiliate
+  host_variable: https://api.sandbox.viator.com/partner
+- file: collections/Viator-Merchant-API-v2.postman_collection.json
+  tier: Merchant
+  host_variable: https://api.sandbox.viator.com/partner
+supplier_side_testing:
+  name: Viator Contract Testing Tool
+  kind: local Docker web application
+  image: public.ecr.aws/viator/cica:latest
+  install: docker pull public.ecr.aws/viator/cica:latest
+  run: >-
+    docker run -it --rm --name viator-contract-testing -p 5173:5173 -p 8989:8989 -e
+    API_KEY=$API_KEY -e SUPPLIER_ID=$SUPPLIER_ID --add-host=host.docker.internal:host-gateway
+    public.ecr.aws/viator/cica:latest
+  ui: http://localhost:5173
+  scope: v2 Reservation System APIs only; v1 endpoints are not supported
+  description: >-
+    Runs Viator's own contract-test scenarios against a reservation system's endpoints. Endpoints do
+    not need to be publicly exposed - a locally running API is reached at
+    http://host.docker.internal:PORT. Test inputs resolve Test Case Input > Test Product Option
+    Config > Global Defaults.
+  credentials_required: [API_KEY, SUPPLIER_ID]
+  credentials_issued_by: Viator, after the integration kick-off meeting
+  source: https://docs.viator.com/supplier-api/technical/
+test_clocks: false
+fixture_tooling: false

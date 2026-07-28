@@ -1,0 +1,151 @@
+generated: '2026-07-28'
+method: derived
+source: >-
+  openapi/viator-partner-api-v2-openapi.json ($ref graph across 271 component schemas and 33
+  operations), enriched from the Key concepts and Booking concepts sections of
+  https://docs.viator.com/partner-api/technical/
+scope: Viator Partner API v2 (demand side)
+summary: >-
+  The Viator demand-side model has a single spine: productCode. Everything a partner stores hangs
+  off it - availability, price, reviews, attractions, bookings and amendments all resolve back to a
+  Viator-proprietary opaque product code. There is no customer or account entity: the traveller
+  exists only as bookerInfo and communication fields inside a booking. Identifiers are opaque and
+  prefixed (BR-, CR-, QR-, PBE-, LOC-, STK-), which makes them recognisable but non-portable - none
+  of them means anything to any other marketplace.
+entities:
+- name: Product
+  primary_key: productCode
+  id_format: >-
+    Viator-proprietary opaque code, no fixed shape. Published examples: 5010SYDNEY, 46334P42,
+    265910P1, 2050P348, 3283BWW, 6613GRANDCELE.
+  schema: '#/components/schemas/Product'
+  operations: [products, productsBulk, productsModifiedSince, productsSearch, productsRecommendations]
+  note: The primary key of the whole demand-side model.
+- name: ProductOption
+  primary_key: productOptionCode
+  id_format: 'Viator-proprietary. Published examples: TG2, TG39, 48HOUR, DEFAULT.'
+  note: >-
+    A bookable variant of a Product with its own pricing and inventory. Formerly called a tour
+    grade.
+- name: AvailabilitySchedule
+  primary_key: productCode
+  schema: '#/components/schemas/AvailabilitySchedule'
+  operations: [availabilitySchedules, availabilitySchedulesBulk, availabilitySchedulesModifiedSince]
+- name: AvailabilityCheck
+  primary_key: null
+  operations: [availabilityCheck]
+  note: A transient real-time quote, not a stored entity.
+- name: Attraction
+  primary_key: attractionId
+  id_format: Viator numeric attraction id (example 97).
+  operations: [attractions, attractionsSearch]
+- name: Destination
+  primary_key: destinationId
+  id_format: Viator numeric destination id (examples 77, 479, 732).
+  operations: [destinations]
+- name: Tag
+  primary_key: tagId
+  id_format: Viator numeric tag id (example 21972).
+  operations: [productsTags]
+- name: LocationReference
+  primary_key: reference
+  id_format: >-
+    LOC- prefixed opaque base64-ish token, plus the reserved literals CONTACT_SUPPLIER_LATER and
+    MEET_AT_DEPARTURE_POINT.
+  schema: '#/components/schemas/LocationReference'
+  operations: [locationsBulk]
+- name: Supplier
+  primary_key: supplierId
+  operations: [suppliersSearchProductCodes]
+  note: >-
+    Assigned by Viator. The supplier's own SupplierProductCode is the key on the inverted supply-side
+    contract, not here.
+- name: Review
+  primary_key: null
+  operations: [reviewsProduct]
+  restriction: >-
+    Covered by the "Protecting unique content" clause - review text must not be indexable by search
+    engines.
+- name: Cart
+  primary_key: cartRef
+  id_format: 'CR- prefixed, example CR-f89f881d88bbb5359cd8ce4207e006f5'
+  partner_key: partnerCartRef
+  operations: [bookingsCartHold, bookingsCartBook]
+- name: Booking
+  primary_key: bookingRef
+  id_format: 'BR-<digits>, example BR-592629763'
+  partner_key: partnerBookingRef
+  partner_key_role: >-
+    The one genuinely portable key on the demand side, and the idempotency key for booking creation.
+  schema: '#/components/schemas/BookingStatusResponseCommon'
+  operations: [bookingsHold, bookingsBook, bookingsCartHold, bookingsCartBook, bookingsStatus,
+    bookingsCancel, bookingsCancelQuote, bookingsModifiedSince]
+  status_values: [ON_HOLD, PENDING, CONFIRMED, REJECTED, CANCELLED]
+- name: BookingQuestionAnswer
+  primary_key: null
+  schema: '#/components/schemas/BookingQuestionAnswers'
+  note: >-
+    Keyed by question code (AGEBAND, FULL_NAMES_FIRST, WEIGHT, PICKUP_POINT, TRANSFER_*) with an
+    optional travelerNum and unit.
+- name: AmendmentQuote
+  primary_key: quoteRef
+  id_format: 'QR-<uuid>, example QR-4891fddc-7e2e-4203-9517-ec75703daa8a'
+  operations: [amendmentCheck, amendmentQuote, amendmentAmend]
+- name: BookingEvent
+  primary_key: transactionRef
+  id_format: 'PBE-<uuid>, example PBE-e60bb92c-f1fc-11ec-b939-0242ac120002'
+  schema: '#/components/schemas/BookingEvent'
+  operations: [bookingsModifiedSince, bookingsModifiedSinceAcknowledge]
+- name: PaymentToken
+  primary_key: paymentToken
+  id_format: 'STK- prefixed, example STK-w4bzf6mvfnfqfbjte6avyw3e44'
+  operations: [paymentsCreateToken]
+- name: CancellationPolicy
+  primary_key: null
+  schema: '#/components/schemas/CancellationPolicy'
+  types: [STANDARD, CUSTOM, ALL_SALES_FINAL]
+relationships:
+- {from: Product, to: ProductOption, kind: has_many, via: productOptions}
+- {from: Product, to: AvailabilitySchedule, kind: has_one, via: productCode}
+- {from: Product, to: Review, kind: has_many, via: productCode}
+- {from: Product, to: CancellationPolicy, kind: has_one, via: cancellationPolicy}
+- {from: Product, to: Itinerary, kind: has_one, via: itinerary}
+- {from: Product, to: Tag, kind: has_many, via: tags}
+- {from: Product, to: Destination, kind: belongs_to, via: destinations}
+- {from: Product, to: Supplier, kind: belongs_to, via: supplierId}
+- {from: Product, to: Image, kind: has_many, via: images}
+- {from: Itinerary, to: LocationReference, kind: has_many, via: pointOfInterestLocation}
+- {from: Attraction, to: Destination, kind: belongs_to, via: destinationId}
+- {from: Attraction, to: Product, kind: has_many, via: attractionId}
+- {from: Destination, to: Destination, kind: belongs_to, via: parentDestinationId}
+- {from: Cart, to: Booking, kind: has_many, via: 'items[].bookingRef'}
+- {from: Booking, to: Product, kind: belongs_to, via: productCode}
+- {from: Booking, to: ProductOption, kind: belongs_to, via: productOptionCode}
+- {from: Booking, to: BookingQuestionAnswer, kind: has_many, via: bookingQuestionAnswers}
+- {from: Booking, to: PaxMixItem, kind: has_many, via: paxMix}
+- {from: Booking, to: VoucherInfo, kind: has_one, via: voucherInfo}
+- {from: Booking, to: LanguageGuide, kind: has_one, via: languageGuide}
+- {from: Booking, to: BookingEvent, kind: has_many, via: bookingRef}
+- {from: Booking, to: AmendmentQuote, kind: has_many, via: bookingRef}
+- {from: Booking, to: CancellationPolicy, kind: has_one, via: cancellationPolicy}
+- {from: BookingEvent, to: BookingEventCancellation, kind: has_one, via: cancellation}
+- {from: BookingEvent, to: BookingEventItem, kind: has_one, via: bookedItem}
+- {from: Cart, to: PaymentToken, kind: has_one, via: paymentToken}
+- {from: PaxMixItem, to: AgeBand, kind: belongs_to, via: ageBand}
+- {from: AvailabilitySchedule, to: PricingLineItem, kind: has_many, via: pricingRecords}
+value_objects:
+- {name: PriceObject, note: 'recommendedRetailPrice / partnerNetPrice split, with ExtraChargesSummary'}
+- {name: AgeBand, values: [ADULT, CHILD, INFANT, YOUTH, SENIOR, TRAVELER]}
+- {name: Currency, note: ISO 4217 three-letter codes}
+- {name: TranslationDetails, note: machine-translation provenance on natural-language fields}
+- {name: ItineraryDuration, note: fixed vs variable duration}
+identifier_portability:
+  portable: [partnerBookingRef, partnerCartRef]
+  viator_proprietary: [productCode, productOptionCode, destinationId, attractionId, tagId, bookingRef,
+    cartRef, quoteRef, transactionRef, locationReference, supplierId, paymentToken]
+  cross_industry_identifiers_present: []
+  note: >-
+    No IATA, ARC, GIATA, GDS or OpenTravel identifier appears anywhere. A distributor must persist
+    Viator's opaque codes as the spine of its own catalogue, and those codes are meaningless outside
+    Viator.
+render: null

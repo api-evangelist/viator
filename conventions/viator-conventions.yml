@@ -1,0 +1,208 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://docs.viator.com/partner-api/technical/ (Viator Partner API v2 specification -
+  Authentication, Localization, API versioning strategy, Accept-Encoding, Endpoint timeout
+  settings, Rate limiting, Workflows and Testing sections), plus
+  openapi/viator-partner-api-v2-openapi.json components.headers / components.parameters
+applies_to:
+- openapi/viator-partner-api-v2-openapi.json
+notes: >-
+  The legacy v1 affiliate and merchant specifications and the supplier-side Reservation System API
+  follow different conventions; where they diverge it is called out per section.
+
+authentication:
+  style: api-key-header
+  header: exp-api-key
+  scope: one key per organisation
+  legacy_alternative:
+    parameter: apiKey
+    in: query
+    applies_to: [openapi/viator-affiliate-api-v1-openapi.json, openapi/viator-merchant-api-v1-openapi.json]
+  supplier_side:
+    header: X-Api-Key
+    applies_to: [openapi/viator-reservation-system-api-openapi.json]
+    note: v2.0 supplier endpoints moved the key to a header; v1.0 endpoints accept both.
+  oauth: false
+  scopes: false
+  per_user_delegation: false
+  detail: authentication/viator-authentication.yml
+
+versioning:
+  scheme: accept-header-media-type
+  header: Accept
+  format: application/json;version=2.0
+  current: '2.0'
+  mandatory: true
+  omission_behaviour: >-
+    Omitting the version parameter returns HTTP 400 with code INVALID_HEADER_VALUE and the message
+    "Accept header is missing or has invalid version information".
+  global: >-
+    Version numbers are global across all endpoints; Viator does not support calling different
+    endpoints at different versions.
+  release_candidates: >-
+    RC versions may be published to the sandbox environment only, are not under version control and
+    may introduce breaking changes before release.
+  backward_compatible_changes:
+  - new endpoints
+  - added response properties
+  - added non-required request properties
+  - unexpected 301/302 redirects
+  - new HTTP methods
+  - new key values in existing enumerated sets
+  breaking_changes:
+  - added required request properties
+  - removed required request or response properties
+  - changed data type or format of an existing field
+  - added, removed or changed response HTTP status codes
+  - removed or modified Content-Type
+  - modified or removed enumerated key values
+  - modified operationId
+  detail: lifecycle/viator-lifecycle.yml
+
+idempotency:
+  supported: true
+  model: client-supplied unique business reference on the request body
+  key_field: partnerBookingRef
+  applies_to_operations: [bookingsBook, bookingsCartBook]
+  cart_variant: partnerCartRef
+  verbatim: >-
+    "you can avoid creating duplicate bookings by making sure that you supply the same value for
+    `partnerBookingRef` in the request to /bookings/book or /bookings/cart/book as you did for the
+    booking you believe may have failed. The `partnerBookingRef` value must be unique; therefore, a
+    duplicate booking will not be created."
+  source: https://docs.viator.com/partner-api/technical/ (Endpoint timeout settings)
+  header_based: false
+  retention: not published
+  recovery_procedure: >-
+    Booking requests can take up to 120s because Viator brokers to third-party supplier systems, and
+    a booking may succeed even when the call times out or returns HTTP 500. Viator's documented
+    recovery is to call bookingsStatus first, then retry with the same partnerBookingRef so the
+    uniqueness constraint suppresses the duplicate.
+  recommended_client_timeout_seconds: 120
+
+pagination:
+  style: opaque-cursor
+  applies_to_operations:
+  - productsModifiedSince
+  - availabilitySchedulesModifiedSince
+  - bookingsModifiedSince
+  request_params:
+  - name: cursor
+    in: query
+    description: Opaque continuation token returned by the previous page.
+  - name: count
+    in: query
+    description: Page size.
+  - name: modified-since
+    in: query
+    description: ISO 8601 timestamp; used only on the first call of an ingestion run.
+  response_fields:
+  - nextCursor
+  acknowledgement_cursor:
+    operation: bookingsModifiedSinceAcknowledge
+    description: >-
+      The booking feed carries a separate server-side acknowledgement cursor so a partner can
+      consume its own booking events reliably to completion.
+  offset_style:
+    applies_to_operations: [productsSearch, attractionsSearch, searchFreeText, reviewsProduct]
+    request_object: pagination
+    fields: [start, count]
+
+bulk_and_delta:
+  pattern: >-
+    Every large collection is exposed three ways - single fetch, POST bulk fetch by identifier list,
+    and a cursored modified-since delta feed - so partners hold a local mirror rather than calling
+    through on the read path.
+  triples:
+  - single: products
+    bulk: productsBulk
+    delta: productsModifiedSince
+  - single: availabilitySchedules
+    bulk: availabilitySchedulesBulk
+    delta: availabilitySchedulesModifiedSince
+  - single: null
+    bulk: locationsBulk
+    delta: null
+
+localization:
+  header: Accept-Language
+  scope: per call
+  note: >-
+    Localisation used to be bound to the API key; under the v2 scheme an organisation has a single
+    key and language is negotiated per request.
+
+compression:
+  header: Accept-Encoding
+  supported: [gzip]
+
+request_tracing:
+  response_header: X-Unique-ID
+  error_body_field: trackingId
+  description: >-
+    Every response carries an X-Unique-ID tracking identifier, echoed into the error envelope as
+    trackingId. Viator asks partners to quote it on support requests.
+  payments_request_headers:
+  - x-trip-requestid
+  - x-trip-clientid
+
+error_envelope:
+  media_type: application/json
+  rfc9457: false
+  schema: ErrorResponse
+  fields:
+  - code
+  - message
+  - timestamp
+  - trackingId
+  example:
+    code: INVALID_HEADER_VALUE
+    message: Accept header is missing or has invalid version information
+    timestamp: '2026-07-28T14:27:21.115718014Z'
+    trackingId: 8D9DD313:E0B8_0A280EB3:01BB_6A68BC49_56ED748:3AD2C8
+  detail: errors/viator-problem-types.yml
+
+rate_limit_signalling:
+  model: per-endpoint per-PUID (Partner Unique ID), plus an IP-based burst layer
+  window: rolling 10 seconds
+  headers:
+  - RateLimit-Limit
+  - RateLimit-Remaining
+  - RateLimit-Reset
+  - Retry-After
+  returned_on_success: true
+  exceeded_status: 429
+  exceeded_code: TOO_MANY_REQUESTS
+  capacity_shed_status: 503
+  capacity_shed_code: SERVICE_UNAVAILABLE
+  published_numbers: false
+  note: >-
+    Viator publishes the mechanism and the headers but not the numbers - "The rate limit you are
+    required to operate within is based on a standard commensurate with the scale of your
+    operation" - so the limit is negotiated with an account manager.
+
+access_tiers:
+  model: >-
+    Endpoint access is gated by partner tier rather than by scope. The specification publishes a
+    full endpoint-by-tier access matrix.
+  tiers:
+  - Basic-access Affiliate
+  - Full-access Affiliate
+  - Full-access + Booking Affiliate
+  - Merchant
+  source: https://docs.viator.com/partner-api/technical/#section/Access-to-endpoints
+
+content_usage_restriction:
+  clause: Protecting unique content
+  requirement: >-
+    Product reviews returned by reviewsProduct and everything inside the viatorUniqueContent element
+    must be loaded through an external JavaScript blocked in robots.txt, and must not appear in page
+    source, so that search engines cannot index it.
+  source: https://docs.viator.com/partner-api/technical/#section/Key-concepts/Protecting-unique-content
+
+cross_links:
+  errors: errors/viator-problem-types.yml
+  lifecycle: lifecycle/viator-lifecycle.yml
+  authentication: authentication/viator-authentication.yml
+  sandbox: sandbox/viator-sandbox.yml
+  changelog: changelog/viator-changelog.yml

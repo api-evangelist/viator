@@ -1,0 +1,128 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://docs.viator.com/partner-api/technical/ (API versioning strategy) and
+  https://docs.viator.com/supplier-api/technical/ (What's new, SLAs, Circuit breakers, Deprecated,
+  v2 migration guide), plus deprecation flags derived from the four harvested OpenAPI documents
+versioning:
+  scheme: accept-header-media-type
+  current: '2.0'
+  header: Accept
+  format: application/json;version=2.0
+  global: true
+  docs: https://docs.viator.com/partner-api/technical/#section/Localization/API-versioning-strategy
+  release_cadence: ad hoc; breaking changes always increment the version
+  release_candidates: >-
+    RC versions may be published to the sandbox environment only; they are not under version control
+    and may change before release.
+deprecation:
+  policy_url: https://docs.viator.com/partner-api/technical/#section/Localization/API-versioning-strategy
+  notice_period: minimum 12 months from notice
+  verbatim: >-
+    "Once a version of the API is deprecated, you will have a minimum of 12 months from the date of
+    receiving notice of the change in which to modify your systems. Requests made to deprecated
+    endpoint versions may result in a 400 Bad Request response after 12 months."
+  sunset_header: false
+  deprecation_header: false
+  rfc8594: false
+  notification_channel: direct partner communication (no public feed)
+deprecated_operations:
+- operation: openapi/viator-merchant-api-v1-openapi.json#merchantCancellation
+  path: POST /merchant/cancellation
+  flag: deprecated:true in the spec
+- operation: openapi/viator-reservation-system-api-openapi.json#availability
+  path: POST /availability
+  tagged: Deprecated
+  superseded_by: [availabilityCheck, reserve]
+- operation: openapi/viator-reservation-system-api-openapi.json#batchAvailability
+  path: POST /batch-availability
+  tagged: Deprecated
+  superseded_by: [calendar]
+- operation: openapi/viator-reservation-system-api-openapi.json#batchPricing
+  path: POST /batch-pricing
+  tagged: Deprecated
+  superseded_by: [calendar]
+- operation: openapi/viator-reservation-system-api-openapi.json#availabilityNotification2
+  path: POST /availabilitynotification2
+  tagged: Deprecated
+  superseded_by: [eventNotification]
+- operation: openapi/viator-partner-api-v2-openapi.json#v1ProductPhotos
+  path: /v1/product/photos
+  note: >-
+    Announced deprecated on 2024-10-24 in the specification Updates table and subsequently removed
+    from paths; retained here as a historical record.
+deprecated_surfaces:
+- surface: XML (application/xml) request and response bodies
+  status: deprecated
+  scope: Reservation System API v1.0 endpoints only; all v2.0 endpoints are JSON-only
+  note: New integrations must use JSON exclusively.
+- surface: SOAP interface (WSDL/XSD)
+  status: deprecated
+  note: Kept for historical reference only; not supported for new or updated integrations.
+- surface: Legacy Viator Merchant API v1 and Affiliate API v1
+  status: superseded by the Partner API v2
+  still_published: true
+- surface: apiKey query-string authentication
+  status: legacy
+  scope: v1 affiliate and merchant specifications only
+whole_api_lifecycle:
+  supplier_side_beta_programme:
+    description: >-
+      The Reservation System API runs a published Beta track so reservation systems can evaluate
+      pre-production endpoints before release.
+    beta_endpoints: [eventNotification, specialOffersNotification]
+    docs: https://docs.viator.com/supplier-api/technical/
+sla:
+  scope: supplier-side reservation-system connectivity only; no SLA is published for the Partner API v2
+  docs: https://docs.viator.com/supplier-api/technical/
+  uptime_target:
+    critical_synchronous: 99.8%
+    critical_synchronous_acceptable: 99.5%
+    asynchronous: 99.5%
+    asynchronous_acceptable: 99.0%
+  latency_p90_seconds:
+    availability_check: 1
+    reserve: 1
+    booking: 5
+    calendar: 5
+    tourlist: 10
+    event_notification: 1
+    special_offers_notification: 1
+  max_monthly_error_rate:
+    availability_check: 1.5%
+    reserve: 1.5%
+    booking: 0.75%
+    calendar: 1.0%
+    tourlist: 0.5%
+    event_notification: 0.5%
+    special_offers_notification: 0.5%
+  incident_response:
+    S1_critical_outage: {mtta_business_days: 2, mttr_business_days: 5}
+    S2_major_disruption: {mtta_business_days: 3, mttr_business_days: 14}
+    S3_moderate_low: {mtta_business_days: 5, mttr_business_days: 90}
+  circuit_breakers:
+    published: true
+    description: >-
+      Viator isolates a degraded reservation system by opening a circuit breaker, stopping all
+      requests to it, when a capability crosses an unacceptable performance threshold.
+    failure_rate_threshold: 70%
+    docs: https://docs.viator.com/supplier-api/technical/
+status_page:
+  published: false
+  probe:
+    url: https://viator.statuspage.io/
+    status: 200
+    finding: >-
+      A Statuspage tenant exists for "Viator Systems Pty Ltd" but the page is INACTIVE - both the
+      HTML title and the /api/v2/status.json endpoint report the page as inactive. There is no live
+      public status page, so no StatusPage pointer is recorded.
+    checked: '2026-07-28'
+  alternative_health_signal:
+    operation: openapi/viator-merchant-api-v1-openapi.json#healthCheck
+    path: GET /health/check
+    note: A per-service health endpoint on the legacy v1 merchant API only.
+support:
+  partner_api: affiliateapi@tripadvisor.com
+  partner_api_tech_support: apitechsupport@viator.com
+  supplier_api: supplierAPI@viator.com
+  help_centre: https://partnerhelp.viator.com/en

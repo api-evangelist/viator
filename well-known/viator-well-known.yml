@@ -1,0 +1,52 @@
+generated: '2026-07-28'
+method: searched
+source: live probes of every apis.yml baseURL host, every OpenAPI servers[] host and the docs host
+summary: >-
+  Viator publishes no /.well-known/ discovery surface on any host. The API hosts answer 404 from
+  the Tomcat error page, the documentation host (an S3/CloudFront origin) answers 403 AccessDenied
+  for any path it does not have an object for, and www.viator.com answers 403 to every automated
+  request because of bot protection. No security.txt, no OIDC discovery, no OAuth authorization
+  server metadata, no api-catalog and no ai-plugin.json were found. Recorded as measured absence,
+  not as an unchecked gap.
+hosts:
+- host: https://api.viator.com
+  role: Partner API v2 production (OpenAPI servers[0])
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/oauth-authorization-server
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+- host: https://viatorapi.viator.com
+  role: legacy v1 affiliate + merchant host (OpenAPI servers[0] of both v1 specs)
+  documents:
+  - path: /.well-known/security.txt
+    status: 503
+    note: host refuses unauthenticated traffic at the edge
+- host: https://docs.viator.com
+  role: documentation host (Redoc pages served from object storage)
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    note: AccessDenied XML from the storage origin, i.e. no such object
+  - path: /llms.txt
+    status: 403
+- host: https://www.viator.com
+  role: corporate website
+  documents:
+  - path: /.well-known/security.txt
+    status: 403
+    note: bot protection returns 403 to every automated request on this host
+- host: https://partnerresources.viator.com
+  role: developer/partner portal
+  documents:
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /llms.txt
+    status: 404
+documents_found: []

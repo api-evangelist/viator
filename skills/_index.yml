@@ -1,0 +1,38 @@
+generated: '2026-07-28'
+method: generated
+source: >-
+  Grounded in operationIds verified verbatim against openapi/viator-partner-api-v2-openapi.json and
+  openapi/viator-reservation-system-api-openapi.json, with the operating rules taken from
+  https://docs.viator.com/partner-api/technical/ and https://docs.viator.com/supplier-api/technical/
+  and captured in conventions/, errors/, lifecycle/ and sandbox/. No provider-published skills or
+  AGENTS.md exist on any Viator surface; these are API Evangelist generations, not Viator documents.
+skills:
+- file: viator-ingest-product-catalogue.md
+  name: Ingest and maintain the Viator product catalogue
+  api: openapi/viator-partner-api-v2-openapi.json
+  tier: Full-access Affiliate or above
+  operations: [productsModifiedSince, productsBulk, products, productsTags, destinations, locationsBulk,
+    availabilitySchedulesModifiedSince, availabilitySchedulesBulk, availabilitySchedules]
+- file: viator-search-and-book.md
+  name: Search, check availability and complete a Viator booking
+  api: openapi/viator-partner-api-v2-openapi.json
+  tier: Merchant partner
+  operations: [productsSearch, searchFreeText, products, productsBookingQuestions, availabilityCheck,
+    bookingsHold, bookingsBook, bookingsStatus]
+- file: viator-cart-booking-and-payment.md
+  name: Book a multi-item Viator cart and tokenise payment
+  api: openapi/viator-partner-api-v2-openapi.json
+  tier: Full-access + Booking Affiliate
+  operations: [availabilityCheck, bookingsCartHold, paymentsCreateToken, bookingsCartBook, bookingsStatus]
+- file: viator-amend-cancel-and-reconcile.md
+  name: Amend, cancel and reconcile Viator bookings
+  api: openapi/viator-partner-api-v2-openapi.json
+  tier: Full-access + Booking Affiliate or Merchant partner
+  operations: [amendmentCheck, amendmentQuote, amendmentAmend, bookingsCancelReasons, bookingsCancelQuote,
+    bookingsCancel, bookingsStatus, bookingsModifiedSince, bookingsModifiedSinceAcknowledge]
+- file: viator-reservation-system-connectivity.md
+  name: Implement Viator reservation-system connectivity (supplier side)
+  api: openapi/viator-reservation-system-api-openapi.json
+  tier: Approved reservation system / booking software vendor
+  operations: [tourList, availabilityCheck, calendar, specialOffers, reserve, booking, bookingAmendment,
+    bookingCancellation, redemption, eventNotification, specialOffersNotification]

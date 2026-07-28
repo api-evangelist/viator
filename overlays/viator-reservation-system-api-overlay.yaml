@@ -1,0 +1,76 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Viator Reservation System API
+  version: 1.0.0
+extends: openapi/viator-reservation-system-api-openapi.json
+x-generated: '2026-07-28'
+x-method: generated
+x-source: >-
+  Derived from the enrichment artifacts in this repository - lifecycle/, asyncapi/, conformance/ and
+  sandbox/. The original specification is preserved verbatim in openapi/.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: viator
+    x-contract-direction: inbound-to-supplier
+    x-contract-note: >-
+      This specification is inverted. It defines endpoints the operator's own reservation system
+      must implement and expose for Viator to call, which is why servers[] is the placeholder
+      https://your-reservation-system.example.com and no baseURL is recorded in apis.yml.
+    x-apievangelist-artifacts:
+      lifecycle: lifecycle/viator-lifecycle.yml
+      events: asyncapi/viator-events.yml
+      sandbox: sandbox/viator-sandbox.yml
+      conformance: conformance/viator-conformance.yml
+- target: $.info
+  update:
+    x-sla:
+      uptime-critical-synchronous: 99.8%
+      uptime-asynchronous: 99.5%
+      latency-p90-seconds: {availability_check: 1, reserve: 1, booking: 5, calendar: 5, tourlist: 10}
+      max-monthly-error-rate: {availability_check: 1.5%, reserve: 1.5%, booking: 0.75%, calendar: 1%,
+        tourlist: 0.5%}
+      circuit-breaker-failure-rate-threshold: 70%
+      detail: lifecycle/viator-lifecycle.yml
+- target: $.info
+  update:
+    x-mandatory-capabilities: [availabilityCheck, calendar, reserve, booking, bookingCancellation,
+      redemption]
+    x-optional-capabilities: [tourList, specialOffers, bookingAmendment]
+    x-prerequisite: >-
+      Development may only commence once Viator-registered operators are already using the
+      reservation system, and only after formal approval by Viator.
+- target: $.info
+  update:
+    x-contract-testing:
+      tool: Viator Contract Testing Tool
+      image: public.ecr.aws/viator/cica:latest
+      scope: v2 endpoints only
+      detail: sandbox/viator-sandbox.yml
+- target: $.paths['/v2/notification/events'].post
+  update:
+    x-direction: supplier-to-viator
+    x-event-kind: notification-webhook
+    x-signals: [salability, capacity, pricing]
+    x-catalog: asyncapi/viator-events.yml
+- target: $.paths['/v2/notification/special-offers'].post
+  update:
+    x-direction: supplier-to-viator
+    x-event-kind: notification-webhook
+    x-catalog: asyncapi/viator-events.yml
+- target: $.paths['/availability'].post
+  update:
+    deprecated: true
+    x-superseded-by: [availabilityCheck, reserve]
+- target: $.paths['/batch-availability'].post
+  update:
+    deprecated: true
+    x-superseded-by: [calendar]
+- target: $.paths['/batch-pricing'].post
+  update:
+    deprecated: true
+    x-superseded-by: [calendar]
+- target: $.paths['/availabilitynotification2'].post
+  update:
+    deprecated: true
+    x-superseded-by: [eventNotification]

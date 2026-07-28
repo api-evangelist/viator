@@ -1,0 +1,133 @@
+generated: '2026-07-28'
+method: derived
+source: >-
+  openapi/viator-partner-api-v2-openapi.json components.responses + components.schemas.ErrorResponse,
+  enriched from https://docs.viator.com/partner-api/technical/ (API versioning strategy and Rate
+  limiting sections) and from live 400 responses observed on https://api.viator.com/partner
+format: viator-error-envelope
+rfc9457: false
+media_type: application/json
+envelope:
+  schema: ErrorResponse
+  fields:
+  - name: code
+    type: string
+    description: Machine-readable error code, SCREAMING_SNAKE_CASE.
+  - name: message
+    type: string
+    description: Human-readable detail.
+  - name: timestamp
+    type: string
+    format: date-time
+  - name: trackingId
+    type: string
+    description: >-
+      Tracking identifier for this error response, mirroring the X-Unique-ID response header.
+      Viator asks partners to quote it when raising support requests.
+response_headers_on_error:
+- X-Unique-ID
+- RateLimit-Limit
+- RateLimit-Remaining
+- RateLimit-Reset
+- Retry-After
+problems:
+- status: 400
+  code: BAD_REQUEST
+  title: Bad Request
+  message: Invalid request
+  operations_count: 30
+  source: openapi/viator-partner-api-v2-openapi.json#/components/responses/BadRequest
+- status: 400
+  code: INVALID_HEADER_VALUE
+  title: Missing or invalid API version in the Accept header
+  message: Accept header is missing or has invalid version information
+  remediation: >-
+    Send Accept: application/json;version=2.0 on every request. Version specification is mandatory.
+  observed_live: true
+  source: https://docs.viator.com/partner-api/technical/#section/Version-specification-mechanism
+- status: 400
+  code: MISSING_HEADER_VALUE
+  title: Missing required header
+  message: 'Missing required header: exp-api-key'
+  remediation: Send the organisation API key in the exp-api-key request header.
+  observed_live: true
+  source: live probe of https://api.viator.com/partner/products/tags on 2026-07-28
+- status: 401
+  code: UNAUTHORIZED
+  title: Unauthorized
+  operations_count: 32
+  remediation: The exp-api-key value was not recognised.
+  source: openapi/viator-partner-api-v2-openapi.json#/components/responses/Unauthorized
+- status: 403
+  code: FORBIDDEN
+  title: Forbidden
+  operations_count: 32
+  remediation: >-
+    The key is valid but the endpoint is not available to this partner tier. See the endpoint access
+    matrix in conventions/viator-conventions.yml (access_tiers).
+  source: openapi/viator-partner-api-v2-openapi.json#/components/responses/Forbidden
+- status: 404
+  code: NOT_FOUND
+  title: Not Found
+  operations_count: 28
+  source: openapi/viator-partner-api-v2-openapi.json#/components/responses/NotFound
+- status: 405
+  code: METHOD_NOT_ALLOWED
+  title: HTTP Method Not Allowed
+  operations_count: 8
+  source: openapi/viator-partner-api-v2-openapi.json#/components/responses/MethodNotAllowed
+- status: 406
+  code: NOT_ACCEPTABLE
+  title: Not Acceptable
+  operations_count: 18
+  remediation: The requested Accept-Language or media type could not be served.
+  source: openapi/viator-partner-api-v2-openapi.json#/components/responses/NotAcceptable
+- status: 429
+  code: TOO_MANY_REQUESTS
+  title: Too Many Requests
+  message: Too many requests, please try again
+  operations_count: 32
+  remediation: >-
+    Read RateLimit-Reset and Retry-After (seconds) and back off. Limits are per-endpoint per-PUID on
+    a rolling 10s window, with an additional IP burst layer.
+  source: https://docs.viator.com/partner-api/technical/#section/Workflows/Rate-limiting
+- status: 500
+  code: INTERNAL_SERVER_ERROR
+  title: Internal Server Error
+  operations_count: 32
+  remediation: >-
+    For bookingsBook and bookingsCartBook a 500 or a timeout does NOT mean the booking failed - call
+    bookingsStatus before retrying, and retry with the same partnerBookingRef.
+  source: openapi/viator-partner-api-v2-openapi.json#/components/responses/InternalServerError
+- status: 503
+  code: SERVICE_UNAVAILABLE
+  title: Service Unavailable
+  message: Service is currently unavailable, please try again
+  operations_count: 32
+  remediation: >-
+    Concurrency-based shedding - returned when Viator is at system-wide capacity even if the
+    partner's own rate limit was not exceeded. Honour the Retry-After header.
+  source: https://docs.viator.com/partner-api/technical/#section/Workflows/Rate-limiting
+booking_rejection_reasons:
+  note: >-
+    A separate, booking-specific failure vocabulary returned on the bookingsCartBook response rather
+    than in the error envelope. Captured verbatim from the specification's Updates table.
+  operation: bookingsCartBook
+  values:
+  - SUSPECTED_FRAUD
+  - SOFT_DECLINE
+  - HARD_DECLINE
+  - THREE_D_SECURE_REQUIRED
+  - INTERNAL_ERROR
+  - PROCESSOR_UNAVAILABLE
+  - PROCESSOR_ISSUE_WITH_PAYMENT
+  - INSUFFICIENT_FUNDS
+  - INVALID_PAYMENT_DETAILS
+  removed:
+  - value: TRANSACTION_NOT_ALLOWED
+    date: '2025-02-11'
+  - value: CARD_INACTIVE
+    date: '2025-02-11'
+  - value: CARD_RESTRICTED
+    date: '2025-02-11'
+  source: https://docs.viator.com/partner-api/technical/#section/Updates

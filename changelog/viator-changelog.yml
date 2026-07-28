@@ -1,0 +1,160 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://docs.viator.com/partner-api/technical/#section/Updates - the dated Updates table embedded
+  in the Viator Partner API v2 specification's info.description - and
+  https://docs.viator.com/supplier-api/technical/ (What's new section of the Viator Reservation
+  System API)
+notes: >-
+  Viator publishes no standalone changelog page, RSS feed or release-notes site. The change record
+  lives inside the OpenAPI documents themselves: a dated "Updates / Latest updates" table in the
+  Partner API v2 description and a narrative "What's new" section in the Reservation System API.
+  There is no separate probe-able changelog URL, so no docs-URL ChangeLog link accompanies this
+  artifact. This is a recent window, not full history; the specification also keeps a longer
+  "Update history" appendix.
+scheme: dated-entries-in-spec
+current_version: '2.0'
+feeds: []
+apis:
+- api: Viator Partner API v2
+  spec: openapi/viator-partner-api-v2-openapi.json
+  url: https://docs.viator.com/partner-api/technical/#section/Updates
+  entries:
+  - date: '2026-05-05'
+    breaking: false
+    type: addition
+    highlight: >-
+      Added support for product-option-level logistics resolution via a new optional logistics
+      object.
+  - date: '2025-11-11'
+    breaking: false
+    type: change
+    highlight: >-
+      Updated the bookingsModifiedSince response with new eventTypes and opened the endpoint to all
+      partner types.
+    note: Published in the table as "11 Sep 2025".
+  - date: '2025-07-01'
+    breaking: false
+    type: addition
+    operations: [amendmentCheck, amendmentQuote, amendmentAmend]
+    highlight: Added the booking amendment endpoints to the Bookings section.
+  - date: '2025-03-27'
+    breaking: false
+    type: change
+    operations: [searchFreeText]
+    highlight: Added tag filtering for "searchType":"PRODUCTS".
+  - date: '2025-03-20'
+    breaking: false
+    type: addition
+    operations: [productsRecommendations]
+    highlight: Added product-to-product recommendations.
+  - date: '2025-03-19'
+    breaking: false
+    type: change
+    operations: [availabilitySchedules, availabilitySchedulesBulk, availabilitySchedulesModifiedSince,
+      availabilityCheck, searchFreeText, productsSearch, bookingsCartHold, bookingsHold]
+    highlight: Added Extra Charges information across the availability, search and hold endpoints.
+  - date: '2025-02-13'
+    breaking: false
+    type: addition
+    operations: [products, productsModifiedSince, productsBulk, productsSearch, searchFreeText]
+    highlight: Added a videos object to the product content responses.
+  - date: '2025-02-11'
+    breaking: false
+    type: removal
+    operations: [bookingsCartBook]
+    highlight: >-
+      Removed the TRANSACTION_NOT_ALLOWED, CARD_INACTIVE and CARD_RESTRICTED rejection reasons.
+  - date: '2025-02-04'
+    breaking: false
+    type: addition
+    operations: [productsSearch, searchFreeText]
+    highlight: >-
+      Added AED, ARS, CLP, CNY, COP, FJD, IDR, ILS, ISK, KRW, MXN, MYR, PEN, PHP, PLN, RUB, THB, TRY
+      and VND as currency options.
+  - date: '2024-12-04'
+    breaking: false
+    type: addition
+    operations: [bookingsCartBook]
+    highlight: Added the PROCESSOR_ISSUE_WITH_PAYMENT rejection reason.
+  - date: '2024-11-19'
+    breaking: false
+    type: addition
+    operations: [bookingsCartBook]
+    highlight: >-
+      Added the SUSPECTED_FRAUD, SOFT_DECLINE, HARD_DECLINE, THREE_D_SECURE_REQUIRED, INTERNAL_ERROR
+      and PROCESSOR_UNAVAILABLE rejection reasons.
+  - date: '2024-10-24'
+    breaking: false
+    type: deprecation
+    highlight: Deprecated the /v1/product/photos endpoint.
+  - date: '2024-10-23'
+    breaking: false
+    type: addition
+    operations: [attractionsSearch, attractions, destinations]
+    highlight: >-
+      Added the Attractions section and the /destinations endpoint, and refreshed the endpoint
+      access matrix.
+  - date: '2024-10-21'
+    breaking: false
+    type: removal
+    highlight: Removed the VIATOR_EXCLUSIVE flag from the product search endpoints.
+  - date: '2024-10-01'
+    breaking: false
+    type: removal
+    highlight: Removed the COVID-19 safety attributes from the AdditionalInfo schema.
+  - date: '2024-08-06'
+    breaking: false
+    type: change
+    highlight: >-
+      Changed DEFAULT tour-grade behaviour on the product, availability, hold and confirm endpoints
+      (explicitly backward compatible).
+  - date: '2024-07-29'
+    breaking: false
+    type: addition
+    operations: [bookingsModifiedSince]
+    highlight: Added the CUSTOMER_CANCELLATION eventType for customer-initiated cancellations.
+  - date: '2024-03-14'
+    breaking: false
+    type: addition
+    operations: [bookingsCartBook, bookingsStatus]
+    highlight: >-
+      Added INSUFFICIENT_FUNDS, INVALID_PAYMENT_DETAILS, TRANSACTION_NOT_ALLOWED, CARD_INACTIVE and
+      CARD_RESTRICTED rejection reasons; added the ON_HOLD booking status.
+  - date: '2024-02-13'
+    breaking: false
+    type: addition
+    operations: [suppliersSearchProductCodes]
+    highlight: >-
+      Added supplierAgreedToLegalCompliance, registrationCountry, tradeRegisterName and
+      registeredBusinessNumber, plus countryCode on ContactDetails.
+  - date: '2023-09-11'
+    breaking: false
+    type: addition
+    highlight: Added PDF voucher support; made bookerInfo.firstName required to match the definition.
+  - date: '2023-07-05'
+    breaking: false
+    type: addition
+    operations: [bookingsCartHold, bookingsCartBook, paymentsCreateToken]
+    highlight: Added the cart booking flow and the checkout-session payment accounts endpoint.
+- api: Viator Reservation System API
+  spec: openapi/viator-reservation-system-api-openapi.json
+  url: https://docs.viator.com/supplier-api/technical/
+  entries:
+  - version: '2.0'
+    breaking: true
+    type: major-release
+    highlight: >-
+      Introduced endpoint versioning (legacy endpoints are v1.0, new endpoints start at v2.0), moved
+      the API key onto HTTP headers, made JSON the only supported format, added the productOptionId
+      single product-variant identifier, added full pricing capabilities (per-person, tiered
+      per-person and unit pricing), added Viator-hosted notification webhooks for salability,
+      capacity, pricing and special offers, added the Reserve endpoint that holds inventory and
+      price before booking, and shipped a self-service contract-testing tool.
+    deprecations:
+    - Real-time Availability API (availability) superseded by availabilityCheck and reserve
+    - Batch Availability API (batchAvailability) superseded by calendar
+    - Batch Pricing API (batchPricing) superseded by calendar
+    - Availability Notifications (2) API (availabilityNotification2) superseded by eventNotification
+    - XML (application/xml) request and response bodies
+    - the legacy SOAP WSDL/XSD interface

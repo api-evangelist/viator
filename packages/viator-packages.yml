@@ -1,0 +1,69 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  npm registry search, PyPI JSON API, RubyGems search API, Packagist search API, NuGet search
+  service, crates.io search API, plus the Viator Partner API v2 and Reservation System API
+  specifications and partnerresources.viator.com
+summary: >-
+  Viator publishes no first-party client libraries in any public package registry. The Partner API
+  v2 documentation ships Postman collections and a curl example as its only client tooling, and the
+  supplier-side Reservation System API ships a Dockerised contract-testing image instead of an SDK.
+  Every registry hit below is third-party or unrelated, and none of it is endorsed by Viator.
+packages: []
+official_sdk_count: 0
+registries_searched:
+- registry: npm
+  query: viator
+  result: no first-party package
+- registry: pypi
+  queries: [viator, viator-api, viator-sdk, pyviator, viatorapi]
+  result: 404 on every candidate name
+- registry: rubygems
+  query: viator
+  result: one unrelated gem (an error-handling library), not Viator
+- registry: packagist
+  query: viator
+  result: no matches for Viator
+- registry: nuget
+  query: viator
+  result: no matches
+- registry: crates.io
+  query: viator
+  result: one unrelated crate (a key-value store), not Viator
+third_party:
+- language: javascript
+  registry: npm
+  name: '@chrischall/viator-mcp'
+  url: https://www.npmjs.com/package/@chrischall/viator-mcp
+  repository: https://github.com/chrischall/viator-mcp
+  description: Community MCP server wrapping the Viator Partner API.
+  official: false
+- language: javascript
+  registry: npm
+  name: viator-api-client
+  url: https://www.npmjs.com/package/viator-api-client
+  description: >-
+    Community OpenAPI-generator output; the repository field is still the unedited
+    GIT_USER_ID/GIT_REPO_ID placeholder.
+  official: false
+first_party_tooling:
+- name: Viator Partner API v2 Postman collections
+  kind: postman-collection
+  official: true
+  count: 4
+  url: https://docs.viator.com/partner-api/technical/
+  files:
+  - collections/Viator-Basic-Access-Affiliate-API-v2.postman_collection.json
+  - collections/Viator-Affiliate-API-v2.postman_collection.json
+  - collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - collections/Viator-Merchant-API-v2.postman_collection.json
+- name: Viator Contract Testing Tool (cica)
+  kind: docker-image
+  official: true
+  registry: Amazon ECR Public
+  image: public.ecr.aws/viator/cica:latest
+  install: docker pull public.ecr.aws/viator/cica:latest
+  description: >-
+    Self-service local web application that runs Viator's own contract-test suite against a
+    reservation system's v2 endpoints. Supplier-side only; v1 endpoints are not supported.
+  source: Viator Reservation System API specification, Contract testing section

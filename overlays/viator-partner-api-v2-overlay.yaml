@@ -1,0 +1,98 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Viator Partner API v2
+  version: 1.0.0
+extends: openapi/viator-partner-api-v2-openapi.json
+x-generated: '2026-07-28'
+x-method: generated
+x-source: >-
+  Derived from the enrichment artifacts in this repository - conventions/, errors/, lifecycle/,
+  sandbox/, authentication/, asyncapi/, mcp/ and data-model/. Nothing here modifies Viator's own
+  specification; the original is preserved verbatim in openapi/.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: viator
+    x-apievangelist-artifacts:
+      conventions: conventions/viator-conventions.yml
+      errors: errors/viator-problem-types.yml
+      lifecycle: lifecycle/viator-lifecycle.yml
+      sandbox: sandbox/viator-sandbox.yml
+      authentication: authentication/viator-authentication.yml
+      events: asyncapi/viator-events.yml
+      data_model: data-model/viator-data-model.yml
+      mcp: mcp/viator-mcp.yml
+      crosswalk: mcp/viator-tool-crosswalk.yml
+    x-standards-conformance:
+      open-travel-standard: none
+      rfc9457: false
+      oauth2: false
+      spec-licence: CC BY 4.0
+      detail: conformance/viator-conformance.yml
+- target: $.info
+  update:
+    x-versioning:
+      scheme: accept-header-media-type
+      format: application/json;version=2.0
+      mandatory: true
+      deprecation-notice-period: 12 months minimum
+- target: $.info
+  update:
+    x-rate-limit:
+      model: per-endpoint per-PUID plus an IP burst layer
+      window-seconds: 10
+      headers: [RateLimit-Limit, RateLimit-Remaining, RateLimit-Reset, Retry-After]
+      published-numbers: false
+      exceeded-status: 429
+      capacity-shed-status: 503
+- target: $.info
+  update:
+    x-content-usage-restriction:
+      clause: Protecting unique content
+      applies-to: [reviewsProduct, viatorUniqueContent]
+      requirement: must not be indexable by search engines
+- target: $.paths['/bookings/book'].post
+  update:
+    x-idempotency:
+      key-field: partnerBookingRef
+      location: requestBody
+      behaviour: >-
+        A repeat request carrying a partnerBookingRef that already exists does not create a
+        duplicate booking.
+      recommended-client-timeout-seconds: 120
+      recovery: call bookingsStatus before retrying
+- target: $.paths['/bookings/cart/book'].post
+  update:
+    x-idempotency:
+      key-field: partnerBookingRef
+      location: requestBody.items[]
+      behaviour: >-
+        A repeat request carrying a partnerBookingRef that already exists does not create a
+        duplicate booking.
+      recommended-client-timeout-seconds: 120
+      recovery: call bookingsStatus before retrying
+- target: $.paths['/bookings/modified-since'].get
+  update:
+    x-event-feed:
+      pattern: cursored delta feed
+      message-schema: '#/components/schemas/BookingEvent'
+      event-types: [CONFIRMATION, REJECTION, AMENDMENT, CANCELLATION, CUSTOMER_CANCELLATION]
+      acknowledge-with: bookingsModifiedSinceAcknowledge
+      catalog: asyncapi/viator-events.yml
+- target: $.paths['/bookings/modified-since/acknowledge'].post
+  update:
+    x-side-effect: >-
+      Acknowledging a supplier CANCELLATION event transfers the customer-communication obligation to
+      the merchant partner. This is a consequential write, not a bookkeeping call.
+- target: $.paths['/v1/checkoutsessions/{sessionToken}/paymentaccounts'].post
+  update:
+    x-agent-guidance:
+      expose-as-tool: false
+      reason: handles raw primary account numbers; must remain inside a PCI-compliant context
+- target: $.servers
+  update:
+    x-environments:
+      production: https://api.viator.com/partner
+      sandbox: https://api.sandbox.viator.com/partner
+      policy: all testing must be done in sandbox
+      detail: sandbox/viator-sandbox.yml

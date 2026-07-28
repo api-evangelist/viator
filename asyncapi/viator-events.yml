@@ -1,0 +1,148 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://docs.viator.com/partner-api/technical/ (Bookings section, BookingEvent schema) and
+  https://docs.viator.com/supplier-api/technical/ (What's new - Notification Webhooks, Connectivity
+  overview, Viator APIs tag), plus openapi/viator-partner-api-v2-openapi.json and
+  openapi/viator-reservation-system-api-openapi.json
+spec_type: none
+asyncapi_published: false
+asyncapi_probe:
+  urls_checked:
+  - https://api.viator.com/asyncapi.json
+  - https://docs.viator.com/asyncapi.yaml
+  finding: >-
+    No AsyncAPI document is published on any Viator surface, and the docs host answers 403
+    AccessDenied for any object it does not hold. Viator's event surface is real but is described
+    entirely in OpenAPI and prose. Nothing was fabricated to fill this gap.
+summary: >-
+  Viator has three distinct event surfaces and none of them is a classic outbound HTTP webhook to a
+  partner-supplied URL. On the demand side, booking events are delivered by a cursored PULL feed
+  with a server-side acknowledgement cursor. On the supply side, Viator hosts inbound notification
+  endpoints that a reservation system POSTs to when availability, capacity, pricing or special
+  offers change - Viator's own documentation calls these "Notification Webhooks". Also on the supply
+  side, the entire Reservation System API is an inverted callback contract: the operator's booking
+  software implements the endpoints and Viator calls them.
+
+surfaces:
+
+- name: Booking event feed (demand side)
+  direction: partner pulls from Viator
+  transport: https
+  pattern: cursored delta feed with explicit acknowledgement
+  spec: openapi/viator-partner-api-v2-openapi.json
+  operations:
+  - operationId: bookingsModifiedSince
+    method: GET
+    path: /bookings/modified-since
+    description: >-
+      Returns booking events modified since a timestamp or cursor. Events initiated by the partner
+      through the API are excluded by default - this is a feed of things that happened TO the
+      partner's bookings, not an echo of its own writes.
+  - operationId: bookingsModifiedSinceAcknowledge
+    method: POST
+    path: /bookings/modified-since/acknowledge
+    description: >-
+      Acknowledges a list of transactionRefs. For supplier-initiated cancellations, acknowledging
+      before the event's acknowledgeBy timestamp transfers ownership of the customer-communication
+      obligation to the merchant partner.
+  message:
+    name: BookingEvent
+    schema: openapi/viator-partner-api-v2-openapi.json#/components/schemas/BookingEvent
+    required: [transactionRef, eventType, acknowledgeBy, bookingRef, partnerBookingRef, lastUpdated,
+      bookedItem]
+    id_field: transactionRef
+    id_format: PBE-<uuid>
+    correlation_fields: [bookingRef, partnerBookingRef]
+  event_types:
+  - type: CONFIRMATION
+    description: The booking was confirmed.
+    acknowledgement_required: false
+  - type: REJECTION
+    description: The booking was rejected by the supplier.
+    acknowledgement_required: false
+  - type: AMENDMENT
+    description: >-
+      The booking was amended. Amendments actioned through the amendment endpoints are not returned.
+    acknowledgement_required: false
+  - type: CANCELLATION
+    description: The booking was cancelled by the supplier.
+    acknowledgement_required: true
+    note: >-
+      The only event type with an acknowledgeBy deadline; refundPercentage is always 100 because the
+      supplier cancelled.
+  - type: CUSTOMER_CANCELLATION
+    description: >-
+      The booking was cancelled by the customer. Cancellations actioned through bookingsCancel are
+      not returned.
+    acknowledgement_required: false
+    added: '2024-07-29'
+  access: >-
+    Opened to all partner types on 2025-09-11; the acknowledge endpoint remains restricted to
+    Full-access + Booking affiliates and merchant partners.
+
+- name: Viator-hosted notification endpoints (supply side)
+  direction: reservation system pushes to Viator
+  transport: https
+  pattern: inbound notification webhook hosted by Viator
+  spec: openapi/viator-reservation-system-api-openapi.json
+  status: beta
+  viator_terminology: Notification Webhooks
+  operations:
+  - operationId: eventNotification
+    method: POST
+    path: /v2/notification/events
+    description: >-
+      Lets a reservation system notify Viator when pricing changes, or when capacity and
+      availability change, so Viator can prevent overbookings and surface last-minute inventory.
+    signals: [salability, capacity, pricing]
+    sla: {p90_seconds: 1, acceptable_seconds: 2, max_monthly_error_rate: 0.5%}
+  - operationId: specialOffersNotification
+    method: POST
+    path: /v2/notification/special-offers
+    description: >-
+      Notifies Viator of new or updated special offers so discounted inventory is merchandised
+      correctly.
+    sla: {p90_seconds: 1, acceptable_seconds: 2, max_monthly_error_rate: 0.5%}
+  supersedes:
+  - operationId: availabilityNotification2
+    path: /availabilitynotification2
+    status: deprecated
+
+- name: Inverted callback contract (supply side)
+  direction: Viator calls the reservation system
+  transport: https
+  pattern: >-
+    The Reservation System API specification defines endpoints the operator's booking software must
+    itself implement and expose for Viator to call. Functionally these are webhooks with Viator as
+    the sender and a published contract, SLA and circuit breaker attached.
+  spec: openapi/viator-reservation-system-api-openapi.json
+  server_placeholder: https://your-reservation-system.example.com
+  authentication: {scheme: apiKey, in: header, name: X-Api-Key}
+  callbacks:
+  - {operationId: tourList, path: /tourlist, mandatory: false, purpose: inventory mapping}
+  - {operationId: availabilityCheck, path: /v2/availability/check, mandatory: true, purpose: real-time
+      capacity check}
+  - {operationId: calendar, path: /v2/availability/calendar, mandatory: true, purpose: long-term
+      availability, pricing and offers}
+  - {operationId: specialOffers, path: /v2/product/special-offers, mandatory: false, purpose: special
+      offer metadata}
+  - {operationId: reserve, path: /v2/reserve, mandatory: true, purpose: hold inventory and price
+      during checkout}
+  - {operationId: booking, path: /booking, mandatory: true, purpose: create the booking after payment}
+  - {operationId: bookingAmendment, path: /booking-amendment, mandatory: false, purpose: apply
+      post-confirmation changes}
+  - {operationId: bookingCancellation, path: /booking-cancellation, mandatory: true, purpose: cancel
+      and free inventory}
+  - {operationId: redemption, path: /redemption, mandatory: true, purpose: redemption status at
+      cancellation time}
+  failure_handling: >-
+    Failed API bookings, amendments and cancellations fall back to email notification of the
+    operator. Successful API calls generate no operator email. A persistently degraded reservation
+    system has its circuit breaker opened by Viator at a 70% failure rate.
+  sla: lifecycle/viator-lifecycle.yml
+
+outbound_webhooks_to_partner_urls: false
+outbound_webhooks_note: >-
+  Viator does not let a demand-side partner register a callback URL. Booking events must be polled
+  from bookingsModifiedSince. Recorded as measured absence.

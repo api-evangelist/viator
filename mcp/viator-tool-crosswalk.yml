@@ -1,0 +1,108 @@
+generated: '2026-07-28'
+method: derived
+source: mcp/viator-mcp.yml + openapi/viator-partner-api-v2-openapi.json
+summary: >-
+  Viator has exactly one machine-readable projection of its demand-side data core - REST OpenAPI.
+  There is no GraphQL surface and no official MCP server, so this crosswalk binds the derived
+  candidate MCP tool set one-to-one onto real operationIds rather than reconciling divergent
+  surfaces. Every tool inherits its input contract from the parameters and requestBody of the
+  operation named in rest[]. Nothing here is inferred: all 33 operationIds were read out of the
+  published specification.
+surfaces:
+  openapi:
+    file: openapi/viator-partner-api-v2-openapi.json
+    version: 3.0.2
+    servers: [https://api.viator.com/partner, https://api.sandbox.viator.com/partner]
+    operations: 33
+    gated: false
+    note: The specification itself is public and unauthenticated; calling it needs an exp-api-key.
+  graphql:
+    endpoint: null
+    gated: null
+    note: No GraphQL surface exists on any Viator host.
+  mcp:
+    url: null
+    gated: null
+    status: candidate
+    note: >-
+      No Viator-operated MCP server. Community servers exist on npm but expose their own tool names
+      and are not authoritative, so they are not mapped here.
+  other_specs:
+  - file: openapi/viator-reservation-system-api-openapi.json
+    note: >-
+      Supplier-side inverted contract - the operator implements it and Viator calls in. Not a
+      candidate tool surface for an agent acting on the demand side; excluded from this crosswalk.
+  - file: openapi/viator-merchant-api-v1-openapi.json
+    note: Legacy v1, superseded by the Partner API v2; excluded.
+  - file: openapi/viator-affiliate-api-v1-openapi.json
+    note: Legacy v1, superseded by the Partner API v2; excluded.
+crosswalk:
+- {tool: get_product, category: catalog, rest: [products], binding: rest, confidence: high}
+- {tool: get_products_bulk, category: catalog, rest: [productsBulk], binding: rest, confidence: high}
+- {tool: list_products_modified_since, category: catalog, rest: [productsModifiedSince], binding: rest,
+    confidence: high}
+- {tool: list_product_tags, category: taxonomy, rest: [productsTags], binding: rest, confidence: high}
+- {tool: list_booking_questions, category: taxonomy, rest: [productsBookingQuestions], binding: rest,
+    confidence: high}
+- {tool: search_products, category: search, rest: [productsSearch], binding: rest, confidence: high}
+- {tool: get_product_recommendations, category: search, rest: [productsRecommendations], binding: rest,
+    confidence: high}
+- {tool: search_freetext, category: search, rest: [searchFreeText], binding: rest, confidence: high}
+- {tool: search_attractions, category: attractions, rest: [attractionsSearch], binding: rest, confidence: high}
+- {tool: get_attraction, category: attractions, rest: [attractions], binding: rest, confidence: high}
+- {tool: list_destinations, category: taxonomy, rest: [destinations], binding: rest, confidence: high}
+- {tool: resolve_locations, category: reference, rest: [locationsBulk], binding: rest, confidence: high}
+- {tool: get_exchange_rates, category: reference, rest: [exchangeRates], binding: rest, confidence: high}
+- {tool: get_product_reviews, category: content, rest: [reviewsProduct], binding: rest, confidence: high,
+    note: 'Output is restricted content - must not be exposed where search engines can index it.'}
+- {tool: lookup_supplier_by_product, category: reference, rest: [suppliersSearchProductCodes], binding: rest,
+    confidence: high}
+- {tool: check_availability, category: availability, rest: [availabilityCheck], binding: rest, confidence: high}
+- {tool: get_availability_schedule, category: availability, rest: [availabilitySchedules], binding: rest,
+    confidence: high}
+- {tool: get_availability_schedules_bulk, category: availability, rest: [availabilitySchedulesBulk],
+    binding: rest, confidence: high}
+- {tool: list_availability_schedules_modified_since, category: availability, rest: [availabilitySchedulesModifiedSince],
+    binding: rest, confidence: high}
+- {tool: hold_booking, category: booking, rest: [bookingsHold], binding: rest, confidence: high}
+- {tool: hold_cart, category: booking, rest: [bookingsCartHold], binding: rest, confidence: high}
+- {tool: book, category: booking, rest: [bookingsBook], binding: rest, confidence: high, note: 'Idempotent
+      on partnerBookingRef; up to 120s latency.'}
+- {tool: book_cart, category: booking, rest: [bookingsCartBook], binding: rest, confidence: high, note: 'Requires
+      a paymentToken from create_payment_account.'}
+- {tool: get_booking_status, category: booking, rest: [bookingsStatus], binding: rest, confidence: high}
+- {tool: list_cancel_reasons, category: cancellation, rest: [bookingsCancelReasons], binding: rest,
+    confidence: high}
+- {tool: get_cancellation_quote, category: cancellation, rest: [bookingsCancelQuote], binding: rest,
+    confidence: high}
+- {tool: cancel_booking, category: cancellation, rest: [bookingsCancel], binding: rest, confidence: high}
+- {tool: list_booking_events, category: events, rest: [bookingsModifiedSince], binding: rest, confidence: high}
+- {tool: acknowledge_booking_events, category: events, rest: [bookingsModifiedSinceAcknowledge], binding: rest,
+    confidence: high, note: 'Acknowledging a supplier CANCELLATION transfers the customer-communication
+      obligation.'}
+- {tool: check_amendment, category: amendment, rest: [amendmentCheck], binding: rest, confidence: high}
+- {tool: quote_amendment, category: amendment, rest: [amendmentQuote], binding: rest, confidence: high}
+- {tool: apply_amendment, category: amendment, rest: [amendmentAmend], binding: rest, confidence: high}
+- {tool: create_payment_account, category: payments, rest: [paymentsCreateToken], binding: rest, confidence: high,
+    note: 'Handles raw card data. Should be excluded from any agent-facing deployment.'}
+mcp_only: []
+rest_only: []
+tier_gating:
+  note: >-
+    Viator gates operations by partner tier, not by scope, so the usable tool set differs per API
+    key. An MCP deployment must reflect the caller's tier or every out-of-tier tool returns 403.
+  basic_access_affiliate_unavailable: [productsModifiedSince, productsBulk, productsBookingQuestions,
+    productsRecommendations, availabilityCheck, availabilitySchedulesBulk, availabilitySchedulesModifiedSince,
+    bookingsCartHold, bookingsCartBook, bookingsHold, bookingsBook, bookingsStatus, bookingsCancelReasons,
+    bookingsCancelQuote, bookingsCancel, bookingsModifiedSinceAcknowledge, amendmentCheck, amendmentQuote,
+    amendmentAmend, paymentsCreateToken, reviewsProduct, suppliersSearchProductCodes]
+  merchant_only: [bookingsHold, bookingsBook]
+  full_access_booking_affiliate_only: [paymentsCreateToken]
+  source: https://docs.viator.com/partner-api/technical/#section/Access-to-endpoints
+coverage:
+  tools_named: 33
+  tools_bound: 33
+  mcp_only: 0
+  rest_ops_total: 33
+  rest_ops_with_tool: 33
+  binding_rate: 1.0

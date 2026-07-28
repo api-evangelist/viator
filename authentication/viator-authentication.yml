@@ -1,0 +1,32 @@
+generated: '2026-07-28'
+method: derived
+source: openapi/viator-affiliate-api-v1-openapi.json, openapi/viator-merchant-api-v1-openapi.json,
+  openapi/viator-partner-api-v2-openapi.json, openapi/viator-reservation-system-api-openapi.json
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+  - query
+schemes:
+- name: Legacy-API-key
+  type: apiKey
+  in: query
+  parameter: apiKey
+  sources:
+  - openapi/viator-affiliate-api-v1-openapi.json
+  - openapi/viator-merchant-api-v1-openapi.json
+- name: API-key
+  type: apiKey
+  in: header
+  parameter: exp-api-key
+  sources:
+  - openapi/viator-affiliate-api-v1-openapi.json
+  - openapi/viator-merchant-api-v1-openapi.json
+  - openapi/viator-partner-api-v2-openapi.json
+- name: ApiKeyHeader
+  type: apiKey
+  in: header
+  parameter: X-Api-Key
+  sources:
+  - openapi/viator-reservation-system-api-openapi.json

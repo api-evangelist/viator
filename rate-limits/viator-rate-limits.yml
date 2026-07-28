@@ -1,0 +1,77 @@
+generated: '2026-07-28'
+method: searched
+source: >-
+  https://docs.viator.com/partner-api/technical/#section/Workflows/Rate-limiting and the
+  components.headers block of openapi/viator-partner-api-v2-openapi.json
+summary: >-
+  Viator publishes the rate-limiting mechanism, the window, the response headers and the back-off
+  behaviour in full, but deliberately publishes no numbers. The limit a partner operates under is
+  negotiated with an account manager and scaled to the size of the partner's operation, so there is
+  no public limit_count to record. The headers are declared on every Partner API v2 operation and
+  are returned on successful responses as well as on 429s, which makes the limit discoverable at
+  runtime even though it is not discoverable in the documentation.
+model: per-endpoint per-PUID (Partner Unique ID)
+additional_layer:
+  model: client IP address burst limiting
+  description: >-
+    A separate security layer limits bursts of consecutive requests from the same IP over a short
+    period and can trigger temporary rejection even when the per-endpoint / per-PUID limit has not
+    been reached.
+window:
+  length: 10
+  unit: seconds
+  type: rolling
+published_numbers: false
+verbatim: >-
+  "We do not have a universal rate limit that applies to all users. The rate limit you are required
+  to operate within is based on a standard commensurate with the scale of your operation."
+negotiation: >-
+  Partners receiving frequent 429s are told to ask their account manager for an increase rather than
+  to read a published tier table.
+headers:
+- name: RateLimit-Limit
+  description: Total requests allowed for this endpoint per rolling 10s window.
+  returned_on: [200, 4xx, 5xx]
+  example: '16'
+- name: RateLimit-Remaining
+  description: Requests remaining in the current 10s window.
+  returned_on: [200, 4xx, 5xx]
+  example: '0'
+- name: RateLimit-Reset
+  description: Seconds until the allowance is fully replenished.
+  returned_on: [200, 4xx, 5xx]
+  example: '10'
+- name: Retry-After
+  description: Recommended wait, in seconds, before retrying this endpoint.
+  returned_on: [429, 503]
+  example: '10'
+responses:
+- status: 429
+  code: TOO_MANY_REQUESTS
+  message: Too many requests, please try again
+  meaning: The partner's own per-endpoint limit was exceeded.
+  action: Honour Retry-After and RateLimit-Reset.
+- status: 503
+  code: SERVICE_UNAVAILABLE
+  message: Service is currently unavailable, please try again
+  meaning: >-
+    Concurrency-based shedding. Viator is at system-wide capacity; the partner may not have exceeded
+    its own limit at all.
+  action: Honour Retry-After. The documented example recommends 60s.
+rate_limits: []
+guidance: >-
+  Because the numbers are not published, the only sustainable client design is to read
+  RateLimit-Remaining and RateLimit-Reset from successful responses and pace ingestion from those,
+  rather than discovering the ceiling by hitting 429s. Viator says as much: "Inspect these values if
+  you wish to estimate whether your method of implementing this API will remain sustainable at
+  scale."
+scope: Viator Partner API v2. No rate limits are published for the legacy v1 specifications.
+supplier_side_throughput:
+  note: >-
+    The supplier-side Reservation System API publishes throughput obligations in the other
+    direction - what a reservation system must sustain for Viator - scaled by a product multiplier.
+    Recorded in lifecycle/viator-lifecycle.yml under sla.
+  detail: lifecycle/viator-lifecycle.yml
+cross_links:
+  conventions: conventions/viator-conventions.yml
+  errors: errors/viator-problem-types.yml

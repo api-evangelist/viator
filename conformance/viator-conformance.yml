@@ -1,0 +1,127 @@
+generated: '2026-07-28'
+method: derived
+source: >-
+  the four harvested OpenAPI documents in openapi/, plus a targeted search of
+  docs.viator.com and partnerresources.viator.com for compliance and standards claims
+summary: >-
+  Viator's contract conforms to no open travel standard. OpenTravel/OTA, HTNG, NDC, IATA, ARC, GDS
+  and GIATA were each searched for explicitly across the full info.description, paths and components
+  of all four specifications and returned zero matches. What Viator does conform to is a short list
+  of generic web and data standards - OpenAPI 3.0.x, JSON, ISO 4217, ISO 8601, BCP 47 - plus a
+  documented rate-limit header convention and a documented PCI posture on the payments path. No
+  certification (SOC 2, ISO 27001, PCI DSS attestation) is published on any reachable Viator surface.
+standards:
+- id: openapi-3.0
+  conforms: true
+  evidence: >-
+    Four published documents - Partner API v2 (3.0.2), Reservation System API (3.0.0), Merchant API
+    v1 (3.0.1), Affiliate API v1 (3.0.2) - all parse and carry info, servers, paths and components.
+- id: openapi-3.1
+  conforms: false
+  evidence: All four documents are 3.0.x.
+- id: oauth2
+  conforms: false
+  evidence: >-
+    No oauth2 securityScheme in any specification. Authentication is a single organisation-wide
+    apiKey (exp-api-key header; apiKey query parameter on the legacy v1 specs; X-Api-Key on the
+    supplier side).
+- id: oidc
+  conforms: false
+  evidence: No openIdConnect scheme; /.well-known/openid-configuration returns 404 on api.viator.com.
+- id: rfc9457-problem-details
+  conforms: false
+  evidence: >-
+    Errors use application/json with a bespoke ErrorResponse envelope (code, message, timestamp,
+    trackingId), not application/problem+json.
+- id: rfc6749-bearer-tokens
+  conforms: false
+  evidence: No bearer or http security schemes anywhere.
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: >-
+    /.well-known/security.txt returns 404 on api.viator.com, 503 on viatorapi.viator.com, 403 on
+    docs.viator.com and www.viator.com. See well-known/viator-well-known.yml.
+- id: rfc8594-sunset-header
+  conforms: false
+  evidence: >-
+    A 12-month deprecation notice period is published in prose, but no Sunset or Deprecation
+    response header is defined in any specification.
+- id: rfc9110-retry-after
+  conforms: true
+  evidence: >-
+    Retry-After is a declared response header on the 429 and 503 responses of every Partner API v2
+    operation, and its use is documented in the Rate limiting section.
+- id: ietf-ratelimit-headers
+  conforms: partial
+  evidence: >-
+    RateLimit-Limit, RateLimit-Remaining and RateLimit-Reset are declared and documented on a rolling
+    10s window. The names match the IETF draft convention but Viator does not cite the draft and
+    does not emit the combined RateLimit field.
+- id: json-api
+  conforms: false
+  evidence: Plain application/json; no JSON:API document structure.
+- id: iso-4217-currency
+  conforms: true
+  evidence: >-
+    Three-letter currency codes throughout (AUD, EUR, USD, GBP, CAD, and the 19 codes added
+    2025-02-04).
+- id: iso-8601-datetime
+  conforms: true
+  evidence: >-
+    All timestamps are ISO 8601 / RFC 3339 (e.g. modified-since query parameters, ErrorResponse
+    timestamp).
+- id: bcp47-language-tags
+  conforms: true
+  evidence: Accept-Language header carries BCP 47 tags (en, en-US) per the Localization section.
+- id: cc-by-4.0-spec-licence
+  conforms: true
+  evidence: >-
+    info.license on the Partner API v2 and both legacy v1 specifications is CC BY 4.0
+    (https://creativecommons.org/licenses/by/4.0/au/). The Reservation System API carries no licence.
+- id: postman-collection-2.1
+  conforms: true
+  evidence: Four published collections declare the v2.1.0 collection schema.
+- id: pci-dss
+  conforms: claimed-not-certified
+  evidence: >-
+    The Full-access + Booking affiliate tier "is responsible for sharing customer's payment
+    information with Viator in a PCI-compliant way, in order for Viator to process the payment"
+    (partnerresources.viator.com merchant certification page), and paymentsCreateToken exists to keep
+    card data off the partner's systems. No PCI DSS Attestation of Compliance, SAQ level or QSA is
+    published anywhere reachable.
+- id: opentravel-ota
+  conforms: false
+  evidence: Zero occurrences of "OpenTravel" or "OTA" as a standard in any of the four specifications.
+- id: htng
+  conforms: false
+  evidence: Zero occurrences.
+- id: iata-ndc
+  conforms: false
+  evidence: >-
+    Zero occurrences of NDC, IATA, ARC, GDS or PNR. Viator sells no air content, so air distribution
+    standards are not applicable.
+- id: giata
+  conforms: false
+  evidence: Zero occurrences; product identity is Viator-proprietary (productCode).
+- id: asyncapi
+  conforms: false
+  evidence: >-
+    No AsyncAPI document is published. The event surface exists (see asyncapi/) but is described in
+    OpenAPI and prose only.
+- id: fhir-r4
+  conforms: not-applicable
+- id: scim-2.0
+  conforms: not-applicable
+- id: odata
+  conforms: not-applicable
+- id: psd2
+  conforms: not-applicable
+certifications_published: []
+trust_center_published: false
+compliance_note: >-
+  No Compliance pointer is emitted for this provider. Viator publishes a PCI-compliance obligation
+  on its partners but no certification, no attestation, no trust centre and no compliance programme
+  page; www.viator.com returns 403 to every automated request so nothing on that host could be
+  verified either way.
+standards_searched_and_not_found: [OpenTravel, OTA, HTNG, NDC, IATA, ARC, GDS, PNR, GIATA, RESO,
+  OAuth 2.0, OpenID Connect, SOC 2, ISO 27001, FedRAMP, HIPAA]

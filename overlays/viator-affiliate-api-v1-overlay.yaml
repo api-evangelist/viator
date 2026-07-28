@@ -1,0 +1,31 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Viator Affiliate API v1
+  version: 1.0.0
+extends: openapi/viator-affiliate-api-v1-openapi.json
+x-generated: '2026-07-28'
+x-method: generated
+x-source: >-
+  Derived from lifecycle/viator-lifecycle.yml and conventions/viator-conventions.yml. The original
+  specification is preserved verbatim in openapi/.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provider: viator
+    x-lifecycle-status: superseded
+    x-superseded-by: openapi/viator-partner-api-v2-openapi.json
+    x-still-published: true
+    x-transactional: false
+    x-note: >-
+      Legacy v1 affiliate contract - a non-transactional subset with no booking endpoints. Still
+      published by Viator but superseded by the Partner API v2.
+    x-apievangelist-artifacts:
+      lifecycle: lifecycle/viator-lifecycle.yml
+      conventions: conventions/viator-conventions.yml
+      authentication: authentication/viator-authentication.yml
+- target: $.components.securitySchemes['Legacy-API-key']
+  update:
+    x-lifecycle-status: legacy
+    x-note: >-
+      Passing the API key as an apiKey query-string parameter exposes the credential in logs,
+      referrers and browser history. The exp-api-key header scheme should be used instead.
