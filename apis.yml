@@ -32,7 +32,7 @@ tags:
 - Hospitality
 created: '2026-07-28'
 modified: '2026-07-28'
-specificationVersion: '0.19'
+specificationVersion: '0.23'
 apis:
 - aid: viator:viator-partner-products-api
   name: Viator Partner Products API
