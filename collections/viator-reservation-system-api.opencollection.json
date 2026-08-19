@@ -1,0 +1,324 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Viator Reservation System API"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Reservation system APIs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Availability Check",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/v2/availability/check",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The Availability check endpoint enables Viator to retrieve capacity and pricing information of one or more items for a specific date and one or more ticket types (adult, child, etc).\n\nThis endpoint is used by Viator when customers have chosen a specific product or a specific item for which capacity and pricing is required to determine the ability for the customers to proceed with the purchase.\n\nThe Availability check endpoint supersedes the existing V1.0 [Real-time availability API](#tag/Depreca"
+        },
+        {
+          "info": {
+            "name": "Calendar",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/v2/availability/calendar",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The Calendar endpoint enables Viator to retrieve capacity and pricing information of one or more items for a date range across all ticket types (adult, child, unit, etc).\n\nThis endpoint is used by Viator to populate availability in the calendars and to create the pricing structure required to accurately price products.\n\nThe Calendar endpoint supersedes both the existing V1.0 [Batch Availability availability API](#tag/Deprecated/operation/batchAvailability) and [Batch Pricing API](#tag/Deprecated"
+        },
+        {
+          "info": {
+            "name": "Reserve",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/v2/reserve",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The Reserve endpoint enables Viator to request the reservation system to reserve (hold) the inventory and price an item for a specific date and one or more ticketTypes (adult, child, etc).\n\nThis endpoint is used by Viator when customers have the intention to make a purchase. The reservation is made to allow time for the customer to complete the payment details.\n\nThe reservation request expects inventory and pricing to be held for a **minimum of 15 minutes** from the time the request is made.\n\nTh"
+        },
+        {
+          "info": {
+            "name": "Special Offers",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/v2/product/special-offers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The Special Offers endpoint enables Viator to retrieve special offer metadata.\n\nThe endpoint is used to retrieve information required to create and display special offer merchandising signals on discounted events returned by the [Calendar](#tag/Reservation-system-APIs/operation/calendar) or [Availability check](#tag/Reservation-system-APIs/operation/availabilityCheck) endpoints.\n\nA special offer merchandising signal does not change the RRP (Recommended Retail Price). It instead defines the crite"
+        },
+        {
+          "info": {
+            "name": "Tour list",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/tourlist",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The Tour list API (v1.0) enables reservation systems to provide a list of available products (and product options). The Tour list response includes descriptive fields and identifiers that facilitate mapping between Viator products and the operator's reservation system products."
+        },
+        {
+          "info": {
+            "name": "Booking",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/booking",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The Booking API (v1.0) enables reservation systems to receive Booking requests from Viator systems in real time. A successful request will create the booking in the reservation system and return a success message to Viator systems which will confirm the booking directly to the customer. Each API request is always for a single booking.\n\nBooking requests are sent in all cases unless Viator has successfully received an unavailable status. See [Availability and pricing](#tag/Connectivity-overview/Av"
+        },
+        {
+          "info": {
+            "name": "Booking Amendment",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/booking-amendment",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The Booking Amendment API (v1.0) enables reservation systems to, in real time, receive from Viator amendments to previously confirmed bookings.\n\nA successful request will amend an existing confirmed booking in the reservation system. Each API request is always for the amendment of a single booking.\n"
+        },
+        {
+          "info": {
+            "name": "Booking Cancellation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/booking-cancellation",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The Booking Cancellation API (v1.0) is used by Viator to cancel a previously confirmed booking.\n\nThe API cancellation does not include details regarding refunds; it focuses purely on the cancellation of the booking.\n"
+        },
+        {
+          "info": {
+            "name": "Redemption",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/redemption",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "**Note**: If you are interested in supporting this API, please inform your API account manager before starting development. Viator must assess whether the reservation system is able to support the redemption model.\n\nThe Redemption API (v1.0) enables Viator to identify ticket redemption status at both booking and traveller levels. \n\nThe information returned allows Viator to determine if booking cancellations/refunds should be permitted.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Viator APIs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Event Notification",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/v2/notification/events",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The event notifications endpoint allows reservation systems to inform Viator of changes to events that affect salability, pricing, or capacity for a given date range. This endpoint ensures rapid synchronization of event updates with Viator.\n\nViator prioritizes callbacks for Event notifications based on the `updateType`. \n- \"AVAILABILITY\" and \"PRICING\" notifications receive the highest priority. \n- \"CAPACITY\" notifications are prioritized using several factors, including the proximity to the trav"
+        },
+        {
+          "info": {
+            "name": "Special Offers Notification",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/v2/notification/special-offers",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "apikey",
+              "key": "X-Api-Key",
+              "value": "{{X-Api-Key}}",
+              "placement": "header"
+            }
+          },
+          "docs": "The special offers notifications endpoint allows reservation systems to inform Viator of new or updated special offers for a given date range. This endpoint ensures rapid synchronization of special offers details with Viator.\n\nSpecial Offers notification triggers Viator to request additional details via the [Special Offers](#tag/Reservation-system-APIs/operation/specialOffers) endpoint **if the special offer is associated with an already connected product option**. This association is determined"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Deprecated",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Real-time Availability",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/availability",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The Real-time Availability API (v1.0) enables Viator to instantly verify the capacity and availability of a product or product option for a specified number of passengers. \n\nThis versatile API allows reservation systems to provide tour availability data for single dates or a range of dates. Viator then uses this information to either allow (if available) or prevent (if unavailable) customer bookings.\n\nWhen used for a **single date**, the API's main purpose is to confirm real-time availability du"
+        },
+        {
+          "info": {
+            "name": "Batch Availability",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/batch-availability",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The Batch Availability API (v1.0) enables Viator to efficiently determine capacity/availability for a future date range using a pull-based method. \n\nReservation systems share availability/capacity of all operator products and associated options across a specified future date range through this API. Upon receiving this information, Viator's systems are updated to either permit (available) or prohibit (unavailable) bookings. \n\nThis proactive approach provides operators control over future bookings"
+        },
+        {
+          "info": {
+            "name": "Batch Pricing",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/batch-pricing",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "**Note**: The Batch Pricing API must only be implemented after agreement with Viator.  If you wish to use this API, inform your Viator API account manager before any development begins.\n\nThe Batch Pricing API (v1.0) enables reservation systems to provide Viator with bulk pricing information for operators' products.\n\nFor guidance on mapping Viator Pricing Rates (Age Bands) to external pricing rates, refer to the [Pricing rates mapping](#tag/API-configurations/Pricing-rates-mapping).\n"
+        },
+        {
+          "info": {
+            "name": "Availability Notification 2",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://your-reservation-system.example.com/availabilitynotification2",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "The Availability Notification 2 API (v1.0) provides reservation systems with the ability to notify Viator when changes to the availability of products occur. \n\nThis allows Viator to immediately either permit or prohibit bookings on dates that have either been made available or unavailable respectively.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -3,10 +3,9 @@ method: derived
 status: candidate
 source: openapi/viator-partner-api-v2-openapi.json
 search:
-  summary: >-
-    No official Viator MCP server exists. npm, the docs host and partnerresources.viator.com were
-    searched; the only MCP servers wrapping the Viator Partner API are community projects with no
-    Viator endorsement, and no remote/hosted MCP endpoint is advertised on any Viator surface.
+  summary: No official Viator MCP server exists. npm, the docs host and partnerresources.viator.com were
+    searched; the only MCP servers wrapping the Viator Partner API are community projects with no Viator
+    endorsement, and no remote/hosted MCP endpoint is advertised on any Viator surface.
   official_server_found: false
   third_party:
   - name: '@chrischall/viator-mcp'
@@ -21,25 +20,26 @@ search:
     official: false
     note: Multi-provider travel MCP that includes Viator among its sources.
   probes:
-  - {url: 'https://mcp.viator.com/', result: DNS_NXDOMAIN}
-  - {url: 'https://api.viator.com/.well-known/ai-plugin.json', status: 404}
-  - {url: 'https://api.viator.com/.well-known/oauth-protected-resource', status: 404}
+  - url: https://mcp.viator.com/
+    result: DNS_NXDOMAIN
+  - url: https://api.viator.com/.well-known/ai-plugin.json
+    status: 404
+  - url: https://api.viator.com/.well-known/oauth-protected-resource
+    status: 404
 server:
   name: viator
   transport: http
   url: null
-  note: >-
-    Candidate only. This is the tool surface a Viator-operated MCP server would expose if it were
+  note: Candidate only. This is the tool surface a Viator-operated MCP server would expose if it were
     projected one-to-one from the published Partner API v2 OpenAPI. It is not a live endpoint.
 auth:
   scheme: apiKey
   header: exp-api-key
   version_header: 'Accept: application/json;version=2.0'
-  note: >-
-    One organisation-wide key, no OAuth and no scopes, so an MCP deployment cannot delegate
-    per-user authority - every tool call carries the full authority of the partner account. Tool
-    exposure must therefore be gated by the partner access tier (see
-    conventions/viator-conventions.yml access_tiers) and, for the booking tools, by human approval.
+  note: One organisation-wide key, no OAuth and no scopes, so an MCP deployment cannot delegate per-user
+    authority - every tool call carries the full authority of the partner account. Tool exposure must
+    therefore be gated by the partner access tier (see conventions/viator-conventions.yml access_tiers)
+    and, for the booking tools, by human approval.
 tools:
 - name: get_product
   description: Retrieve full product content for one Viator product code.
@@ -97,8 +97,7 @@ tools:
   description: Retrieve reviews for a product.
   source_operation: openapi/viator-partner-api-v2-openapi.json#reviewsProduct
   read_only: true
-  caution: >-
-    Review text is covered by Viator's "Protecting unique content" restriction - it must not be
+  caution: Review text is covered by Viator's "Protecting unique content" restriction - it must not be
     rendered anywhere a search engine can index it.
 - name: lookup_supplier_by_product
   description: Resolve supplier details for a list of product codes.
@@ -171,9 +170,8 @@ tools:
   source_operation: openapi/viator-partner-api-v2-openapi.json#bookingsModifiedSinceAcknowledge
   read_only: false
   consequence: write
-  caution: >-
-    Acknowledging a supplier CANCELLATION event transfers the customer-communication obligation to
-    the partner. Not a neutral write.
+  caution: Acknowledging a supplier CANCELLATION event transfers the customer-communication obligation
+    to the partner. Not a neutral write.
 - name: check_amendment
   description: Check whether a booking can be amended.
   source_operation: openapi/viator-partner-api-v2-openapi.json#amendmentCheck
@@ -193,11 +191,16 @@ tools:
   source_operation: openapi/viator-partner-api-v2-openapi.json#paymentsCreateToken
   read_only: false
   consequence: financial
-  caution: >-
-    Handles raw PAN data. Only Full-access + Booking affiliates may call it and only in a
-    PCI-compliant context. Should not be exposed as an agent tool.
+  caution: Handles raw PAN data. Only Full-access + Booking affiliates may call it and only in a PCI-compliant
+    context. Should not be exposed as an agent tool.
 coverage:
   rest_operations_total: 33
   tools_derived: 33
   excluded: 0
 crosswalk: mcp/viator-tool-crosswalk.yml
+deployment:
+  mode: none
+  verified: derived
+  tools: 33
+  checked: '2026-08-12'
+  source: catalog MCP census

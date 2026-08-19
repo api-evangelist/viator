@@ -1,0 +1,600 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Viator API Documentation & Specification - Affiliate Partners",
+    "version": "1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "exp-api-key",
+      "value": "{{exp-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Utility services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/util/sitedetails",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/util/sitedetails",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "defaultCurrencyCode",
+                "value": "USD",
+                "type": "query",
+                "description": "**currency code** (default) for pricing\n- countries with standard currencies will default to *this* currency for pricing display prices displayed in this currency as the default currency\n- other countries will default to `'USD'`\n- e.g., Australia would be `'AUD'`; Vietnam would be `'USD'`\n- See: [supported currencies](#section/Appendices/Supported-currency-codes)\n"
+              },
+              {
+                "name": "centralURL",
+                "value": "alllasvegastours.com",
+                "type": "query",
+                "description": "**URL** for multi-URL sites that have a central URL for processing etc like www.alllasvegastours.com has content.allsightseeingtours.com"
+              }
+            ]
+          },
+          "docs": "Get site details – show the site settings for your organization"
+        },
+        {
+          "info": {
+            "name": "/util/countrymap",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/util/countrymap",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Get a dictionary mapping coutry-codes to their natural-language names and international dialling prefixes"
+        },
+        {
+          "info": {
+            "name": "/util/guid",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/util/guid",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "This service can be used to generate a GUID if necessary"
+        },
+        {
+          "info": {
+            "name": "/util/siteBinaryData",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/util/siteBinaryData",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get partner custom information, such as Logo, Favicon or quick links (only necessary for some partners)"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Taxonomy services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/taxonomy/destinations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/taxonomy/destinations",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "- Retrieves all the country taxonomy/city nodes as a flat list\n- Returns a complete list of Viator destinations, including destination names and parent identifiers\n- Used to provide navigation through drill down lists or combo boxes\n"
+        },
+        {
+          "info": {
+            "name": "/taxonomy/categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/taxonomy/categories",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "destId",
+                "value": "684",
+                "type": "query",
+                "description": "**unique numeric identifier** of the destination to enquire about (optional)\n- `destinationId` is returned by [/taxonomy/destinations](#operation/taxonomyDestination)\n"
+              }
+            ]
+          },
+          "docs": "- Retrieves a list of product categories for a destination that can be used as a means of filtering when searching for products using the [/search/products](#operation/searchProducts) service\n- This service can be used to get a list of all categories and subcategories for a destination by including its `destId`, or you can omit the `destId` to get a list of all categories and subcategories\n- **Note:** If no `destId` is passed, `productCount` and `thumbnailURL` will be `null` as they are destinat"
+        },
+        {
+          "info": {
+            "name": "/taxonomy/attractions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/taxonomy/attractions",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "- Retrieves a list of attractions (things like the Eiffel Tower or Empire State Building) and their associated unique numeric identifiers\n- The attraction's identifier (`seoId`) can be used as a means of searching for available products; for example, in the [/search/products](#operation/searchProducts) service.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Product services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/search/products",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/search/products",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nThis service is used to search for products based on various criteria; such as:\n* the destination (locale) in which it operates\n* its association with a tourist attraction\n* its category and/or subcategory\n* the time period during which it operates\n\nThe fields you include in the request body for this service determine the kind of search that will be performed.\n\n**<u>Note</u>**: \n\n* You can search **EITHER** by destination (`destId`) **OR** by attraction-link (`seoId`), but not both.\n* The desti"
+        },
+        {
+          "info": {
+            "name": "/search/products/codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/search/products/codes",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "- This service returns an array of products given an array of product identifiers that is useful for wishlist / shopping cart / user account display \n- **Note**: requesting an inactive or non-existent product code will return `0`, `null` and blank values (as per the example below).\n"
+        },
+        {
+          "info": {
+            "name": "/search/freetext",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/search/freetext",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "- This service provides a **free text search across all products destinations, attractions and recommendations**\n- The `text` parameter is required\n- **Note:** results include a type indicator (`type`) that you can use to display each result appropriately based on its content\n"
+        },
+        {
+          "info": {
+            "name": "/product",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/product",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "currencyCode",
+                "value": "EUR",
+                "type": "query",
+                "description": "**currency code** for the currency to use in this instance\n- **Note**: Commissions to Viator Affiliates will always be paid in the main currency configured for that account.\n"
+              },
+              {
+                "name": "sortOrder",
+                "value": "REVIEW_RATING_A",
+                "type": "query",
+                "description": "**specifier** of the order in which to return reviews\n\nSort order options:\n\n  - `'REVIEW_RATING_A'`: Traveler Rating (low→high) Average\n  - `'REVIEW_RATING_D'`: Traveler Rating (high→low) Average\n  - `'REVIEW_RATING_SUBMISSION_DATE_D'`: Most recent review\n"
+              },
+              {
+                "name": "voucherOption",
+                "value": "",
+                "type": "query",
+                "description": "- `\"VOUCHER_PAPER_ONLY\"`: Paper Vouchers only accepted\n- `\"VOUCHER_E\"`: EVouchers + Paper Vouchers accepted\n- `\"VOUCHER_ID_ONLY\"`: ID + Evouchers + Paper vouchers accepted\n"
+              },
+              {
+                "name": "code",
+                "value": "5010SYDNEY",
+                "type": "query",
+                "description": "**unique alphanumeric identifier** of the product"
+              },
+              {
+                "name": "showUnavailable",
+                "value": "false",
+                "type": "query",
+                "description": "**specifier** as to whether or not to show 'unavailable' products:\n\n  - `true`: return *both* available and unavailable products\n  - `false`: return *only* available products (default)\n"
+              },
+              {
+                "name": "excludeTourGradeAvailability",
+                "value": "",
+                "type": "query",
+                "description": "**specifier:** \n- `true`: return **all** tour grades, including those that are not available\n- `false`: only display tour grades that *are* available\n"
+              }
+            ]
+          },
+          "docs": "This service provides all product details required for a product display page, as well as information required for price checks and booking, such as: \n- age bands\n- tour grades (product options)\n- language options \n- booking questions\n- hotel pickup flags\n\n**currencyCode (in query):** \n- <mark>**<u>Update: 9 Jun 2020</u>**: Multiple currencies are now enabled by default. Partners can choose to have the pricing displayed in any of the [supported currencies](#section/Appendices/Supported-currency-"
+        },
+        {
+          "info": {
+            "name": "/product/reviews",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/product/reviews",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "sortOrder",
+                "value": "REVIEW_RATING_A",
+                "type": "query",
+                "description": "**specifier** of the order in which to return reviews\n\nSort order options:\n\n  - `'REVIEW_RATING_A'`: Traveler Rating (low→high) Average\n  - `'REVIEW_RATING_D'`: Traveler Rating (high→low) Average\n  - `'REVIEW_RATING_SUBMISSION_DATE_D'`: Most recent review\n"
+              },
+              {
+                "name": "topX",
+                "value": "1-3",
+                "type": "query",
+                "description": "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+              },
+              {
+                "name": "code",
+                "value": "5010SYDNEY",
+                "type": "query",
+                "description": "**unique alphanumeric identifier** of the product"
+              },
+              {
+                "name": "showUnavailable",
+                "value": "false",
+                "type": "query",
+                "description": "**specifier** as to whether or not to show 'unavailable' products:\n\n  - `true`: return *both* available and unavailable products\n  - `false`: return *only* available products (default)\n"
+              }
+            ]
+          },
+          "docs": "Get reviews of a product submitted by users\n\n**Note**: \n\n- The number of reviews that you can obtain via this service will depend on\nwhether your account is limited in terms of the number of reviews you are\nentitled to receive. \n\n- The number of reviews available through this service is given in the\n`reviewCount` element in the response from [/product](#operation/product)\n\n- Please speak to your account manager if you wish to receive more reviews.\nIf your account is not limited, you will be able"
+        },
+        {
+          "info": {
+            "name": "/product/photos",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/product/photos",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "topX",
+                "value": "1-3",
+                "type": "query",
+                "description": "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+              },
+              {
+                "name": "code",
+                "value": "5010SYDNEY",
+                "type": "query",
+                "description": "**unique alphanumeric identifier** of the product"
+              },
+              {
+                "name": "showUnavailable",
+                "value": "false",
+                "type": "query",
+                "description": "**specifier** as to whether or not to show 'unavailable' products:\n\n  - `true`: return *both* available and unavailable products\n  - `false`: return *only* available products (default)\n"
+              }
+            ]
+          },
+          "docs": "Get photos of a product submitted by users"
+        },
+        {
+          "info": {
+            "name": "/available/products",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/available/products",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Gets available products by product code, date range or number of adult travelers\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Attraction services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/search/attractions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/search/attractions",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "\nThis service retrieves a list of attractions associated with the given\ndestination\n\n**Note**:\n\n- Pages generated using data from this endpoint are subject to a **strict no-index policy**. If you are unsure about whether you are correctly following this rule, please reach out to your account manager for advice.\n\n\n**Aliases**:\n\n- [/search/recommendations](#operation/searchRecommendations)\n\n- [/search/seo](#operation/searchSeo)\n"
+        },
+        {
+          "info": {
+            "name": "/attraction",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/attraction",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "seoId",
+                "value": "14235",
+                "type": "query",
+                "description": "**unique numeric identifier** for the attraction to retrieve details for"
+              },
+              {
+                "name": "currencyCode",
+                "value": "EUR",
+                "type": "query",
+                "description": "**currency-code** for the currency in which to display pricing details for the desired attraction"
+              }
+            ]
+          },
+          "docs": "This service returns the details of an attraction.\n\n**Note**:\n\n- Pages generated using data from this endpoint are subject to a **strict no-index policy**. If you are unsure about whether you are correctly following this rule, please reach out to your account manager for advice.\n\n**Aliases**:\n- [/recommendation](#operation/attraction)\n- [/seo](#operation/attraction)\n"
+        },
+        {
+          "info": {
+            "name": "/attraction/reviews",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/attraction/reviews",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "seoId",
+                "value": "14235",
+                "type": "query",
+                "description": "**unique numeric identifier** of the attraction for which to retrieve reviews"
+              },
+              {
+                "name": "sortOrder",
+                "value": "SEO_REVIEW_RATING_D",
+                "type": "query",
+                "description": "Sort order for the results; one of:\n\n- `'SEO_REVIEW_RATING_D'` - sort by traveler rating (descending)\n- `'SEO_REVIEW_RATING_PUBLISHED_DATE_D'` - sort by date of publication (most recent first)\n"
+              }
+            ]
+          },
+          "docs": "\nThis service gets reviews related to an attraction. These reviews might be\nassociated indirectly through the related products.\n\n**Note**:\n\n- Pages generated using data from this endpoint are subject to a **strict no-index policy**. If you are unsure about whether you are correctly following this rule, please reach out to your account manager for advice.\n\n**Aliases**:\n\n- [/recommendation/reviews](#operation/attractionReviews)\n\n- [/seo/reviews](#operation/attractionReviews)\n"
+        },
+        {
+          "info": {
+            "name": "/attraction/photos",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/attraction/photos",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "topX",
+                "value": "1-3",
+                "type": "query",
+                "description": "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+              },
+              {
+                "name": "seoId",
+                "value": "14235",
+                "type": "query",
+                "description": "**unique numeric identifier** for the attraction to retrieve photos"
+              }
+            ]
+          },
+          "docs": "\nThis service returns photos that are related to an attraction. These may be\nassociated indirectly if they are photos of products related to the\nattraction.\n\n**Note**:\n\n- Pages generated using data from this endpoint are subject to a **strict no-index policy**. If you are unsure about whether you are correctly following this rule, please reach out to your account manager for advice.\n\n**Aliases**:\n\n- [/recommendation/photos](#operation/attractionPhotos)\n\n- [/seo/photos](#operation/attractionPhoto"
+        },
+        {
+          "info": {
+            "name": "/attraction/products",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/attraction/products",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "seoId",
+                "value": "14235",
+                "type": "query",
+                "description": "**unique numeric identifier** for the attraction"
+              },
+              {
+                "name": "topX",
+                "value": "1-3",
+                "type": "query",
+                "description": "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+              },
+              {
+                "name": "sortOrder",
+                "value": "SEO_PRODUCT_TOP_SELLERS",
+                "type": "query",
+                "description": "Sort order for the results; one of:\n\n  - `'SEO_PRODUCT_TOP_SELLERS'` – top sellers (**Note**: What Viator gets paid impacts this sort order)\n  - `'SEO_PRODUCT_REVIEW_AVG_RATING_A'` – traveller rating (low->high)\n  - `'SEO_PRODUCT_REVIEW_AVG_RATING_D'` – traveller rating (high->low)\n  - `'SEO_PRODUCT_PRICE_FROM_A'` – price (low->high) \n  - `'SEO_PRODUCT_PRICE_FROM_D'` – price (high->low)\n"
+              },
+              {
+                "name": "currencyCode",
+                "value": "EUR",
+                "type": "query",
+                "description": "**currency-code** for the currency in which to display pricing details for the products related to the specified attraction.\n\n**Note:**\n- You must have multiple currencies enabled in order to set the currency using this parameter. Please speak to your account manager if you wish to have this enabled.\n- If you omit this parameter; or, if you do not have multiple currencies enabled, pricing will be returned in the default currency for your account.\n"
+              }
+            ]
+          },
+          "docs": "This service gets attraction-related products (for cross-selling purposes)\n\n**Aliases**:\n- [/recommendation/products](#operation/attractionProducts)\n- [/seo/products](#operation/attractionProducts)\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Support services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/support/customercare",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/support/customercare",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "This endpoint returns the URL to the Viator help page."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,997 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Viator Partner API",
+    "version": "2.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "exp-api-key",
+      "value": "{{exp-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Products",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/products/modified-since",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/products/modified-since",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor received from a previous call to **this** endpoint that points to the desired starting point for the results. \n\n**Note**: Pagination will come into play when the number of results exceeds the figure given in the `count` parameter. In this case, pass the content of the `nextCursor` element for the value of `cursor` to receive the next page of results. The final page of results will not include the `nextCursor` element. For more information, see: [Ingesting and updating the product catalogue](#section/Workflows/Ingesting-and-updating-the-product-catalogue).\n- Example: `'MTU3NDA0MzU1NQ=='`\n"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the maximum number of product detail items to be returned in each response from this endpoint\n"
+              },
+              {
+                "name": "campaign-value",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the campaign tracking identifier that will be appended to the URL returned in `productUrl` as a query parameter. Campaigns allow you to track how specific links perform, with metrics such as sessions, bookings, and commission. Reports are available via the Viator Partner Platform.\n\n**Note**: If you wish to use a campaign value that includes non-alphanumeric characters (e.g., '+', '-', etc.), you must URL-encode these characters.\n"
+              },
+              {
+                "name": "target-lander",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the type of landing page customers will be shown when opening the link provided in the `productUrl` field.\n\nOrdinarily, when customers follow the link in `productUrl`, they are redirected to a sales-conversion-optimized affiliate landing page. This default behavior can be disabled by setting this parameter to `\"NONE\"`, which will modify the `productUrl` query string such that when opened, the customer will instead land on the standard viator.com product display page, which is **not** optimized for affiliate-link sales.\n\nAvailable values:\n\n- `\"NONE\"`: Causes `target_lander=NONE` to be included in the `productUrl` query string, which will **disable** redirection to an affiliate landing page when the link is followed.\n\nOur recommendation is for you to **allow** the default behavior by **not** including this parameter, unless you have a specific technical or business requirement to do so.\n"
+              },
+              {
+                "name": "modified-since",
+                "value": "",
+                "type": "query",
+                "description": "Only return products that have been modified since the date and time (UTC) specified by this timestamp\n\n**Note**: \n- As this is a query parameter, colons (i.e., `:`) in the timestamp should be URL-encoded as `%3A`; e.g.: \"`2020-09-30T00%3A00%3A01.737043Z`\"\n- Using this parameter is <u>not recommended</u> as the standard pagination method; rather, use the `cursor` parameter to ensure all product updates are captured during ingestion.\n"
+              }
+            ]
+          },
+          "docs": "Get full product details for all products modified since a specified time.\nInitiate a full ingestion only to establish your local copy; this should be a rare occurrence compared to regular updates. Fetch incremental updates through this endpoint on an hourly basis. You are welcome to poll for updates as frequently as every 15 minutes if desired. Be mindful that excessive frequency beyond these recommendations may trigger rate limits.\n\n**Note**:\n  - See [Ingesting and updating the product catalog"
+        },
+        {
+          "info": {
+            "name": "/products/bulk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/products/bulk",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "campaign-value",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the campaign tracking identifier that will be appended to the URL returned in `productUrl` as a query parameter. Campaigns allow you to track how specific links perform, with metrics such as sessions, bookings, and commission. Reports are available via the Viator Partner Platform.\n\n**Note**: If you wish to use a campaign value that includes non-alphanumeric characters (e.g., '+', '-', etc.), you must URL-encode these characters.\n"
+              },
+              {
+                "name": "target-lander",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the type of landing page customers will be shown when opening the link provided in the `productUrl` field.\n\nOrdinarily, when customers follow the link in `productUrl`, they are redirected to a sales-conversion-optimized affiliate landing page. This default behavior can be disabled by setting this parameter to `\"NONE\"`, which will modify the `productUrl` query string such that when opened, the customer will instead land on the standard viator.com product display page, which is **not** optimized for affiliate-link sales.\n\nAvailable values:\n\n- `\"NONE\"`: Causes `target_lander=NONE` to be included in the `productUrl` query string, which will **disable** redirection to an affiliate landing page when the link is followed.\n\nOur recommendation is for you to **allow** the default behavior by **not** including this parameter, unless you have a specific technical or business requirement to do so.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get full product details for all requested products (limited to 500 products per request)\n\n**Note**: \n  - This endpoint **should not** be used to ingest or update the product catalog. Instead, please use the [/products/modified-since](#operation/productsModifiedSince) endpoint for that purpose.\n  - The response object utilizes polymorphism and differs markedly depending on whether the product is active or inactive. Click the drop-down selector in the `status` description to toggle between an `\"A"
+        },
+        {
+          "info": {
+            "name": "/products/{product-code}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/products/:product-code",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "campaign-value",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the campaign tracking identifier that will be appended to the URL returned in `productUrl` as a query parameter. Campaigns allow you to track how specific links perform, with metrics such as sessions, bookings, and commission. Reports are available via the Viator Partner Platform.\n\n**Note**: If you wish to use a campaign value that includes non-alphanumeric characters (e.g., '+', '-', etc.), you must URL-encode these characters.\n"
+              },
+              {
+                "name": "target-lander",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the type of landing page customers will be shown when opening the link provided in the `productUrl` field.\n\nOrdinarily, when customers follow the link in `productUrl`, they are redirected to a sales-conversion-optimized affiliate landing page. This default behavior can be disabled by setting this parameter to `\"NONE\"`, which will modify the `productUrl` query string such that when opened, the customer will instead land on the standard viator.com product display page, which is **not** optimized for affiliate-link sales.\n\nAvailable values:\n\n- `\"NONE\"`: Causes `target_lander=NONE` to be included in the `productUrl` query string, which will **disable** redirection to an affiliate landing page when the link is followed.\n\nOur recommendation is for you to **allow** the default behavior by **not** including this parameter, unless you have a specific technical or business requirement to do so.\n"
+              },
+              {
+                "name": "product-code",
+                "value": "",
+                "type": "path",
+                "description": "Retrieve details of the product identified by this product code"
+              }
+            ]
+          },
+          "docs": "Get full product details for a single product.\n\n**Note**: \n  - This endpoint **should not** be used to ingest or update the product catalog. Instead, please use the [/products/modified-since](#operation/productsModifiedSince) endpoint for that purpose.\n  - The response object utilizes polymorphism and differs markedly depending on whether the product is active or inactive. Click the drop-down selector in the `status` description to toggle between an `\"ACTIVE\"` and `\"INACTIVE\"` product response.\n"
+        },
+        {
+          "info": {
+            "name": "/products/tags",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/products/tags",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Get details for all tags (includes all languages/localizations)\nTags should be cached and refreshed weekly.\n\nTo learn more about tags, see this article: [Viator tags, explained](https://partnerresources.viator.com/travel-commerce/tags?source=specs)\n\n**Note**: If no response is received for a given tag reference, this means\nthat the tag was removed from our database and the associated product has\nnot yet been updated with a replacement tag. If this occurs, please\ndisregard the removed tag.\n\n**Not"
+        },
+        {
+          "info": {
+            "name": "/products/booking-questions",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/products/booking-questions",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Get full details of all available preset booking questions.\nBooking questions should be cached and refreshed monthly.\n\n**Note**: This endpoint is only available to <u>affiliate partners with API access level \"Full Access + Booking\"</u> and <u>merchant partners</u>.\n\n(Response sample generated on: 2020-08-25)\n"
+        },
+        {
+          "info": {
+            "name": "/products/search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/products/search",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "campaign-value",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the campaign tracking identifier that will be appended to the URL returned in `productUrl` as a query parameter. Campaigns allow you to track how specific links perform, with metrics such as sessions, bookings, and commission. Reports are available via the Viator Partner Platform.\n\n**Note**: If you wish to use a campaign value that includes non-alphanumeric characters (e.g., '+', '-', etc.), you must URL-encode these characters.\n"
+              },
+              {
+                "name": "target-lander",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the type of landing page customers will be shown when opening the link provided in the `productUrl` field.\n\nOrdinarily, when customers follow the link in `productUrl`, they are redirected to a sales-conversion-optimized affiliate landing page. This default behavior can be disabled by setting this parameter to `\"NONE\"`, which will modify the `productUrl` query string such that when opened, the customer will instead land on the standard viator.com product display page, which is **not** optimized for affiliate-link sales.\n\nAvailable values:\n\n- `\"NONE\"`: Causes `target_lander=NONE` to be included in the `productUrl` query string, which will **disable** redirection to an affiliate landing page when the link is followed.\n\nOur recommendation is for you to **allow** the default behavior by **not** including this parameter, unless you have a specific technical or business requirement to do so.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Returns a list of filtered, ordered and sorted product summaries for products that match the given search criteria.\nThis endpoint must not be used to ingest the catalog of products, the [/products/modified-since](#operation/productsModifiedSince) endpoint must be used for that purpose.\n\nIf you’re a Basic Access Affiliate Partner, this endpoint provides all the essential functionality that you need to implement in order to use the Viator API. The following article describes how to do this in the "
+        },
+        {
+          "info": {
+            "name": "/products/recommendations",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/products/recommendations",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieve a list of sorted product-to-product recommendations that match the given search criteria.\n\nRecommendations are algorithm-generated based on various factors such as shared attributes, category, customer purchase patterns, browsing behavior, and other relevant metrics.\n\nThis endpoint can be used to enhance product discovery, suggest alternatives, improve cross-selling by displaying related products to customers, etc...\n\nNotes:\n- The `recommendations` object may contain multiple recommenda"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Auxiliary",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/search/freetext",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/search/freetext",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": "en, en-AU"
+              }
+            ],
+            "params": [
+              {
+                "name": "campaign-value",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the campaign tracking identifier that will be appended to the URL returned in `productUrl` as a query parameter. Campaigns allow you to track how specific links perform, with metrics such as sessions, bookings, and commission. Reports are available via the Viator Partner Platform.\n\n**Note**: If you wish to use a campaign value that includes non-alphanumeric characters (e.g., '+', '-', etc.), you must URL-encode these characters.\n"
+              },
+              {
+                "name": "target-lander",
+                "value": "",
+                "type": "query",
+                "description": "Target lander page for affiliate productUrl\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Perform a search for products, attractions and/or destinations that contain a free-text search term. Product results can be filtered and sorted according to various criteria.\nThis endpoint must not be used to ingest the catalog of products, the [/products/modified-since](#operation/productsModifiedSince) endpoint must be used for that purpose.\n\n**Note**: Only **active** products are returned in the response from this endpoint.\n"
+        },
+        {
+          "info": {
+            "name": "/locations/bulk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/locations/bulk",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get full location details for the requested location references. Locations should be cached and refreshed monthly. Additionally, the [/locations/bulk](#operation/locationsBulk) endpoint should be used on demand for any new location references returned in the product content response.\n\n**Note**: If no response is received for a given location reference, this means  that the location was either removed from our database or replaced by a different one.  If this occurs, please disregard the removed "
+        },
+        {
+          "info": {
+            "name": "/exchange-rates",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/exchange-rates",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "This endpoint gets the exchange rates for conversions between specified currencies.\nExchange rates should be cached and refreshed based on the expiry timestamp (at the moment daily).\n\nIn this API, all pricing is denominated in the currency of the supplier. For example, if a tour operates in Thailand, its prices will be given in Thai Baht (THB). \n\nNot all supplier currencies are supported, but many are. They comprise:\n\n- AED, ARS, AUD, BRL, CAD, CHF, CLP, CNY, COP, DKK, EUR, FJD, GBP \n- HKD, IDR,"
+        },
+        {
+          "info": {
+            "name": "/reviews/product",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/reviews/product",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Retrieves and filters reviews <u>for a **single** product</u>\nReviews should be cached and refreshed weekly, as well as on-demand when you see that the product content endpoint returns a different review count than saved in your database for the product.\n\n**Non-indexing of reviews**\n\n- Review content is protected proprietary information; therefore, you may not allow review content to be indexed by search engines. In order for your site to be certified, you will need to demonstrate that you have "
+        },
+        {
+          "info": {
+            "name": "/suppliers/search/product-codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/suppliers/search/product-codes",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Gets a collection of supplier information objects for the provided products. Limited to 500 products per request.\nSupplier details should be cached and refreshed weekly.\n"
+        },
+        {
+          "info": {
+            "name": "/destinations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/destinations",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "campaign-value",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the campaign tracking identifier that will be appended to the URL returned in `destinationUrl` as a query parameter. Campaigns allow you to track how specific links perform, with metrics such as sessions, bookings, and commission. Reports are available via the Viator Partner Platform.\n\n**Note**: If you wish to use a campaign value that includes non-alphanumeric characters (e.g., '+', '-', etc.), you must URL-encode these characters.\n"
+              }
+            ]
+          },
+          "docs": "Get details of all destinations supported by the API. Destinations should be refreshed weekly (in addition to on-demand updates when a new destination is returned in the product content response).\n\n\n**Note**:\n\n - Returns a complete list of Viator destinations, including destination names and parent identifiers\n - Used to provide navigation through drill down lists or combo boxes\n - Use the data received from this endpoint to resolve the destination identifier(s) in the `destinations[].ref` eleme"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Availability",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/availability/check",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/availability/check",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Check real-time availability and pricing for a product depending on the date, pax-mix, start time and/or product option.\n\nWe recommend using the pricing information returned by this endpoint as the source of truth for the amount you will be invoiced by Viator for the sale of the product in question.\n\nThe third response example – 265910P1 (commission payment model) – shows the alternative PriceObject for merchants using the commission payment model.\n\n**Note**: This service should only be used to "
+        },
+        {
+          "info": {
+            "name": "/availability/schedules/{product-code}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/availability/schedules/:product-code",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "product-code",
+                "value": "",
+                "type": "path",
+                "description": "Retrieve availability details for the product identified by this product code"
+              }
+            ]
+          },
+          "docs": "Get availability and pricing details for all product options of the requested product. The pricing is returned in the supplier's currency. We recommend using the [/exchange-rates](#operation/exchangeRates) endpoint to get the Viator exchange rates and apply them for pricing conversion.\n\n **Note**: This endpoint **should not** be used for ingesting or updating the availability and pricing details for the entire catalog of Viator products. Instead, please use the [/availability/schedules/modified-"
+        },
+        {
+          "info": {
+            "name": "/availability/schedules/bulk",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/availability/schedules/bulk",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get availability and pricing details for all product options of all requested products. The pricing is returned in the supplier's currency. We recommend using the [/exchange-rates](#operation/exchangeRates) endpoint to get the Viator exchange rates and apply them for pricing conversion.\n\n**Note**: This endpoint **should not** be used for ingesting or updating the availability and pricing details for the entire catalog of Viator products. Instead, please use the [/availability/schedules/modified-"
+        },
+        {
+          "info": {
+            "name": "/availability/schedules/modified-since",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/availability/schedules/modified-since",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor received from a previous call to **this** endpoint that\npoints to the desired starting point for the results.\n\n**Note**: Pagination will come into play when the number of results\nexceeds the figure given in the `count` parameter. In this case, pass\nthe content of the `nextCursor` element for the value of `cursor` to\nreceive the next page of results. The final page of results will not\ninclude the `nextCursor` element. For more information, see: [Ingesting\nand updating availability schedules](#section/Workflows/Ingesting-and-updating-availability-schedules).\n- Example: `'MTYwNTA2ODAwOXw1NjcyUDk='`\n"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "The maximum number of products to be returned in response. \n- Maximum allowed and default value: `500`\n"
+              },
+              {
+                "name": "modified-since",
+                "value": "",
+                "type": "query",
+                "description": "Only retrieve availabilty schedules that have been modified since the date and time (UTC) specified by this timestamp\n\n**Note**: \n- As this is a query parameter, colons (i.e., `:`) in the timestamp should be URL-encoded as `%3A`; e.g.: \"`2020-09-30T00%3A00%3A01.737043Z`\"\n- Using this parameter is <u>not recommended</u> as the standard pagination method; rather, use the `cursor` parameter to ensure all availability schedule updates are captured during ingestion.\n"
+              }
+            ]
+          },
+          "docs": "Get full future availability details for all products modified since the specified time. The pricing is returned in the supplier's currency. We recommend using the [/exchange-rates](#operation/exchangeRates) endpoint to get the Viator exchange rates and apply them for pricing conversion. Initiate a full ingestion only to establish your local copy; this should be a rare occurrence compared to regular updates. Fetch incremental updates through this endpoint on an hourly basis. You are welcome to p"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Bookings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/bookings/cart/hold",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/bookings/cart/hold",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Requests the creation of a hold for each item in the cart.\n\nA hold is a guarantee that either the price or availability (or both) of the product will be retained until a booking\nrequest is made using the [/bookings/cart/book](#operation/bookingsCartBook) endpoint.\n\nA hold consists of two components - **availability** and **pricing**. The response to this service indicates whether one, both or neither has been granted, and until when for each item.\n\n- The length of time for which the availability"
+        },
+        {
+          "info": {
+            "name": "/bookings/cart/book",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/bookings/cart/book",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Requests a booking for each item in the cart.\n\n- As some products are booked on external supplier systems, it may take > 90s to receive a response from this endpoint. For this reason, <u>we recommend setting your internal time-out for this service to **120s**</u>.\n  In the event that this service does time-out, or you receive a HTTP 500 error, you should check the status of the booking using the [/bookings/status](#operation/bookingsStatus) endpoint to ensure the booking was not created before y"
+        },
+        {
+          "info": {
+            "name": "/bookings/hold",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/bookings/hold",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              },
+              {
+                "name": "exp-demo",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "**Note**: This endpoint is only available to <u>merchant partners</u>.\n\nRequests the creation of a booking-hold - a guarantee that either the price\nor availability (or both) of the product will be retained until a booking\nrequest is made using the [/bookings/book](#operation/bookingsBook)\nendpoint.\n\nThe booking-hold consists of two components - **availability** and\n**pricing**. The response to this service indicates whether one, both or\nneither has been granted, and until when.\n\n- The length of "
+        },
+        {
+          "info": {
+            "name": "/bookings/book",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/bookings/book",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              },
+              {
+                "name": "exp-demo",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Requests a booking for a product.\n\n**Note**: \n- This endpoint is only available to <u>merchant partners</u>.\n- The amount that you will be invoiced for the sale of this tour (in the specified currency) is given in the `totalPrice` element in the response from this endpoint.\n- As some products are booked on external supplier systems, it may take > 90s to receive a response from this endpoint. For this reason, <u>we recommend setting your internal time-out for this service to **120s**</u>. In the "
+        },
+        {
+          "info": {
+            "name": "/bookings/status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/bookings/status",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              },
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "**Note**: This endpoint is only available to <u>affiliate partners with API access level \"Full Access + Booking\"</u> and <u>merchant partners</u>.\n\n\nRequests the status of an existing booking using either the Viator-generated booking reference (`bookingRef`) or the reference generated by the partner (`partnerBookingRef`). For bookings made through v1 endpoints, only Viator-generated booking reference is supported.\n\n\nChecking the status of a booking is only necessary to retrieve updates on:\n\n  - "
+        },
+        {
+          "info": {
+            "name": "/bookings/cancel-reasons",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/bookings/cancel-reasons",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Specifies which set of cancellation reasons to retrieve; one of:\n\n- `\"CUSTOMER\"` – (default) gets the set of **customer**-initiated cancellation reasons (for use with the [/bookings/{booking-reference}/cancel](#operation/bookingsCancel) endpoint)\n- `\"SUPPLIER\"` – gets the set of **supplier**-initiated cancellation reasons (for use with the [/bookings/modified-since](#operation/bookingsModifiedSince) endpoint)\n"
+              }
+            ]
+          },
+          "docs": "Retrieves a dictionary of unique identification codes (`cancellationReasonCode`) and their associated natural-language descriptions (`cancellationReasonText`). Cancellation reasons should be cached and refreshed monthly.\n**Note**: \n  - This endpoint is only available to <u>affiliate partners with API access level \"Full Access + Booking\"</u> and <u>merchant partners</u>.\n  - As the data returned by this endpoint may change from time to time, it is recommended that you retrieve the latest cancella"
+        },
+        {
+          "info": {
+            "name": "/bookings/{booking-reference}/cancel-quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/bookings/:booking-reference/cancel-quote",
+            "headers": [
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "booking-reference",
+                "value": "",
+                "type": "path",
+                "description": "The booking reference code (in format `BR-123456789`, which is generated by Viator and returned in the `bookingRef` element in the response from [/bookings/book](#operation/bookingsBook)) of the booking for which to retrieve a cancellation quote\n"
+              }
+            ]
+          },
+          "docs": "Gets the cancellation quote for an existing booking.\n\n**Note**: This endpoint is only available to <u>affiliate partners with API access level \"Full Access + Booking\"</u> and <u>merchant partners</u>.\n\nFor more information about how to perform cancellations using this API, see the [Cancellation API workflow](#section/Booking-concepts/Cancellation-API-workflow) section and our in-depth guide about cancellation policies and how to handle cancellations: [All you need to know about cancellation poli"
+        },
+        {
+          "info": {
+            "name": "/bookings/{booking-reference}/cancel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/bookings/:booking-reference/cancel",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "booking-reference",
+                "value": "",
+                "type": "path",
+                "description": "The booking reference code (in format `BR-123456789`, which is generated by Viator and returned in the `bookingRef` element in the response from [/bookings/book](#operation/bookingsBook)) of the booking for which to request cancellation\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cancels existing booking with given Viator-generated booking-reference\n\n**Note**: This endpoint is only available to <u>affiliate partners with API access level \"Full Access + Booking\"</u> and <u>merchant partners</u>.\n\nFor more information about how to perform cancellations using this API, see the [Cancellation API workflow](#section/Booking-concepts/Cancellation-API-workflow) section and our in-depth guide about cancellation policies and how to handle cancellations: [All you need to know about"
+        },
+        {
+          "info": {
+            "name": "/bookings/modified-since",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/bookings/modified-since",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "modified-since",
+                "value": "",
+                "type": "query",
+                "description": "Only retrieve booking events that have occurred since the point in time indicated by this timestamp.\n\n**Note**: \n\n- As this is a query parameter, colons (i.e., `:`) in the timestamp should be URL-encoded as `%3A`; e.g.: \"`2020-09-30T00%3A00%3A01.737043Z`\"\n- Using this parameter is <u>not recommended</u> as the standard pagination method; instead, we recommend using the `cursor` parameter to ensure all booking event notifications are captured.\n"
+              },
+              {
+                "name": "cursor",
+                "value": "",
+                "type": "query",
+                "description": "Pagination cursor received from a previous call to **this** endpoint that points to the starting point for the next page of results.\n\n**Note**: Pagination will come into play when the number of results exceeds the figure given in the `count` parameter. In this case, pass the content of the `nextCursor` element for the value of `cursor` to receive the next page of results. The final page of results will not include the `nextCursor` element.\n"
+              },
+              {
+                "name": "count",
+                "value": "",
+                "type": "query",
+                "description": "Specifies the maximum number of booking events to be included in each page of results returned from this endpoint.\n"
+              }
+            ]
+          },
+          "docs": "Gets all booking-event notifications relevant to the partner since a point in time indicated by a timestamp or pagination cursor. This endpoint should be polled hourly, except in supplier cancellation scenarios, in which case polling should occur every 5 minutes.\n\n**Merchant partners only:** In order to stop notification emails sent by Viator for **supplier cancellations of bookings made through the API** you must **poll this endpoint every 5 minutes** and send an acknowledge using\n[/bookings/mo"
+        },
+        {
+          "info": {
+            "name": "/bookings/modified-since/acknowledge",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/bookings/modified-since/acknowledge",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Acknowledges receipt of one or more booking event notifications returned by the [/bookings/modified-since](#operation/bookingsModifiedSince) endpoint. Merchants who wish to assume control of the customer service workflow surrounding booking change events must carry out this step before the time indicated in the `bookings[].acknowledgeBy` field, otherwise Viator will automatically send a cancellation notification to the email address provided by the partner for cancellation notifications.\nThis en"
+        },
+        {
+          "info": {
+            "name": "/amendment/check/{booking-reference}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/amendment/check/:booking-reference",
+            "params": [
+              {
+                "name": "booking-reference",
+                "value": "BR-123456789",
+                "type": "path",
+                "description": "The booking reference code (in format `BR-123456789`), generated by Viator and returned in the `bookingRef` element in the response from [/bookings/book](#operation/bookingsBook) and [/bookings/cart/book](#operation/bookingsCartBook) for which to retrieve amendability status and details\n"
+              }
+            ]
+          },
+          "docs": "Returns the amendability status of a given `bookingRef`, along with a list of booking components (e.g., booking details, traveller info, pickup location) that can be amended. \n\n**Notes**:\n- Only bookings made after July 2025 are eligible to be amended.\n- This endpoint is only available to <u>affiliate partners with API access level \"Full Access + Booking\"</u> and <u>merchant partners</u>.\n"
+        },
+        {
+          "info": {
+            "name": "/amendment/quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/amendment/quote",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Gets the amendment quote for an existing booking.\n\n**Notes**:\n  - Only one amendmentType can be updated per request.\n  - This endpoint is only available to <u>affiliate partners with API access level \"Full Access + Booking\"</u> and <u>merchant partners</u>.\n"
+        },
+        {
+          "info": {
+            "name": "/amendment/amend/{quote-reference}",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/amendment/amend/:quote-reference",
+            "params": [
+              {
+                "name": "quote-reference",
+                "value": "QR-4891fddc-7e2e-4203-9517-ec75703daa8a",
+                "type": "path",
+                "description": "The booking reference code (in format `QR-4891fddc-7e2e-4203-9517-ec75703daa8a`), generated by Viator and returned in the `quoteRef` element in the response from /amendments/check endpoint.\n"
+              }
+            ]
+          },
+          "docs": "Amends existing booking with given Viator-generated `quoteRef`\n\n**Note**: This endpoint is only available to <u>affiliate partners with API access level \"Full Access + Booking\"</u> and <u>merchant partners</u>.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Payments",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/v1/checkoutsessions/{sessionToken}/paymentaccounts",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/v1/checkoutsessions/:sessionToken/paymentaccounts",
+            "headers": [
+              {
+                "name": "Content-Type",
+                "value": ""
+              },
+              {
+                "name": "x-trip-clientid",
+                "value": ""
+              },
+              {
+                "name": "x-trip-requestid",
+                "value": ""
+              },
+              {
+                "name": "User-Agent",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "sessionToken",
+                "value": "CSI-P-kwftrgmrbfbglkaw4espjdr52e",
+                "type": "path",
+                "description": "The `sessionToken` is obtained from calling the [/bookings/cart/hold](#operation/bookingsCartHold) endpoint and embedded in the `paymentDataSubmissionUrl`.\n\n**Note:** The `paymentDataSubmissionUrl` value should be used instead of contructing the URL manually.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a payment token from raw credit card details for use with the [/bookings/cart/book](#operation/bookingsCartBook) endpoint.\n\nThe URL should not be constructed manually, instead use the `paymentDataSubmissionUrl` value returned from the [/bookings/cart/hold](#operation/bookingsCartHold) endpoint.\n\nWhen using the API payment solution, it is a requirement that you implement our fraud prevention solution. See <a href=\"https://partnerresources.viator.com/travel-commerce/api-payments/#api\" targ"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Attractions",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/attractions/search",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://api.viator.com/partner/attractions/search",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "campaign-value",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the campaign tracking identifier that will be appended to the URL returned in `attractionUrl` as a query parameter. Campaigns allow you to track how specific links perform, with metrics such as sessions, bookings, and commission. Reports are available via the Viator Partner Platform.\n\n**Note**: If you wish to use a campaign value that includes non-alphanumeric characters (e.g., '+', '-', etc.), you must URL-encode these characters.\n"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get a list of attractions associated with a given `destinationId`, along with all relevant information about them, including products mapped.\n\nAttractions should be cached and refreshed weekly.\n\n**Note**:\n\n - Pages generated using data from this endpoint are subject to a strict no-index policy. \n You must ensure that your site is configured such that **no Viator Unique Content is indexed by any search engine**. \n This is a requirement for site certification. For more information, see [Key concep"
+        },
+        {
+          "info": {
+            "name": "/attractions/{attraction-id}",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://api.viator.com/partner/attractions/:attraction-id",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              },
+              {
+                "name": "Accept",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "campaign-value",
+                "value": "",
+                "type": "query",
+                "description": "**Affiliate partners only**: Specifies the campaign tracking identifier that will be appended to the URL returned in `attractionUrl` as a query parameter. Campaigns allow you to track how specific links perform, with metrics such as sessions, bookings, and commission. Reports are available via the Viator Partner Platform.\n\n**Note**: If you wish to use a campaign value that includes non-alphanumeric characters (e.g., '+', '-', etc.), you must URL-encode these characters.\n"
+              }
+            ]
+          },
+          "docs": "Get all relevant information about a specific `attractionId`, including products mapped.\n    \n**Note**:\n\n - Pages generated using data from this endpoint are subject to a strict no-index policy. \n You must ensure that your site is configured such that **no Viator Unique Content is indexed by any search engine**. \n This is a requirement for site certification. For more information, see [Key concepts – Protecting unique content](#section/Key-concepts/Protecting-unique-content). \n If you are unsure"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

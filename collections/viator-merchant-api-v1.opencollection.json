@@ -1,0 +1,796 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Viator API Documentation & Specification – Merchant Partners",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "apikey",
+      "key": "exp-api-key",
+      "value": "{{exp-api-key}}",
+      "placement": "header"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "General services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/health/check",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/health/check",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Health check\nUse this service to determine whether the Viator API is presently online and that your API key is valid. You should receive a response identical to the example shown. If you have not yet received an API key, please request one from your business development partner. If you have not yet signed up as a Viator merchant partner and would like to, please visit our [distribution partner website](https://www.viator.com/distribution-partners?mcid=58463#api-solutions).\"\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Taxonomy services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/taxonomy/destinations",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/taxonomy/destinations",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Get details of all destinations supported by this API\n- Retrieves all the country taxonomy/city nodes as a flat list\n- Returns a complete list of Viator destinations, including destination names and parent identifiers\n- Used to provide navigation through drill down lists or combo boxes\n"
+        },
+        {
+          "info": {
+            "name": "/taxonomy/categories",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/taxonomy/categories",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "destId",
+                "value": "684",
+                "type": "query",
+                "description": "**unique numeric identifier** of the destination to enquire about (optional)\n- `destinationId` is returned by [/taxonomy/destinations](#operation/taxonomyDestinations)\n"
+              }
+            ]
+          },
+          "docs": "Get all product categories\n- Retrieves a list of product categories for a destination that can be used as a means of filtering when searching for products using the [/search/products](/#operation/searchProducts) service\n- This service can be used to get a list of all categories and subcategories for a destination by including its `destId`, or you can omit the `destId` to get a list of all categories and subcategories\n- **Note:** If no `destId` is passed, `productCount` and `thumbnailURL` will be"
+        },
+        {
+          "info": {
+            "name": "/taxonomy/attractions",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/taxonomy/attractions",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get attractions\n- Retrieves a list of attractions (things like the Eiffel Tower or Empire State Building) and their associated unique numeric identifiers\n- The attraction's identifier (`seoId`) can be used as a means of searching for available products; for example, in the [/search/products](#operation/searchProducts) service.\n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Product services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/search/products",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/search/products",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search for products\n\nThis service is used to search for products based on various criteria; such\nas:\n\n* the destination (locale) in which it operates\n\n* its association with a tourist attraction\n\n* its category and/or subcategory\n\n* the time period during which it operates\n\nThe fields you include in the request body for this service determine the\nkind of search that will be performed.\n\n\n**<u>Note</u>**: \n\n\n* You can search **EITHER** by destination (`destId`) **OR** by\nattraction-link (`seoId`),"
+        },
+        {
+          "info": {
+            "name": "/search/products/codes",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/search/products/codes",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Search by product code\n- This service returns an array of products given an array of product identifiers that is useful for wishlist / shopping cart / user account display \n- **Note**: requesting an inactive or non-existent product code will return `0`, `null` and blank values (as per the 'invalid_product' example).\n"
+        },
+        {
+          "info": {
+            "name": "/search/freetext",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/search/freetext",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Free text search\n- This service provides a **free text search across all products and destinations**\n- The `text` parameter is required\n- **Note:** results include a type indicator (`type`) that you can use to display each result appropriately based on its content\n"
+        },
+        {
+          "info": {
+            "name": "/product",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/product",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "currencyCode",
+                "value": "",
+                "type": "query",
+                "description": "**currency code** for the currency in which pricing is displayed\n- default=`'USD'`\n"
+              },
+              {
+                "name": "sortOrder",
+                "value": "",
+                "type": "query",
+                "description": "**specifier** of the order in which to return reviews\n\nSort order options:\n\n  - `\"REVIEW_RATING_A\"`: Traveler Rating (low→high) Average\n  - `\"REVIEW_RATING_D\"`: Traveler Rating (high→low) Average\n  - `\"REVIEW_RATING_SUBMISSION_DATE_D\"`: Most recent review\n"
+              },
+              {
+                "name": "voucherOption",
+                "value": "",
+                "type": "query",
+                "description": "- `\"VOUCHER_PAPER_ONLY\"`: Paper Vouchers only accepted\n- `\"VOUCHER_E\"`: EVouchers + Paper Vouchers accepted\n"
+              },
+              {
+                "name": "code",
+                "value": "5010SYDNEY",
+                "type": "query",
+                "description": "**unique alphanumeric identifier** of the product"
+              },
+              {
+                "name": "showUnavailable",
+                "value": "false",
+                "type": "query",
+                "description": "**specifier** as to whether or not to show 'unavailable' products:\n\n  - `true`: return *both* available and unavailable products\n  - `false`: return *only* available products (default)\n"
+              },
+              {
+                "name": "excludeTourGradeAvailability",
+                "value": "",
+                "type": "query",
+                "description": "**specifier:** \n- `true`: return **all** tour grades, including those that are not available\n- `false`: only display tour grades that *are* available\n"
+              }
+            ]
+          },
+          "docs": "Get product information\nThis service provides all product details required for a product display page, as well as information required for price checks and booking, such as: \n- age bands\n- tour grades\n- language options \n- booking questions\n- hotel pickup flags\n\n**currencyCode (in query):** \n- use this parameter to specify the currency in which product pricing should be displayed\n- the default currency is the currency of your account; or, if you have multi-currency enabled, US dollars\n- \"multi-c"
+        },
+        {
+          "info": {
+            "name": "/product/reviews",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/product/reviews",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "sortOrder",
+                "value": "",
+                "type": "query",
+                "description": "**specifier** of the order in which to return reviews\n\nSort order options:\n\n  - `\"REVIEW_RATING_A\"`: Traveler Rating (low→high) Average\n  - `\"REVIEW_RATING_D\"`: Traveler Rating (high→low) Average\n  - `\"REVIEW_RATING_SUBMISSION_DATE_D\"`: Most recent review\n"
+              },
+              {
+                "name": "topX",
+                "value": "1-3",
+                "type": "query",
+                "description": "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n\n**Note**: \n- the maximum number of rows per request is 100; therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+              },
+              {
+                "name": "code",
+                "value": "5010SYDNEY",
+                "type": "query",
+                "description": "**unique alphanumeric identifier** of the product"
+              },
+              {
+                "name": "showUnavailable",
+                "value": "false",
+                "type": "query",
+                "description": "**specifier** as to whether or not to show 'unavailable' products:\n\n  - `true`: return *both* available and unavailable products\n  - `false`: return *only* available products (default)\n"
+              }
+            ]
+          },
+          "docs": "Get user-submitted reviews of a product\n\n**Note**: \n\n- The number of reviews that you can obtain via this service will depend on\nwhether your account is limited in terms of the number of reviews you are\nentitled to receive. \n\n- The number of reviews available through this service is given in the\n`reviewCount` element in the response from\n[/product](#operation/product)\n\n- Please speak to your account manager if you wish to receive more reviews.\nIf your account is not limited, you will be able to "
+        },
+        {
+          "info": {
+            "name": "/product/photos",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/product/photos",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "topX",
+                "value": "1-3",
+                "type": "query",
+                "description": "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n\n**Note**: \n- the maximum number of rows per request is 100; therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+              },
+              {
+                "name": "code",
+                "value": "5010SYDNEY",
+                "type": "query",
+                "description": "**unique alphanumeric identifier** of the product"
+              },
+              {
+                "name": "showUnavailable",
+                "value": "false",
+                "type": "query",
+                "description": "**specifier** as to whether or not to show 'unavailable' products:\n\n  - `true`: return *both* available and unavailable products\n  - `false`: return *only* available products (default)\n"
+              }
+            ]
+          },
+          "docs": "Get photos of a product submitted by users"
+        },
+        {
+          "info": {
+            "name": "/available/products",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/available/products",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Find products that are available\n\n This endpoint returns available products filtered by product code, date range or number of adult travelers\n\n\n - **Note**: Availability data is limited to a period of **12 months** into the future from the present time on the production server and **6 months** on the sandbox server. \n \n"
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Booking services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/booking/availability",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/booking/availability",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get the tour-grade with the lowest price that is available for a product on each day of the specified month\n\nThis service:\n  - returns the tour grade with the lowest price that is available for each day\n  - is useful when displaying a calendar of available tours\n\nFor more information, see: [Availability services](#section/Key-concepts/Availability-services)\n\n**Notes:** \n  - [/booking/availability/dates](#operation/bookingAvailabilityDates) provides all availability in one call and is more suitab"
+        },
+        {
+          "info": {
+            "name": "/booking/availability/dates",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/booking/availability/dates",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "productCode",
+                "value": "2280AAHT",
+                "type": "query",
+                "description": "**unique alphanumeric identifier** of the product"
+              }
+            ]
+          },
+          "docs": "Get dates on which a product is available\n\nThis service:\n- retrieves all available dates for a product, excluding days it does not operate and blocked-out dates\n- returns a multi-dimensional array of year-month -> days that have any availabile tour grade or traveler mix\n- useful to present the user with a list of dates for selection on which *this* product is available for booking\n- **Notes**: \n\n  - The user's desired traveler mix may not be eligible for booking; these details can be displayed w"
+        },
+        {
+          "info": {
+            "name": "/booking/availability/tourgrades",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/booking/availability/tourgrades",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get the tour grades of a product that are currently available\n\nThis service reports:\n- all tour grades for the specified product, on the specified day, that are available for the specified age bands\n- the pricing breakdown and the total depending on the travel date and traveler mix\n\n**Note**: Availability data is limited to a period of **12 months** into the future from the present time on the production server and **6 months** on the sandbox server. \n"
+        },
+        {
+          "info": {
+            "name": "/booking/availability/tourgrades/pricingmatrix",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/booking/availability/tourgrades/pricingmatrix",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get a pricing matrix that includes availability and tour-grades for a product\n\nGiven a month, this service returns days with available tour grades only (i.e., days which have at least one tourgrade available), and the pricing matrix for that tour grade for that day.\n\n- **Note**: Availability data is limited to a period of **12 months** into the future from the present time on the production server and **6 months** on the sandbox server. \n"
+        },
+        {
+          "info": {
+            "name": "/booking/calculateprice",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/booking/calculateprice",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Confirm the price of a tour / activity prior to booking\n\nFor more information, see: [Calculating prices](#section/Common-workflows-and-data-validation/Calculating-prices)  \n\n- **Note**: Availability and pricing data is limited to a period of **six months** into the future from the present time\n"
+        },
+        {
+          "info": {
+            "name": "/booking/hotels",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/booking/hotels",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "productCode",
+                "value": "2280AAHT",
+                "type": "query",
+                "description": "**unique alphanumeric identifier** of the product"
+              },
+              {
+                "name": "destId",
+                "value": "123",
+                "type": "query",
+                "description": "**unique numeric identifier** of the destination"
+              }
+            ]
+          },
+          "docs": "Get hotel pick-ups\nLists the hotel pickups available for either a product or a destination\n"
+        },
+        {
+          "info": {
+            "name": "/booking/book",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/booking/book",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Make a booking\n\n **Note**: \n  - This endpoint is only available to <u>merchant partners</u>.\n  - The amount that you will be invoiced for the sale of this tour (in the specified currency) is given in the `totalPrice` element in the response from this endpoint.\n  - As some products are booked on external supplier systems, it may take > 90s to receive a response from this endpoint. For this reason, <u>we recommend setting your internal time-out for this service to **120s**</u>. In the event that t"
+        },
+        {
+          "info": {
+            "name": "/booking/status",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/booking/status",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get the booking status for multiple items based on different criteria\n\nThis service: \n- is ideally be used in software for bulk updates of pending bookings\n- returns a maximum of 1000 bookings (narrow your search if you expect a greater number of results)\n- will return <u>both</u> live <u>and</u> test bookings\n- rate limited to <u>one request every 30 minutes</u>\n- For more information, see: [Get the bookiing status for multiple items](#section/Common-workflows-and-data-validation/Get-the-bookin"
+        },
+        {
+          "info": {
+            "name": "/booking/status/items",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/booking/status/items",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get brief booking statuses\n\nThis service is similar to [/booking/status](#operation/bookingStatus) in that it:\n- retrieves the booking status for multiple items based on different criteria\n- has the same request parameters as [/booking/status](#operation/bookingStatus)\n\nHowever, it differs in that it returns a multi-item array of booking items with less detail than what would be received from [/booking/status](#operation/bookingStatus).\n"
+        },
+        {
+          "info": {
+            "name": "/booking/pricingmatrix",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/booking/pricingmatrix",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Get the pricing matrix for tour-grades, product age bands and pax mixes\n\nFor more information, see: [Get the tour-grade pricing matrix](#section/Common-workflows-and-data-validation/Get-the-tour-grade-pricing-matrix)\n"
+        },
+        {
+          "info": {
+            "name": "/booking/voucher",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/booking/voucher",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "leadLastName",
+                "value": "Simpson",
+                "type": "query",
+                "description": "**surname** of *this* lead traveler"
+              },
+              {
+                "name": "itemId",
+                "value": "600033670",
+                "type": "query",
+                "description": "Booking-reference number generated by Viator\n\n  - **Note**: For more information, see: [Booking references](#section/Key-concepts/Booking-references)\n"
+              },
+              {
+                "name": "embeddedResources",
+                "value": "",
+                "type": "query",
+                "description": "ignore (Viator only)"
+              },
+              {
+                "name": "voucherKey",
+                "value": "",
+                "type": "query",
+                "description": "**identifier** for the voucher\n- **note**: use <u>either</u> `voucherKey` <u>or</u> the three separate parameters\n- if `voucherKey` is provided as well as the other parameters, then `voucherKey` overrides the other paramaters\n- `voucherKey` is obtained from [/booking/mybookings](#operation/bookingMybookings) or in the response from [/booking/book](#operation/bookingBook) when you make a booking\n"
+              },
+              {
+                "name": "fullHTML",
+                "value": "true",
+                "type": "query",
+                "description": "**specifier**:\n- set to `true` if you wish to retrieve the full HTML-formatted voucher\n- set to `false` if you want the div fragment (optional)\n"
+              },
+              {
+                "name": "mobileVoucher",
+                "value": "true",
+                "type": "query",
+                "description": "**specifier**: \n- if set to `true`, the service returns the mobile (cut down) HTML-formatted voucher\n- if `false` the full voucher HTML is returned (ignoring `fullHTML`)\n- default: `true` \n- this field should only be enabled for products that have a `voucherOption` of `'VOUCHER_E'`\n- do not enable `mobileVouchers` for paper vouchers (`voucherOption` of `'VOUCHER_PAPER_ONLY'`) as no barcode is returned\n- the voucher information is available in the response from [/product](#operation/product), [/booking/book](#operation/bookingBook), [/booking/pastbooking](#operation/bookingPastbooking), [/booking/mybookings](#operation/bookingMybookings) (it is also displayed under the 'Redemption Info' heading in this service)\n"
+              }
+            ]
+          },
+          "docs": "Get voucher details\n- Use this service to retrieve the voucher details of a booked item.\n- The data returned is HTML-formatted and can be wrapped in a header and/or footer.\n\n**Sample query parameters**\n- leadLastName=Simpson test&itemId=580669678\n\n**or** \n- voucherKey=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678&fullHTML=true&mobileVoucher=true\n"
+        },
+        {
+          "info": {
+            "name": "/booking/pastbooking",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/booking/pastbooking",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "voucherKey",
+                "value": "1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678",
+                "type": "query",
+                "description": "**specifier** of past booking type (use *one* of: `itemId` (booking reference) *and* `'voucherKey'` *or* `'email'`)"
+              },
+              {
+                "name": "email",
+                "value": "apitest@viator.com",
+                "type": "query",
+                "description": "**email address** by which to search for past bookings"
+              },
+              {
+                "name": "itemId",
+                "value": "580669678",
+                "type": "query",
+                "description": "Search for a booking with this **unique booking-reference number**. See [Booking references](#section/Key-concepts/Booking-references) for more information.\n"
+              }
+            ]
+          },
+          "docs": "Get the details of a single specific past booking based on the `voucherKey` or `itemId` and email address sent in the request.\n\n**Note**: this service will only return past bookings that were made with the same API key that was used to make the booking\n\n**Sample query parameters**:\n- email=apitest@viator.com&itemId=580669678\n\n**or**\n- voucherKey=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678\n\n**email**\n- The email address passed must match the email address"
+        },
+        {
+          "info": {
+            "name": "/booking/mybookings",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/booking/mybookings",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "voucherKey",
+                "value": "3299307:93c7f36a56b18ba1068787ba7fb7988da5c8ad08db77604110141ff21498603e:600033670",
+                "type": "query",
+                "description": "**voucher key** for the booking"
+              },
+              {
+                "name": "email",
+                "value": "apitest@viator.com",
+                "type": "query",
+                "description": "**email address** of the booker for the booking"
+              },
+              {
+                "name": "itineraryOrItemId",
+                "value": "700179574",
+                "type": "query",
+                "description": "The booking reference number of the item\n- **Note**: For more information, see [Booking references](#section/Key-concepts/Booking-references)\n"
+              }
+            ]
+          },
+          "docs": "Get a user's bookings with travel dates in the future. \n\nThis service can also be used to check the status of a booking. \n\n**Provide either:** \n- A `voucherKey`, **or...** \n- An email address (`email`) and a booking reference (`itineraryOrItemId`) ([Booking Reference](#section/Key-concepts/Booking-references))\n"
+        },
+        {
+          "info": {
+            "name": "/bookings/cancel-reasons",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/bookings/cancel-reasons",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ]
+          },
+          "docs": "Retrieves a dictionary of unique identification codes (`cancellationReasonCode`) and their associated natural-language descriptions (`cancellationReasonText`).\n\nFor information on how to use this service, see: [Cancellation API workflow](#section/Common-workflows-and-data-validation/Cancellation-API-workflow)\n\n**Note**: \n\n  * This service <u>requires</u> [exp-api-key](#section/Authentication/exp-api-key) to be included as a header parameter. Please speak to your account manager if you have not y"
+        },
+        {
+          "info": {
+            "name": "/bookings/{booking-reference}/cancel-quote",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://viatorapi.viator.com/service/bookings/:booking-reference/cancel-quote",
+            "params": [
+              {
+                "name": "booking-reference",
+                "value": "",
+                "type": "path",
+                "description": "Unique numeric identifier of the booking for which to retrieve a cancellation quote"
+              }
+            ]
+          },
+          "docs": "Retrieves a quote for the cancellation of a booking\n\nFor information on how to use this service, see: [Cancellation API workflow](#section/Common-workflows-and-data-validation/Cancellation-API-workflow)\n\n**Note**: \n\n  * This service <u>requires</u> [exp-api-key](#section/Authentication/exp-api-key) to be included as a header parameter. Please speak to your account manager if you have not yet been issued an exp-api-key.\n  * The base URL for the server for this endpoint is different from the older"
+        },
+        {
+          "info": {
+            "name": "/bookings/{booking-reference}/cancel",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/bookings/:booking-reference/cancel",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "params": [
+              {
+                "name": "booking-reference",
+                "value": "",
+                "type": "path",
+                "description": "The ID of the booking"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Submits a cancellation request for the specified booking\n\nFor information on how to use this service, see: [Cancellation API workflow](#section/Common-workflows-and-data-validation/Cancellation-API-workflow)\n\n**Note**: \n\n  * This service <u>requires</u> [exp-api-key](#section/Authentication/exp-api-key) to be included as a header parameter. Please speak to your account manager if you have not yet been issued an exp-api-key.\n  * The base URL for the server for this endpoint is different from the "
+        }
+      ]
+    },
+    {
+      "info": {
+        "name": "Deprecated services",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "/merchant/cancellation",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://viatorapi.viator.com/service/merchant/cancellation",
+            "headers": [
+              {
+                "name": "Accept-Language",
+                "value": ""
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Cancel a booking\n**Note**: This service has been replaced by the [cancellationReasons](#operation/cancellationReasons), [bookingQuote](#operation/bookingQuote) and [cancelBooking](#operation/cancelBooking) endpoints\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
