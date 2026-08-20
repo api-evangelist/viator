@@ -23,6 +23,17 @@ tags:
 - Travel
 - United States
 - Tours and Activities
+- Experience
+- OTA
+- Booking
+- Distribution
+- Marketplace
+- Affiliates
+- Hospitality
+tags_raw:
+- Travel
+- United States
+- Tours and Activities
 - Experiences
 - OTA
 - Booking
@@ -43,6 +54,11 @@ apis:
   humanURL: https://docs.viator.com/partner-api/technical/
   baseURL: https://api.viator.com/partner
   tags:
+  - Product
+  - Catalog
+  - Content
+  - Search
+  tags_raw:
   - Products
   - Catalog
   - Content
@@ -85,6 +101,11 @@ apis:
   humanURL: https://docs.viator.com/partner-api/technical/
   baseURL: https://api.viator.com/partner
   tags:
+  - Bookings
+  - Order
+  - Cancellation
+  - Amendments
+  tags_raw:
   - Bookings
   - Orders
   - Cancellation
@@ -188,6 +209,11 @@ apis:
   - Merchant
   - Legacy
   - Bookings
+  - Product
+  tags_raw:
+  - Merchant
+  - Legacy
+  - Bookings
   - Products
   properties:
   - type: OpenAPI
@@ -203,6 +229,11 @@ apis:
   humanURL: https://docs.viator.com/partner-api/affiliate/technical/
   baseURL: https://viatorapi.viator.com/service
   tags:
+  - Affiliates
+  - Legacy
+  - Product
+  - Attractions
+  tags_raw:
   - Affiliate
   - Legacy
   - Products
