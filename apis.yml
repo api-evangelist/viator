@@ -45,149 +45,34 @@ created: '2026-07-28'
 modified: '2026-07-28'
 specificationVersion: '0.23'
 apis:
-- aid: viator:viator-partner-products-api
-  name: Viator Partner Products API
-  description: >-
-    Product content and catalogue ingestion for the Viator Partner API v2 - full product detail,
-    bulk retrieval, incremental modified-since ingestion, the product tag taxonomy, booking
-    questions, product search and product-to-product recommendations.
+- aid: viator:viator-attraction-services-api
+  name: Viator Attraction services API
+  description: Attraction services
   humanURL: https://docs.viator.com/partner-api/technical/
   baseURL: https://api.viator.com/partner
   tags:
-  - Product
-  - Catalog
-  - Content
-  - Search
-  tags_raw:
-  - Products
-  - Catalog
-  - Content
-  - Search
+  - Attraction services
   properties:
   - type: OpenAPI
-    url: openapi/viator-partner-api-v2-openapi.json
+    url: openapi/viator-attraction-services-api-openapi.yml
   - type: Documentation
     url: https://docs.viator.com/partner-api/technical/
   - type: APIReference
     url: https://docs.viator.com/partner-api/technical/#tag/Products
   - type: PostmanCollection
     url: collections/Viator-Merchant-API-v2.postman_collection.json
-- aid: viator:viator-partner-availability-api
-  name: Viator Partner Availability API
-  description: >-
-    Real-time availability and price checking plus availability-schedule retrieval for a single
-    product, in bulk, or incrementally by modification date, so partners can hold a local mirror
-    of bookable capacity and pricing.
-  humanURL: https://docs.viator.com/partner-api/technical/
-  baseURL: https://api.viator.com/partner
-  tags:
-  - Availability
-  - Pricing
-  - Schedules
-  properties:
-  - type: OpenAPI
-    url: openapi/viator-partner-api-v2-openapi.json
-  - type: Documentation
-    url: https://docs.viator.com/partner-api/technical/
   - type: APIReference
     url: https://docs.viator.com/partner-api/technical/#tag/Availability
-- aid: viator:viator-partner-bookings-api
-  name: Viator Partner Bookings API
-  description: >-
-    Transactional booking surface - cart and single-item hold and book, booking status, cancel
-    reasons, cancellation quote and cancellation, amendment check, quote and amend, and the
-    modified-since booking feed with an acknowledgement cursor for pulling a partner's own
-    booking records.
-  humanURL: https://docs.viator.com/partner-api/technical/
-  baseURL: https://api.viator.com/partner
-  tags:
-  - Bookings
-  - Order
-  - Cancellation
-  - Amendments
-  tags_raw:
-  - Bookings
-  - Orders
-  - Cancellation
-  - Amendments
-  properties:
-  - type: OpenAPI
-    url: openapi/viator-partner-api-v2-openapi.json
-  - type: Documentation
-    url: https://docs.viator.com/partner-api/technical/
   - type: APIReference
     url: https://docs.viator.com/partner-api/technical/#tag/Bookings
   - type: PostmanCollection
     url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
-- aid: viator:viator-partner-payments-api
-  name: Viator Partner Payments API
-  description: >-
-    Checkout-session payment account endpoint used by Full Access plus Booking affiliate partners
-    to pass traveller payment details to Viator in a PCI-compliant way when Viator remains the
-    merchant of record.
-  humanURL: https://docs.viator.com/partner-api/technical/
-  baseURL: https://api.viator.com/partner
-  tags:
-  - Payments
-  - Checkout
-  properties:
-  - type: OpenAPI
-    url: openapi/viator-partner-api-v2-openapi.json
   - type: APIReference
     url: https://docs.viator.com/partner-api/technical/#tag/Payments
-- aid: viator:viator-partner-attractions-api
-  name: Viator Partner Attractions API
-  description: >-
-    Attraction search and attraction detail endpoints, letting partners build attraction landing
-    pages and tie Viator's bookable products back to the places they visit.
-  humanURL: https://docs.viator.com/partner-api/technical/
-  baseURL: https://api.viator.com/partner
-  tags:
-  - Attractions
-  - Places
-  properties:
-  - type: OpenAPI
-    url: openapi/viator-partner-api-v2-openapi.json
   - type: APIReference
     url: https://docs.viator.com/partner-api/technical/#tag/Attractions
-- aid: viator:viator-partner-auxiliary-api
-  name: Viator Partner Auxiliary API
-  description: >-
-    Supporting reference and content services for the Partner API v2 - free-text search across
-    products, destinations and attractions, bulk location resolution, exchange rates, product
-    reviews, supplier product-code lookup and the destination taxonomy.
-  humanURL: https://docs.viator.com/partner-api/technical/
-  baseURL: https://api.viator.com/partner
-  tags:
-  - Search
-  - Locations
-  - Reviews
-  - Exchange Rates
-  - Destinations
-  properties:
-  - type: OpenAPI
-    url: openapi/viator-partner-api-v2-openapi.json
   - type: APIReference
     url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
-- aid: viator:viator-reservation-system-api
-  name: Viator Reservation System API
-  description: >-
-    The supplier-side connectivity contract, formerly the Viator Supplier API. This specification
-    is inverted - it defines the endpoints a tour operator's reservation system or booking
-    software must itself implement and expose for Viator to call, covering tour list mapping,
-    real-time and batch availability, batch pricing, reserve, booking, amendment, cancellation
-    and redemption, alongside the Viator-hosted event and special-offer notification endpoints.
-    It carries published uptime, latency and error-rate SLAs and Viator-operated circuit breakers.
-  humanURL: https://docs.viator.com/supplier-api/technical/
-  tags:
-  - Supplier
-  - Connectivity
-  - Channel Manager
-  - Inventory
-  - Reservation System
-  properties:
-  - type: OpenAPI
-    url: openapi/viator-reservation-system-api-openapi.json
   - type: Documentation
     url: https://docs.viator.com/supplier-api/technical/
   - type: Documentation
@@ -196,51 +81,719 @@ apis:
     url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
   - type: Documentation
     url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
-- aid: viator:viator-merchant-api-v1
-  name: Viator Merchant API v1
-  description: >-
-    The legacy v1 merchant-partner specification still published by Viator, exposing taxonomy,
-    product, photo, review, availability, pricing-matrix, booking, voucher and cancellation
-    services under viatorapi.viator.com/service. Superseded by the Partner API v2 but retained in
-    the public documentation.
-  humanURL: https://docs.viator.com/partner-api/merchant/technical/
-  baseURL: https://viatorapi.viator.com/service
-  tags:
-  - Merchant
-  - Legacy
-  - Bookings
-  - Product
-  tags_raw:
-  - Merchant
-  - Legacy
-  - Bookings
-  - Products
-  properties:
-  - type: OpenAPI
-    url: openapi/viator-merchant-api-v1-openapi.json
   - type: Documentation
     url: https://docs.viator.com/partner-api/merchant/technical/
-- aid: viator:viator-affiliate-api-v1
-  name: Viator Affiliate API v1
-  description: >-
-    The legacy v1 affiliate-partner specification, a non-transactional subset covering utility
-    services, destination and category taxonomy, product and attraction search, product detail,
-    reviews and photos under viatorapi.viator.com/service. Superseded by the Partner API v2.
-  humanURL: https://docs.viator.com/partner-api/affiliate/technical/
-  baseURL: https://viatorapi.viator.com/service
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-attractions-api
+  name: Viator Attractions API
+  description: The Attractions API from Viator — 2 operation(s) for attractions.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
   tags:
-  - Affiliates
-  - Legacy
-  - Product
-  - Attractions
-  tags_raw:
-  - Affiliate
-  - Legacy
-  - Products
   - Attractions
   properties:
   - type: OpenAPI
-    url: openapi/viator-affiliate-api-v1-openapi.json
+    url: openapi/viator-attractions-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-auxiliary-api
+  name: Viator Auxiliary API
+  description: The Auxiliary API from Viator — 6 operation(s) for auxiliary.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Auxiliary
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-auxiliary-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-availability-api
+  name: Viator Availability API
+  description: The Availability API from Viator — 4 operation(s) for availability.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Availability
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-availability-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-booking-services-api
+  name: Viator Booking services API
+  description: Booking services
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Booking services
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-booking-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-bookings-api
+  name: Viator Bookings API
+  description: The Bookings API from Viator — 13 operation(s) for bookings.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Bookings
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-bookings-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-deprecated-api
+  name: Viator Deprecated API
+  description: >-
+    This section lists endpoints that are no longer recommended for new or updated integrations. These
+    endpoints remain available for existing connections only, will stop receiving new features or behavior
+    improvements, and will eventually be retired once an end-of-life procedure is agreed with Viator (see
+    the [v2 migration guide](#tag/v2-migration-guide) for details).
+
+
+    For all new development, use the current, fully supported endpoints documented in the main sections
+    of this guide.
+
+
+    ### REST v1.0 endpoints — deprecated
+
+
+    - [Real-time Availability API](#operation/availability) — superseded by the Availability Check API
+    and Reserve API
+
+    - [Batch Availability API](#operation/batchAvailability) — superseded by the Calendar API
+
+    - [Batch Pricing API](#operation/batchPricing) — superseded by the Calendar API
+
+    - [Availability Notifications (2) API](#operation/availabilityNotification2) — superseded by the Event
+    Notifications API
+
+
+    ### Data format: XML — deprecated
+
+
+    XML (`application/xml`) requests and responses are deprecated. **New integrations must use JSON (`application/json`)
+    exclusively.** XML remains available for existing v1.0 integrations only and will receive no new features
+    or behavior improvements. All v2.0 endpoints are JSON-only. XML will eventually be retired once an
+    end-of-life procedure is agreed with Viator.
+
+
+    ### SOAP interface (WSDL/XSD) — deprecated
+
+
+    The legacy SOAP interface definitions are deprecated. SOAP is no longer supported for new or updated
+    integrations; use the REST endpoints documented in the main sections of this guide instead.
+
+
+    The WSDL and XSD files are kept for historical reference only:
+
+
+    - [Reseller-to-supplier WSDL](resources/api_specs/wsdl/tgds-reseller-to-supplier.wsdl)
+
+    - [Supplier-to-reseller WSDL](resources/api_specs/wsdl/tgds-supplier-to-reseller.wsdl)
+
+    - [API XSD](resources/api_specs/xsd/api.xsd)
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Deprecated
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-deprecated-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-deprecated-services-api
+  name: Viator Deprecated services API
+  description: Deprecated services
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Deprecated services
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-deprecated-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-general-services-api
+  name: Viator General services API
+  description: General services
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - General services
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-general-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-payments-api
+  name: Viator Payments API
+  description: The Payments API from Viator — 1 operation(s) for payments.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Payments
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-payments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-product-services-api
+  name: Viator Product services API
+  description: Product services
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Product services
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-product-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-products-api
+  name: Viator Products API
+  description: The Products API from Viator — 7 operation(s) for products.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-products-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-reservation-system-apis-api
+  name: Viator Reservation system APIs API
+  description: "This section describes all the possible services, some of which are mandatory, that reservation\
+    \ systems can develop to integrate with Viator. \n\nAll API requests made by Viator to the reservation\
+    \ system are specified. The reservation system will respond to Viator requests in a synchronous manner,\
+    \ responding as per specification. Both request and response formats are described in detail in subsequent\
+    \ sections of this document.\n\n### Authentication\n\nThese endpoints support two authentication mechanisms:\
+    \ the legacy body-embedded `ApiKey` field, which is always required in the request payload for v1\
+    \ APIs, or the `X-Api-Key` header used by the v2 APIs. The header option was added so existing partners\
+    \ could migrate to header-based authentication without changing endpoints.\n\n### BookingCutoff and\
+    \ Capacity elements\n\nThe [Availability response](#tag/Reservation-system-APIs/operation/availability)\
+    \ includes two elements used to determine whether a booking can proceed:\n\n- **`BookingCutoff`**\
+    \ communicates the point in time after which a tour option may no longer be purchased. Exactly one\
+    \ of its three child elements must be provided: `DateTime` (a timezone-qualified timestamp), `ProductDateTime`\
+    \ (a timestamp in the product's own local time, with no timezone offset), or `NotApplicable` (a boolean,\
+    \ `true` if no cut-off exists for the product option).\n- **`Capacity`** communicates the remaining\
+    \ places available for Viator to book. Its `Simple` child element holds `Remaining` (the number of\
+    \ places left) and `ConsumedBy` (the age bands — `ADULT`, `CHILD`, `INFANT`, `YOUTH`, `SENIOR` — that\
+    \ draw down on those places), which lets specific age bands (e.g. infants) be excluded from consuming\
+    \ capacity.\n\nBoth elements are part of the [Availability response schema](#tag/Reservation-system-APIs/operation/availability)\
+    \ — see that operation for the full field definitions."
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Reservation system APIs
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-reservation-system-apis-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-support-services-api
+  name: Viator Support services API
+  description: Support services
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Support services
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-support-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-taxonomy-services-api
+  name: Viator Taxonomy services API
+  description: Taxonomy services
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Taxonomy services
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-taxonomy-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-utility-services-api
+  name: Viator Utility services API
+  description: Utility services
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Utility services
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-utility-services-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/affiliate/technical/
+- aid: viator:viator-viator-apis-api
+  name: Viator Viator APIs API
+  description: >-
+    This section describes the Viator built API(s) available for reservation system consumption.
+
+
+    **Note**: For these APIs, the request is sent **to** Viator and the response is received **from**
+    Viator.
+  humanURL: https://docs.viator.com/partner-api/technical/
+  baseURL: https://api.viator.com/partner
+  tags:
+  - Viator APIs
+  properties:
+  - type: OpenAPI
+    url: openapi/viator-viator-apis-api-openapi.yml
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/technical/
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Products
+  - type: PostmanCollection
+    url: collections/Viator-Merchant-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Availability
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Bookings
+  - type: PostmanCollection
+    url: collections/Viator-Affiliate-Booking-API-v2.postman_collection.json
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Payments
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Attractions
+  - type: APIReference
+    url: https://docs.viator.com/partner-api/technical/#tag/Auxiliary
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/api-overview/
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/connectivity-overview/index.html
+  - type: Documentation
+    url: https://docs.viator.com/supplier-api/technical/sapi-manual-latest/
+  - type: Documentation
+    url: https://docs.viator.com/partner-api/merchant/technical/
   - type: Documentation
     url: https://docs.viator.com/partner-api/affiliate/technical/
 common:
