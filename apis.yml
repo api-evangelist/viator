@@ -18,6 +18,18 @@ description: >-
   the contract is entirely Viator-proprietary, product identifiers are Viator-internal, and
   partners are contractually required to prevent search engines indexing Viator reviews and
   unique content.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 image: https://partnerresources.viator.com/wp-content/uploads/2023/08/V-logo_Green.png
 tags:
 - Travel
