@@ -1,0 +1,66 @@
+slug: viator
+provider: Viator
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Travel & Hospitality
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 5
+edges:
+- tag: Booking services
+  spec_file: viator-booking-services-api-openapi.yml
+  capability_id: BC-4020
+  capability_id_l1: BC-4020
+  capability_name: Reservation & Booking Management
+  confidence: 0.9
+  evidence: POST /booking/book bookingBook; POST /booking/status; GET /booking/voucher; schemas CancelBookingResponse,
+    CancellationRequest, RefundDetails
+  reason: Full reservation lifecycle for tour/activity bookings — create booking, check status, retrieve
+    voucher, cancel with refund detail. Spans capture, cancellation and documentation, so the L1 is the
+    honest level.
+- tag: Bookings
+  spec_file: viator-bookings-api-openapi.yml
+  capability_id: BC-4020
+  capability_id_l1: BC-4020
+  capability_name: Reservation & Booking Management
+  confidence: 0.9
+  evidence: POST /bookings/book bookingsBook; POST /bookings/hold; POST /bookings/{booking-reference}/cancel;
+    POST /amendment/quote
+  reason: Booking hold, cart book, status, cancellation quote/cancel and amendment quoting is the reservation
+    lifecycle. Spans several L2s (capture, hold, modification/cancellation), so L1 only.
+- tag: Reservation system APIs
+  spec_file: viator-reservation-system-apis-api-openapi.yml
+  capability_id: BC-4020
+  capability_id_l1: BC-4020
+  capability_name: Reservation & Booking Management
+  confidence: 0.9
+  evidence: POST /v2/reserve  Reserve; POST /booking  Booking; POST /booking-amendment  Booking Amendment;
+    POST /booking-cancellation  Booking Cancellation
+  reason: Operations create, amend, cancel and redeem bookings against checked availability — the reservation
+    lifecycle. Left at L1 because capture, modification/cancellation and confirmation/redemption are all
+    present.
+- tag: Taxonomy services
+  spec_file: viator-taxonomy-services-api-openapi.yml
+  capability_id: BC-4000.60
+  capability_id_l1: BC-4000
+  capability_name: Travel Product Master Data Governance
+  confidence: 0.72
+  evidence: GET /taxonomy/destinations; GET /taxonomy/categories; POST /taxonomy/attractions
+  reason: Operations serve the destination, category and attraction taxonomy used to classify bookable
+    products — stewardship of product taxonomy and classification identifiers.
+- tag: Products
+  spec_file: viator-products-api-openapi.yml
+  capability_id: BC-4000
+  capability_id_l1: BC-4000
+  capability_name: Travel Product & Inventory Management
+  confidence: 0.7
+  evidence: GET /products/modified-since; POST /products/bulk; GET /products/tags; GET /products/{product-code}
+  reason: Partner API for retrieving and synchronising the bookable tour/activity product catalogue including
+    product records, tags and booking questions — travel product and inventory master definition. Kept
+    at L1 because the surface spans product detail, taxonomy tags and search rather than one sub-capability.

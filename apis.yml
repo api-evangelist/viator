@@ -809,6 +809,9 @@ apis:
   - type: Documentation
     url: https://docs.viator.com/partner-api/affiliate/technical/
 common:
+- type: CapabilityMap
+  url: capabilities/viator-capability-edges.yml
+  name: Viator Business Capability Map
 - type: AgenticAccess
   url: agentic-access/viator-agentic-access.yml
 - type: DomainSecurity
