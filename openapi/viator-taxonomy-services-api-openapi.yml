@@ -1,0 +1,1790 @@
+openapi: 3.2.0
+info:
+  title: Viator Taxonomy services API
+  license:
+    name: CC BY 4.0
+    url: https://creativecommons.org/licenses/by/4.0/au
+  version: '1.0'
+  description: 'Operations tagged Taxonomy services across 2 of this provider''s published API definitions: viator-affiliate-api-v1-openapi.json, viator-merchant-api-v1-openapi.json. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://viatorapi.viator.com/service
+  description: Production server
+- url: https://viatorapi.sandbox.viator.com/service
+  description: Sandbox server (uses test data)
+security:
+- API-key: []
+- Legacy-API-key: []
+tags:
+- name: Taxonomy services
+  description: Taxonomy services
+paths:
+  /taxonomy/destinations:
+    get:
+      tags:
+      - Taxonomy services
+      summary: /taxonomy/destinations
+      operationId: taxonomyDestinations
+      description: '- Retrieves all the country taxonomy/city nodes as a flat list
+
+        - Returns a complete list of Viator destinations, including destination names and parent identifiers
+
+        - Used to provide navigation through drill down lists or combo boxes
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      description: '**array** of destination objects'
+                      items:
+                        type: object
+                        properties:
+                          sortOrder:
+                            type: integer
+                            description: '**sort order** for this response'
+                          selectable:
+                            type: boolean
+                            description: ignore - (Viator only)
+                          destinationUrlName:
+                            type: string
+                            description: ignore - (Viator only)
+                          defaultCurrencyCode:
+                            $ref: '#/components/schemas/defaultCurrencyCode'
+                          lookupId:
+                            description: '**hierarchy location specifier** for the destination that is a concatenation of all `parentId` and `destinationId` codes
+
+                              - e.g. `''8.77.673''` for Chicago
+
+                              - format: [top level `parentId`].[any additional `parentId`].[`destinationId`]
+
+                              '
+                            type: string
+                          parentId:
+                            type: integer
+                            description: '**unique numeric identifier** of the destination''s parent destination'
+                          timeZone:
+                            type: string
+                            description: '**time zone** of the destination'
+                          iataCode:
+                            $ref: '#/components/schemas/iataCode'
+                          destinationId:
+                            type: integer
+                            description: '**unique numeric identifier** of the destination
+
+                              - use this value as the `destId` input field for other Viator API services
+
+                              '
+                          destinationType:
+                            $ref: '#/components/schemas/destinationType'
+                          destinationName:
+                            type: string
+                            description: '**natural-language name** of the destination'
+                          latitude:
+                            type: number
+                            description: '**latitude component** of the destination''s geolocation'
+                          longitude:
+                            type: number
+                            description: '**longitude component** of the destination''s geolocation'
+              examples:
+                '1':
+                  $ref: '#/components/examples/taxonomy-destinations-example'
+    servers:
+    - url: https://viatorapi.viator.com/service
+      description: Production server
+  /taxonomy/categories:
+    get:
+      tags:
+      - Taxonomy services
+      summary: /taxonomy/categories
+      operationId: taxonomyCategories
+      description: '- Retrieves a list of product categories for a destination that can be used as a means of filtering when searching for products using the [/search/products](#operation/searchProducts) service
+
+        - This service can be used to get a list of all categories and subcategories for a destination by including its `destId`, or you can omit the `destId` to get a list of all categories and subcategories
+
+        - **Note:** If no `destId` is passed, `productCount` and `thumbnailURL` will be `null` as they are destination-specific fields
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      - in: query
+        name: destId
+        schema:
+          type: integer
+        description: '**unique numeric identifier** of the destination to enquire about (optional)
+
+          - `destinationId` is returned by [/taxonomy/destinations](#operation/taxonomyDestination)
+
+          '
+        example: 684
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      description: '**array** of category data objects'
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: '**unique numeric identifier** for the category'
+                          productCount:
+                            type: integer
+                            description: '**number** of products in this category in the destination specified by `destId`
+
+                              - **note**: will be `null` if no `destId` is included in the query
+
+                              '
+                          thumbnailURL:
+                            type: string
+                            description: '**URL** for this category''s thumbnail image, selected from the most popular product within the category
+
+                              - **note:** will be `null` if no `destId` is included in the query
+
+                              '
+                          groupName:
+                            type: string
+                            description: '**natural-language name** of *this* product category'
+                          groupUrlName:
+                            type: string
+                            description: '**URL-formatted name** of *this* product category'
+                          subcategories:
+                            type: array
+                            description: '**array** of subcategory objects'
+                            items:
+                              type: object
+                              properties:
+                                sortorder:
+                                  type: integer
+                                  description: '**sort order** (suggested) of the subcategory within the category'
+                                categoryId:
+                                  type: integer
+                                  description: '**unique numeric identifier** of *this* product category'
+                                subcategoryId:
+                                  type: integer
+                                  description: '**unique numeric identifier** of *this* product subcategory'
+                                subcategoryName:
+                                  type: string
+                                  description: '**natural-language name** of *this* product subcategory'
+                                subCategoryUrlName:
+                                  type: string
+                                  description: '**URL-formatted name** of *this* product subcategory'
+              examples:
+                '1':
+                  $ref: '#/components/examples/taxonomy-categories-example'
+    servers:
+    - url: https://viatorapi.viator.com/service
+      description: Production server
+  /taxonomy/attractions:
+    post:
+      tags:
+      - Taxonomy services
+      summary: /taxonomy/attractions
+      operationId: taxonomyAttractions
+      description: '- Retrieves a list of attractions (things like the Eiffel Tower or Empire State Building) and their associated unique numeric identifiers
+
+        - The attraction''s identifier (`seoId`) can be used as a means of searching for available products; for example, in the [/search/products](#operation/searchProducts) service.
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                destId:
+                  type: integer
+                  description: '**unique numeric identifier** of the destination in which to search for attractions'
+                topX:
+                  $ref: '#/components/schemas/topX'
+                sortOrder:
+                  type: string
+                  description: 'Sort order for the results; one of:
+
+                    - `''RECOMMENDED''` – sorted in order of recommendation (**Note**: What Viator gets paid impacts this sort order)
+
+                    - `''SEO_ALPHABETICAL''` – Alphabetical (A->Z)
+
+                    '
+            example:
+              destId: 684
+              topX: 1-3
+              sortOrder: RECOMMENDED
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          sortOrder:
+                            type: integer
+                            description: '**sort order** of *this* listing'
+                          webURL:
+                            $ref: '#/components/schemas/webURL'
+                          pageUrlName:
+                            description: '**URL-formatted title** of the attraction page'
+                            type: string
+                          primaryDestinationUrlName:
+                            description: '**URL-formatted name** of the destination associated with *this* attraction'
+                            type: string
+                          publishedDate:
+                            description: '**conventionally-formatted date** on which the attraction was listed'
+                            type: string
+                          title:
+                            description: '**natural-language title** of the attraction'
+                            type: string
+                          attractionLatitude:
+                            description: '**latitude component** of the attraction''s location'
+                            type: number
+                          attractionLongitude:
+                            description: '**longitude component** of the attraction''s location'
+                            type: number
+                          attractionStreetAddress:
+                            description: '**street address** of the attraction'
+                            type: string
+                          attractionCity:
+                            description: '**name** of the city in which the attraction is located'
+                            type: string
+                          attractionState:
+                            description: '**name** of the state in which the attraction is located'
+                            type: string
+                          destinationId:
+                            description: '**unique numeric identifier** of the the destination associated with the attraction'
+                            type: integer
+                          thumbnailHiResURL:
+                            description: '**URL** for the attraction''s high-resolution thumbnail image'
+                            type: string
+                          photoCount:
+                            description: '**number** of user photos published for the attraction'
+                            type: integer
+                          primaryDestinationId:
+                            description: '**unique numeric identifier** of the attraction''s primary destination'
+                            type: integer
+                          seoId:
+                            description: '**unique numeric identifier** of the attraction
+
+                              - use as an input for [/search/products](#operation/searchProducts)
+
+                              '
+                            type: integer
+                          productCount:
+                            description: '**number** of products associated with the attraction'
+                            type: integer
+                          primaryDestinationName:
+                            description: '**natural-language name** of the attraction''s primary destination'
+                            type: string
+                          thumbnailURL:
+                            description: '**URL** the attraction''s thumbnail image'
+                            type: string
+                          rating:
+                            description: '**average user rating** of the attraction'
+                            type: number
+              examples:
+                '1':
+                  $ref: '#/components/examples/taxonomy-attractions-example'
+    servers:
+    - url: https://viatorapi.viator.com/service
+      description: Production server
+components:
+  schemas:
+    destinationType:
+      type: string
+      enum:
+      - CITY
+      - COUNTRY
+      - REGION
+      description: '**destination type specifier**
+
+        - `''COUNTRY''`: destination is a country
+
+        - `''REGION''`: destination is a recognized region of a country, such as a state, island within a country, stretch of coastline, etc.
+
+        - `''CITY''`: destination is a city
+
+        '
+    basicErrorModel:
+      type: object
+      properties:
+        errorReference:
+          type: string
+          example: null
+          description: '**reference number** of *this* error'
+        dateStamp:
+          type: string
+          example: 2017-11-24T21:30:47+0000
+          description: '**timestamp** of *this* response'
+        errorType:
+          type: string
+          description: '**code** specifying the type of error'
+          example: null
+        errorCodes:
+          type: array
+          description: '**array** of error codes pertaining to *this* error
+
+            - See: [Exception error codes](#section/Appendices/Exception-error-codes) for a list of possible error codes
+
+            '
+          items:
+            type: string
+          example: []
+        errorMessage:
+          type: array
+          description: '**array** of error message strings'
+          example: null
+        errorName:
+          type: string
+          example: null
+          description: '**name** of *this* type of error'
+        extraInfo:
+          type: object
+          description: ignore (Viator only)
+        extraObject:
+          type: object
+          description: ignore (Viator only)
+        success:
+          type: boolean
+          example: true
+          description: '**boolean indicator** of *this* request''s outcome
+
+            - `true`: the request was successful with no errors
+
+            - `false`: an error was encountered
+
+            '
+        totalCount:
+          type: integer
+          example: 1
+          description: '**number** of results available for *this* service
+
+            '
+        errorMessageText:
+          type: string
+          example: null
+          description: '**array** of error message strings in plain text'
+        vmid:
+          type: string
+          example: '321050'
+          description: '**unique numeric id** of the server that processed *this* request'
+    iataCode:
+      type: string
+      description: '**IATA airport code** for the destination
+
+        - a three-letter code defined by the International Air Transport Association (IATA) used to identify many airports around the world
+
+        - the IATA code is also known as an ''IATA location identifier'', ''IATA station code'' or simply a ''location identifier''
+
+        - the IATA code is <u>not available</u> for destinations with a destination type of `''COUNTRY''` or `''REGION''`, as there could be more than one airport within a destination
+
+        '
+      example: null
+    webURL:
+      type: string
+      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
+    topX:
+      type: string
+      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+      example: 1-3
+    defaultCurrencyCode:
+      type: string
+      description: Default currency code
+    destinationType_2:
+      type: string
+      enum:
+      - CITY
+      - COUNTRY
+      - REGION
+      description: '**destination type specifier**
+
+        - `"COUNTRY"`: destination is a country
+
+        - `"REGION"`: destination is a recognized region of a country, such as a state, island within a country, stretch of coastline, etc.
+
+        - `"CITY"`: destination is a city
+
+        '
+    basicErrorModel_2:
+      type: object
+      properties:
+        errorReference:
+          type:
+          - string
+          - 'null'
+          description: '**reference number** of *this* error'
+        dateStamp:
+          type:
+          - string
+          - 'null'
+          description: '**timestamp** of *this* response'
+        errorType:
+          type:
+          - string
+          - 'null'
+          description: '**code** specifying the type of error'
+        errorCodes:
+          type:
+          - array
+          - 'null'
+          description: '**array** of error codes pertaining to *this* error
+
+            - See: [Viator API error codes](#section/Appendices/Viator-API-error-codes) for a list of possible error codes
+
+            '
+          items:
+            type: string
+          example: []
+        errorMessage:
+          type:
+          - array
+          - 'null'
+          description: '**array** of error message strings'
+        errorName:
+          type:
+          - string
+          - 'null'
+          description: '**name** of *this* type of error'
+        extraInfo:
+          type:
+          - object
+          - 'null'
+          description: ignore (Viator only)
+        extraObject:
+          type:
+          - object
+          - 'null'
+          description: ignore (Viator only)
+        success:
+          type:
+          - boolean
+          - 'null'
+          description: '**boolean indicator** of *this* request''s outcome
+
+            - `true`: the request was successful with no errors
+
+            - `false`: an error was encountered
+
+            '
+        totalCount:
+          type:
+          - integer
+          - 'null'
+          description: '**number** of results available for *this* service
+
+            '
+        errorMessageText:
+          type:
+          - string
+          - 'null'
+          description: '**array** of error message strings in plain text'
+        vmid:
+          type:
+          - string
+          - 'null'
+          description: '**unique numeric id** of the server that processed *this* request'
+    iataCode_2:
+      type:
+      - string
+      - 'null'
+      description: '**IATA airport code** for the destination
+
+        - a three-letter code defined by the International Air Transport Association (IATA) used to identify many airports around the world
+
+        - the IATA code is also known as an ''IATA location identifier'', ''IATA station code'' or simply a ''location identifier''
+
+        - the IATA code is <u>not available</u> for destinations with a destination type of `''COUNTRY''` or `''REGION''`, as there could be more than one airport within a destination
+
+        '
+    webURL_2:
+      type:
+      - string
+      - 'null'
+      description: ignore (Viator only)
+    topX_2:
+      type: string
+      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n\n**Note**: \n- the maximum number of rows per request is 100; therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+      example: 1-3
+  examples:
+    taxonomy-attractions-example:
+      summary: /taxonomy/attractions
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Carroll-Shelby-Museum/d684-a23402?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Carroll-Shelby-Museum
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-03-02'
+          destinationId: 684
+          seoId: 23402
+          productCount: 2
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/321988_Viator_TripAdvisor_UGC_171245.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/321988_Viator_TripAdvisor_UGC_171245.jpg
+          photoCount: 0
+          primaryDestinationId: 684
+          rating: 5
+          attractionLatitude: 36.072175
+          attractionLongitude: -115.179668
+          attractionStreetAddress: 6405 Ensworth St.
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          title: Carroll Shelby Museum
+        - sortOrder: 2
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Shark-Reef-Aquarium-at-Mandalay-Bay/d684-a14235?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Shark-Reef-Aquarium-at-Mandalay-Bay
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-02-27'
+          destinationId: 684
+          seoId: 14235
+          productCount: 1
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/563331_Viator_Photographer_394530.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/563331_Viator_Photographer_394530.jpg
+          photoCount: 14
+          primaryDestinationId: 684
+          rating: 4.5
+          attractionLatitude: 36.09215
+          attractionLongitude: -115.17665
+          attractionStreetAddress: 3950 Las Vegas Blvd South
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          title: Shark Reef Aquarium at Mandalay Bay
+        - sortOrder: 3
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Welder-Up/d684-a24303?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Welder-Up
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-02-26'
+          destinationId: 684
+          seoId: 24303
+          productCount: 3
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/365146_Viator_TripAdvisor_UGC_180066.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/365146_Viator_TripAdvisor_UGC_180066.jpg
+          photoCount: 0
+          primaryDestinationId: 684
+          rating: 4.5
+          attractionLatitude: 36.133057
+          attractionLongitude: -115.17419
+          attractionStreetAddress: 3160 South Highland Drive, Suite D
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          title: Welder Up
+        dateStamp: 2020-04-20T23:46:09+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 71
+        errorMessageText: null
+        vmid: '331001'
+    taxonomy-categories-example:
+      summary: /taxonomy/categories
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/71/7c/7d.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 1
+            subcategoryName: Air Tours
+            subcategoryUrlName: Air-Tours
+            categoryId: 1
+          - sortOrder: 2
+            subcategoryId: 2
+            subcategoryName: Helicopter Tours
+            subcategoryUrlName: Helicopter-Tours
+            categoryId: 1
+          - sortOrder: 3
+            subcategoryId: 3
+            subcategoryName: Balloon Rides
+            subcategoryUrlName: Balloon-Rides
+            categoryId: 1
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/71/7c/7d.jpg
+          productCount: 77
+          groupName: Air, Helicopter & Balloon Tours
+          groupUrlName: Air-Helicopter-and-Balloon-Tours
+          id: 1
+        - sortOrder: 2
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/0a/03/9e/ca.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 26052
+            subcategoryName: Yoga Classes
+            subcategoryUrlName: Yoga-Classes
+            categoryId: 26051
+          - sortOrder: 2
+            subcategoryId: 40290
+            subcategoryName: Language Classes
+            subcategoryUrlName: Language-Classes
+            categoryId: 26051
+          - sortOrder: 3
+            subcategoryId: 33259
+            subcategoryName: Glassblowing Classes
+            subcategoryUrlName: Glassblowing-Classes
+            categoryId: 26051
+          - sortOrder: 4
+            subcategoryId: 40286
+            subcategoryName: Art Classes
+            subcategoryUrlName: Art-Classes
+            categoryId: 26051
+          - sortOrder: 5
+            subcategoryId: 40293
+            subcategoryName: Sports Lessons
+            subcategoryUrlName: Sports-Lessons
+            categoryId: 26051
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0a/03/9e/ca.jpg
+          productCount: 12
+          groupName: Classes & Workshops
+          groupUrlName: Classes-and-Workshops
+          id: 26051
+        - sortOrder: 3
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/e5/a3/54.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 7
+            subcategoryName: Day Cruises
+            subcategoryUrlName: Day-Cruises
+            categoryId: 3
+          - sortOrder: 2
+            subcategoryId: 40295
+            subcategoryName: Water Tours
+            subcategoryUrlName: Water-Tours
+            categoryId: 3
+          - sortOrder: 3
+            subcategoryId: 9
+            subcategoryName: Night Cruises
+            subcategoryUrlName: Night-Cruises
+            categoryId: 3
+          - sortOrder: 4
+            subcategoryId: 5640
+            subcategoryName: Dinner Cruises
+            subcategoryUrlName: Dinner-Cruises
+            categoryId: 3
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/e5/a3/54.jpg
+          productCount: 22
+          groupName: Cruises, Sailing & Water Tours
+          groupUrlName: Cruises-Sailing-and-Water-Tours
+          id: 3
+        - sortOrder: 4
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/73/48/34.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 40338
+            subcategoryName: LGBT Friendly Tours
+            subcategoryUrlName: LGBT-Friendly-Tours
+            categoryId: 4
+          - sortOrder: 2
+            subcategoryId: 11
+            subcategoryName: Cultural Tours
+            subcategoryUrlName: Cultural-Tours
+            categoryId: 4
+          - sortOrder: 3
+            subcategoryId: 14
+            subcategoryName: Literary, Art & Music Tours
+            subcategoryUrlName: Literary-Art-and-Music-Tours
+            categoryId: 4
+          - sortOrder: 4
+            subcategoryId: 26967
+            subcategoryName: Architecture Tours
+            subcategoryUrlName: Architecture-Tours
+            categoryId: 4
+          - sortOrder: 5
+            subcategoryId: 12
+            subcategoryName: Historical & Heritage Tours
+            subcategoryUrlName: Historical-and-Heritage-Tours
+            categoryId: 4
+          - sortOrder: 6
+            subcategoryId: 5332
+            subcategoryName: Archaeology Tours
+            subcategoryUrlName: Archaeology-Tours
+            categoryId: 4
+          - sortOrder: 7
+            subcategoryId: 13
+            subcategoryName: Movie & TV Tours
+            subcategoryUrlName: Movie-and-TV-Tours
+            categoryId: 4
+          - sortOrder: 8
+            subcategoryId: 118
+            subcategoryName: Ghost & Vampire Tours
+            subcategoryUrlName: Ghost-and-Vampire-Tours
+            categoryId: 4
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/73/48/34.jpg
+          productCount: 108
+          groupName: Cultural & Theme Tours
+          groupUrlName: Cultural-and-Theme-Tours
+          id: 4
+        - sortOrder: 5
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/6b/77/2f.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 15
+            subcategoryName: Day Trips
+            subcategoryUrlName: Day-Trips
+            categoryId: 5
+          - sortOrder: 2
+            subcategoryId: 17
+            subcategoryName: Rail Tours
+            subcategoryUrlName: Rail-Tours
+            categoryId: 5
+          - sortOrder: 3
+            subcategoryId: 74
+            subcategoryName: Private Day Trips
+            subcategoryUrlName: Private-Day-Trips
+            categoryId: 5
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/6b/77/2f.jpg
+          productCount: 221
+          groupName: Day Trips & Excursions
+          groupUrlName: Day-Trips-and-Excursions
+          id: 5
+        - sortOrder: 6
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/82/99/03.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 5325
+            subcategoryName: Coffee & Tea Tours
+            subcategoryUrlName: Coffee-and-Tea-Tours
+            categoryId: 6
+          - sortOrder: 2
+            subcategoryId: 32024
+            subcategoryName: Market Tours
+            subcategoryUrlName: Market-Tours
+            categoryId: 6
+          - sortOrder: 3
+            subcategoryId: 18
+            subcategoryName: Bar, Club & Pub Tours
+            subcategoryUrlName: Bar-Club-and-Pub-Tours
+            categoryId: 6
+          - sortOrder: 4
+            subcategoryId: 32027
+            subcategoryName: Street Food Tours
+            subcategoryUrlName: Street-Food-Tours
+            categoryId: 6
+          - sortOrder: 5
+            subcategoryId: 21
+            subcategoryName: Wine Tasting & Winery Tours
+            subcategoryUrlName: Wine-Tasting-and-Winery-Tours
+            categoryId: 6
+          - sortOrder: 6
+            subcategoryId: 5324
+            subcategoryName: Beer & Brewery Tours
+            subcategoryUrlName: Beer-and-Brewery-Tours
+            categoryId: 6
+          - sortOrder: 7
+            subcategoryId: 19
+            subcategoryName: Cooking Classes
+            subcategoryUrlName: Cooking-Classes
+            categoryId: 6
+          - sortOrder: 8
+            subcategoryId: 81
+            subcategoryName: Nightlife
+            subcategoryUrlName: Nightlife
+            categoryId: 6
+          - sortOrder: 9
+            subcategoryId: 20
+            subcategoryName: Dining Experiences
+            subcategoryUrlName: Dining-Experiences
+            categoryId: 6
+          - sortOrder: 10
+            subcategoryId: 80
+            subcategoryName: Food Tours
+            subcategoryUrlName: Food-Tours
+            categoryId: 6
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/82/99/03.jpg
+          productCount: 81
+          groupName: Food, Wine & Nightlife
+          groupUrlName: Food-Wine-and-Nightlife
+          id: 6
+        - sortOrder: 7
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/71/1c/ee.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 78
+            subcategoryName: Kid Friendly Tours & Activities
+            subcategoryUrlName: Kid-Friendly-Tours-and-Activities
+            categoryId: 21
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/71/1c/ee.jpg
+          productCount: 3
+          groupName: Kid Friendly
+          groupUrlName: Kid-Friendly
+          id: 21
+        - sortOrder: 8
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/36/b1/dd.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 113
+            subcategoryName: Luxury Tours
+            subcategoryUrlName: Luxury-Tours
+            categoryId: 25
+          - sortOrder: 2
+            subcategoryId: 114
+            subcategoryName: Romantic Tours
+            subcategoryUrlName: Romantic-Tours
+            categoryId: 25
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/36/b1/dd.jpg
+          productCount: 171
+          groupName: Luxury & Special Occasions
+          groupUrlName: Luxury-and-Special-Occasions
+          id: 25
+        - sortOrder: 9
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/73/32/1c.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 84
+            subcategoryName: Overnight Tours
+            subcategoryUrlName: Overnight-Tours
+            categoryId: 20
+          - sortOrder: 2
+            subcategoryId: 85
+            subcategoryName: Multi-day Tours
+            subcategoryUrlName: Multi-day-Tours
+            categoryId: 20
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/73/32/1c.jpg
+          productCount: 53
+          groupName: Multi-day & Extended Tours
+          groupUrlName: Multi-day-and-Extended-Tours
+          id: 20
+        - sortOrder: 10
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/6a/e4/ce.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 5322
+            subcategoryName: Running Tours
+            subcategoryUrlName: Running-Tours
+            categoryId: 9
+          - sortOrder: 2
+            subcategoryId: 5323
+            subcategoryName: Ziplines
+            subcategoryUrlName: Ziplines
+            categoryId: 9
+          - sortOrder: 3
+            subcategoryId: 32
+            subcategoryName: 4WD, ATV & Off-Road Tours
+            subcategoryUrlName: 4WD-ATV-and-Off-Road-Tours
+            categoryId: 9
+          - sortOrder: 4
+            subcategoryId: 26032
+            subcategoryName: Horseback Riding
+            subcategoryUrlName: Horseback-Riding
+            categoryId: 9
+          - sortOrder: 5
+            subcategoryId: 33264
+            subcategoryName: Obstacle Courses
+            subcategoryUrlName: Obstacle-Courses
+            categoryId: 9
+          - sortOrder: 6
+            subcategoryId: 36
+            subcategoryName: Nature & Wildlife
+            subcategoryUrlName: Nature-and-Wildlife
+            categoryId: 9
+          - sortOrder: 7
+            subcategoryId: 5319
+            subcategoryName: Climbing
+            subcategoryUrlName: Climbing
+            categoryId: 9
+          - sortOrder: 8
+            subcategoryId: 33
+            subcategoryName: Fishing Charters & Tours
+            subcategoryUrlName: Fishing-Charters-and-Tours
+            categoryId: 9
+          - sortOrder: 9
+            subcategoryId: 119
+            subcategoryName: Eco Tours
+            subcategoryUrlName: Eco-Tours
+            categoryId: 9
+          - sortOrder: 10
+            subcategoryId: 35
+            subcategoryName: Hiking & Camping
+            subcategoryUrlName: Hiking-and-Camping
+            categoryId: 9
+          - sortOrder: 11
+            subcategoryId: 87
+            subcategoryName: Adrenaline & Extreme
+            subcategoryUrlName: Adrenaline-and-Extreme
+            categoryId: 9
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/6a/e4/ce.jpg
+          productCount: 387
+          groupName: Outdoor Activities
+          groupUrlName: Outdoor-Activities
+          id: 9
+        - sortOrder: 11
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/fa/8e/cf.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 116
+            subcategoryName: Private Sightseeing Tours
+            subcategoryUrlName: Private-Sightseeing-Tours
+            categoryId: 26
+          - sortOrder: 2
+            subcategoryId: 117
+            subcategoryName: Custom Private Tours
+            subcategoryUrlName: Custom-Private-Tours
+            categoryId: 26
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/fa/8e/cf.jpg
+          productCount: 113
+          groupName: Private & Custom Tours
+          groupUrlName: Private-and-Custom-Tours
+          id: 26
+        - sortOrder: 12
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/0a/3d/2d/cc.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 39
+            subcategoryName: Shopping Passes & Offers
+            subcategoryUrlName: Shopping-Passes-and-Offers
+            categoryId: 10
+          - sortOrder: 2
+            subcategoryId: 40
+            subcategoryName: Shopping Tours
+            subcategoryUrlName: Shopping-Tours
+            categoryId: 10
+          - sortOrder: 3
+            subcategoryId: 88
+            subcategoryName: Fashion Shows & Tours
+            subcategoryUrlName: Fashion-Shows-and-Tours
+            categoryId: 10
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0a/3d/2d/cc.jpg
+          productCount: 11
+          groupName: Shopping & Fashion
+          groupUrlName: Shopping-and-Fashion
+          id: 10
+        - sortOrder: 13
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/71/a6/31.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 89
+            subcategoryName: Ports of Call Tours
+            subcategoryUrlName: Ports-of-Call-Tours
+            categoryId: 24
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/71/a6/31.jpg
+          productCount: 3
+          groupName: Shore Excursions
+          groupUrlName: Shore-Excursions
+          id: 24
+        - sortOrder: 14
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/6e/cf/d0.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 5111
+            subcategoryName: Cabaret
+            subcategoryUrlName: Cabaret
+            categoryId: 11
+          - sortOrder: 2
+            subcategoryId: 41
+            subcategoryName: Concerts & Special Events
+            subcategoryUrlName: Concerts-and-Special-Events
+            categoryId: 11
+          - sortOrder: 3
+            subcategoryId: 70
+            subcategoryName: 'Family-friendly Shows '
+            subcategoryUrlName: Family-friendly-Shows
+            categoryId: 11
+          - sortOrder: 4
+            subcategoryId: 124
+            subcategoryName: Cirque du Soleil
+            subcategoryUrlName: Cirque-du-Soleil
+            categoryId: 11
+          - sortOrder: 5
+            subcategoryId: 42
+            subcategoryName: Comedy
+            subcategoryUrlName: Comedy
+            categoryId: 11
+          - sortOrder: 6
+            subcategoryId: 91
+            subcategoryName: Adults-only Shows
+            subcategoryUrlName: Adults-only-Shows
+            categoryId: 11
+          - sortOrder: 7
+            subcategoryId: 44
+            subcategoryName: Theater, Shows & Musicals
+            subcategoryUrlName: Theater-Shows-and-Musicals
+            categoryId: 11
+          - sortOrder: 8
+            subcategoryId: 90
+            subcategoryName: Dinner Packages
+            subcategoryUrlName: Dinner-Packages
+            categoryId: 11
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/6e/cf/d0.jpg
+          productCount: 111
+          groupName: Shows, Concerts & Sports
+          groupUrlName: Shows-Concerts-and-Sports
+          id: 11
+        - sortOrder: 15
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/6f/f1/ee.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 29
+            subcategoryName: Attraction Tickets
+            subcategoryUrlName: Attraction-Tickets
+            categoryId: 8
+          - sortOrder: 2
+            subcategoryId: 93
+            subcategoryName: Zoo Tickets & Passes
+            subcategoryUrlName: Zoo-Tickets-and-Passes
+            categoryId: 8
+          - sortOrder: 3
+            subcategoryId: 30
+            subcategoryName: Sightseeing Passes
+            subcategoryUrlName: Sightseeing-Passes
+            categoryId: 8
+          - sortOrder: 4
+            subcategoryId: 31
+            subcategoryName: Museum Tickets & Passes
+            subcategoryUrlName: Museum-Tickets-and-Passes
+            categoryId: 8
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/6f/f1/ee.jpg
+          productCount: 47
+          groupName: Sightseeing Tickets & Passes
+          groupUrlName: Sightseeing-Tickets-and-Passes
+          id: 8
+        - sortOrder: 16
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/09/c5/a0/15.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 5336
+            subcategoryName: Day Spas
+            subcategoryUrlName: Day-Spas
+            categoryId: 5335
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/09/c5/a0/15.jpg
+          productCount: 4
+          groupName: Spa Tours
+          groupUrlName: Spa-Tours
+          id: 5335
+        - sortOrder: 17
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/71/dd/6a.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 50
+            subcategoryName: Theme Park Tickets & Tours
+            subcategoryUrlName: Theme-Park-Tickets-and-Tours
+            categoryId: 14
+          - sortOrder: 2
+            subcategoryId: 51
+            subcategoryName: Water Parks
+            subcategoryUrlName: Water-Parks
+            categoryId: 14
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/71/dd/6a.jpg
+          productCount: 11
+          groupName: Theme Parks
+          groupUrlName: Theme-Parks
+          id: 14
+        - sortOrder: 18
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/73/48/32.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 99
+            subcategoryName: City Packages
+            subcategoryUrlName: City-Packages
+            categoryId: 12
+          - sortOrder: 2
+            subcategoryId: 120
+            subcategoryName: Vespa, Scooter & Moped Tours
+            subcategoryUrlName: Vespa-Scooter-and-Moped-Tours
+            categoryId: 12
+          - sortOrder: 3
+            subcategoryId: 45
+            subcategoryName: Self-guided Tours & Rentals
+            subcategoryUrlName: Self-guided-Tours-and-Rentals
+            categoryId: 12
+          - sortOrder: 4
+            subcategoryId: 33282
+            subcategoryName: Trikke Tours
+            subcategoryUrlName: Trikke-Tours
+            categoryId: 12
+          - sortOrder: 5
+            subcategoryId: 26961
+            subcategoryName: Vespa Rentals
+            subcategoryUrlName: Vespa-Rentals
+            categoryId: 12
+          - sortOrder: 6
+            subcategoryId: 5331
+            subcategoryName: Motorcycle Tours
+            subcategoryUrlName: Motorcycle-Tours
+            categoryId: 12
+          - sortOrder: 7
+            subcategoryId: 5329
+            subcategoryName: Skip-the-Line Tours
+            subcategoryUrlName: Skip-the-Line-Tours
+            categoryId: 12
+          - sortOrder: 8
+            subcategoryId: 32042
+            subcategoryName: Classic Car Tours
+            subcategoryUrlName: Classic-Car-Tours
+            categoryId: 12
+          - sortOrder: 9
+            subcategoryId: 5330
+            subcategoryName: City Tours
+            subcategoryUrlName: City-Tours
+            categoryId: 12
+          - sortOrder: 10
+            subcategoryId: 95
+            subcategoryName: Half-day Tours
+            subcategoryUrlName: Half-day-Tours
+            categoryId: 12
+          - sortOrder: 11
+            subcategoryId: 98
+            subcategoryName: Bus & Minivan Tours
+            subcategoryUrlName: Bus-and-Minivan-Tours
+            categoryId: 12
+          - sortOrder: 12
+            subcategoryId: 26963
+            subcategoryName: Audio Guided Tours
+            subcategoryUrlName: Audio-Guided-Tours
+            categoryId: 12
+          - sortOrder: 13
+            subcategoryId: 46
+            subcategoryName: Segway Tours
+            subcategoryUrlName: Segway-Tours
+            categoryId: 12
+          - sortOrder: 14
+            subcategoryId: 97
+            subcategoryName: Hop-on Hop-off Tours
+            subcategoryUrlName: Hop-on-Hop-off-Tours
+            categoryId: 12
+          - sortOrder: 15
+            subcategoryId: 40336
+            subcategoryName: Fun and Games
+            subcategoryUrlName: Fun-and-Games
+            categoryId: 12
+          - sortOrder: 16
+            subcategoryId: 94
+            subcategoryName: Full-day Tours
+            subcategoryUrlName: Full-day-Tours
+            categoryId: 12
+          - sortOrder: 17
+            subcategoryId: 32044
+            subcategoryName: Escape Games
+            subcategoryUrlName: Escape-Games
+            categoryId: 12
+          - sortOrder: 18
+            subcategoryId: 96
+            subcategoryName: Night Tours
+            subcategoryUrlName: Night-Tours
+            categoryId: 12
+          - sortOrder: 19
+            subcategoryId: 26028
+            subcategoryName: Photography Tours
+            subcategoryUrlName: Photography-Tours
+            categoryId: 12
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/73/48/32.jpg
+          productCount: 563
+          groupName: Tours & Sightseeing
+          groupUrlName: Tours-and-Sightseeing
+          id: 12
+        - sortOrder: 19
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/2a/fc/74.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 52
+            subcategoryName: Airport & Ground Transfers
+            subcategoryUrlName: Airport-and-Ground-Transfers
+            categoryId: 15
+          - sortOrder: 2
+            subcategoryId: 32762
+            subcategoryName: Private Drivers
+            subcategoryUrlName: Private-Drivers
+            categoryId: 15
+          - sortOrder: 3
+            subcategoryId: 100
+            subcategoryName: Bus Services
+            subcategoryUrlName: Bus-Services
+            categoryId: 15
+          - sortOrder: 4
+            subcategoryId: 5526
+            subcategoryName: Private Transfers
+            subcategoryUrlName: Private-Transfers
+            categoryId: 15
+          - sortOrder: 5
+            subcategoryId: 40308
+            subcategoryName: Transportation Services
+            subcategoryUrlName: Transportation-Services
+            categoryId: 15
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/2a/fc/74.jpg
+          productCount: 74
+          groupName: Transfers & Ground Transport
+          groupUrlName: Transfers-and-Ground-Transport
+          id: 15
+        - sortOrder: 20
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/71/13/ef.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 50128
+            subcategoryName: Unique Experiences
+            subcategoryUrlName: Unique-Experiences
+            categoryId: 50127
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/71/13/ef.jpg
+          productCount: 40
+          groupName: Unique Experiences
+          groupUrlName: Unique-Experiences
+          id: 50127
+        - sortOrder: 21
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/e9/32/7c.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 5327
+            subcategoryName: Viator Exclusive Tours
+            subcategoryUrlName: Viator-Exclusive-Tours
+            categoryId: 5326
+          - sortOrder: 2
+            subcategoryId: 5328
+            subcategoryName: Viator VIP Tours
+            subcategoryUrlName: Viator-VIP-Tours
+            categoryId: 5326
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/e9/32/7c.jpg
+          productCount: 9
+          groupName: Viator VIP & Exclusive Tours
+          groupUrlName: Viator-VIP-and-Exclusive-Tours
+          id: 5326
+        - sortOrder: 22
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/ab/f7/38.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 55
+            subcategoryName: Bike & Mountain Bike Tours
+            subcategoryUrlName: Bike-and-Mountain-Bike-Tours
+            categoryId: 16
+          - sortOrder: 2
+            subcategoryId: 56
+            subcategoryName: Walking Tours
+            subcategoryUrlName: Walking-Tours
+            categoryId: 16
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/ab/f7/38.jpg
+          productCount: 63
+          groupName: Walking & Biking Tours
+          groupUrlName: Walking-and-Biking-Tours
+          id: 16
+        - sortOrder: 23
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/70/2b/6e.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 27534
+            subcategoryName: White Water Rafting
+            subcategoryUrlName: White-Water-Rafting
+            categoryId: 17
+          - sortOrder: 2
+            subcategoryId: 27536
+            subcategoryName: Tubing
+            subcategoryUrlName: Tubing
+            categoryId: 17
+          - sortOrder: 3
+            subcategoryId: 57
+            subcategoryName: Kayaking & Canoeing
+            subcategoryUrlName: Kayaking-and-Canoeing
+            categoryId: 17
+          - sortOrder: 4
+            subcategoryId: 33290
+            subcategoryName: Float Trips
+            subcategoryUrlName: Float-Trips
+            categoryId: 17
+          - sortOrder: 5
+            subcategoryId: 40334
+            subcategoryName: Water Equipment
+            subcategoryUrlName: Water-Equipment
+            categoryId: 17
+          - sortOrder: 6
+            subcategoryId: 103
+            subcategoryName: Boat Rental
+            subcategoryUrlName: Boat-Rental
+            categoryId: 17
+          - sortOrder: 7
+            subcategoryId: 26033
+            subcategoryName: Stand Up Paddleboarding
+            subcategoryUrlName: Stand-Up-Paddleboarding
+            categoryId: 17
+          - sortOrder: 8
+            subcategoryId: 59
+            subcategoryName: Surfing & Windsurfing
+            subcategoryUrlName: Surfing-and-Windsurfing
+            categoryId: 17
+          - sortOrder: 9
+            subcategoryId: 107
+            subcategoryName: Jet Boats & Speed Boats
+            subcategoryUrlName: Jet-Boats-and-Speed-Boats
+            categoryId: 17
+          - sortOrder: 10
+            subcategoryId: 60
+            subcategoryName: Other Water Sports
+            subcategoryUrlName: Other-Water-Sports
+            categoryId: 17
+          - sortOrder: 11
+            subcategoryId: 104
+            subcategoryName: Waterskiing & Jetskiing
+            subcategoryUrlName: Waterskiing-and-Jetskiing
+            categoryId: 17
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/70/2b/6e.jpg
+          productCount: 38
+          groupName: Water Sports
+          groupUrlName: Water-Sports
+          id: 17
+        - sortOrder: 24
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/70/4a/0e.jpg
+          subcategories:
+          - sortOrder: 1
+            subcategoryId: 61
+            subcategoryName: Wedding Packages
+            subcategoryUrlName: Wedding-Packages
+            categoryId: 18
+          - sortOrder: 2
+            subcategoryId: 62
+            subcategoryName: Honeymoon Packages
+            subcategoryUrlName: Honeymoon-Packages
+            categoryId: 18
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/70/4a/0e.jpg
+          productCount: 33
+          groupName: Weddings & Honeymoons
+          groupUrlName: Weddings-and-Honeymoons
+          id: 18
+        dateStamp: 2020-04-20T23:59:14+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331004'
+    taxonomy-destinations-example:
+      summary: /taxonomy/destinations
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          selectable: false
+          destinationUrlName: USA
+          defaultCurrencyCode: USD
+          lookupId: '8.77'
+          parentId: 8
+          timeZone: America/New_York
+          iataCode: null
+          destinationId: 77
+          destinationType: COUNTRY
+          destinationName: USA
+          latitude: 37.09024
+          longitude: -95.712891
+        - sortOrder: 1
+          selectable: true
+          destinationUrlName: Alabama
+          defaultCurrencyCode: USD
+          lookupId: 8.77.22212
+          parentId: 77
+          timeZone: ''
+          iataCode: null
+          destinationId: 22212
+          destinationType: REGION
+          destinationName: Alabama
+          latitude: 32.34
+          longitude: -86.26
+        - sortOrder: 2
+          selectable: true
+          destinationUrlName: Alaska
+          defaultCurrencyCode: USD
+          lookupId: 8.77.270
+          parentId: 77
+          timeZone: America/Anchorage
+          iataCode: null
+          destinationId: 270
+          destinationType: REGION
+          destinationName: Alaska
+          latitude: 63.588753
+          longitude: -154.4930619
+        - sortOrder: 3
+          selectable: true
+          destinationUrlName: Arizona
+          defaultCurrencyCode: USD
+          lookupId: 8.77.271
+          parentId: 77
+          timeZone: America/Phoenix
+          iataCode: null
+          destinationId: 271
+          destinationType: REGION
+          destinationName: Arizona
+          latitude: 34.0489281
+          longitude: -111.0937311
+        - sortOrder: 4
+          selectable: true
+          destinationUrlName: Arkansas
+          defaultCurrencyCode: USD
+          lookupId: 8.77.22213
+          parentId: 77
+          timeZone: ''
+          iataCode: null
+          destinationId: 22213
+          destinationType: REGION
+          destinationName: Arkansas
+          latitude: 35.2011
+          longitude: -91.8318
+        - sortOrder: 5
+          selectable: true
+          destinationUrlName: California
+          defaultCurrencyCode: USD
+          lookupId: 8.77.272
+          parentId: 77
+          timeZone: America/Los_Angeles
+          iataCode: null
+          destinationId: 272
+          destinationType: REGION
+          destinationName: California
+          latitude: 36.778261
+          longitude: -119.4179324
+        dateStamp: 2020-04-20T23:56:25+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331001'
+    taxonomy-attractions-example_2:
+      summary: taxonomy attractions example
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          webURL: null
+          pageUrlName: Grand-Canyon-West-Rim
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-01-15'
+          attractionLatitude: 35.8808
+          attractionLongitude: -113.97048
+          attractionStreetAddress: ''
+          attractionCity: ''
+          attractionState: ''
+          destinationId: 684
+          photoCount: 157
+          primaryDestinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/44811_GrandCanyon_WestRim_d815-24.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/44811_GrandCanyon_WestRim_d815-24.jpg
+          seoId: 1594
+          productCount: 16
+          rating: 4.5
+          title: Grand Canyon West Rim
+        - sortOrder: 2
+          webURL: null
+          pageUrlName: Graceland-Wedding-Chapel
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2019-08-22'
+          attractionLatitude: 36.162683
+          attractionLongitude: -115.144685
+          attractionStreetAddress: 619 Las Vegas Boulevard South
+          attractionCity: Las Vegas
+          attractionState: ''
+          destinationId: 684
+          photoCount: 10
+          primaryDestinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/785937_Viator_Photographer_395090.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/785937_Viator_Photographer_395090.jpg
+          seoId: 1246
+          productCount: 2
+          rating: 4.5
+          title: Graceland Wedding Chapel
+        - sortOrder: 3
+          webURL: null
+          pageUrlName: Wynn-Las-Vegas
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2019-07-30'
+          attractionLatitude: 36.126374
+          attractionLongitude: -115.166749
+          attractionStreetAddress: 3131 Las Vegas Blvd South
+          attractionCity: Las Vegas
+          attractionState: ''
+          destinationId: 684
+          photoCount: 5
+          primaryDestinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/100516_Las%20Vegas_Wynn%20Hotel%20&%20Casino_d684-508.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/100516_Las%20Vegas_Wynn%20Hotel%20&%20Casino_d684-508.jpg
+          seoId: 1266
+          productCount: 2
+          rating: 0
+          title: Wynn Las Vegas
+        dateStamp: 2020-02-06T19:55:25+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 72
+        errorMessageText: null
+        vmid: '331004'
+    taxonomy-categories-example_2:
+      summary: taxonomy categories example
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/71/7c/7d.jpg
+          subcategories:
+          - sortOrder: 1
+            categoryId: 1
+            subcategoryId: 2
+            subcategoryName: Helicopter Tours
+            subcategoryUrlName: Helicopter-Tours
+          - sortOrder: 2
+            categoryId: 1
+            subcategoryId: 1
+            subcategoryName: Air Tours
+            subcategoryUrlName: Air-Tours
+          - sortOrder: 3
+            categoryId: 1
+            subcategoryId: 3
+            subcategoryName: Balloon Rides
+            subcategoryUrlName: Balloon-Rides
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/71/7c/7d.jpg
+          groupName: Air, Helicopter & Balloon Tours
+          productCount: 77
+          groupUrlName: Air-Helicopter-and-Balloon-Tours
+          id: 1
+        - sortOrder: 2
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/0a/03/9e/ca.jpg
+          subcategories:
+          - sortOrder: 1
+            categoryId: 26051
+            subcategoryId: 40290
+            subcategoryName: Language Classes
+            subcategoryUrlName: Language-Classes
+          - sortOrder: 2
+            categoryId: 26051
+            subcategoryId: 40293
+            subcategoryName: Sports Lessons
+            subcategoryUrlName: Sports-Lessons
+          - sortOrder: 3
+            categoryId: 26051
+            subcategoryId: 33939
+            subcategoryName: Craft Classes
+            subcategoryUrlName: Craft-Classes
+          - sortOrder: 4
+            categoryId: 26051
+            subcategoryId: 26052
+            subcategoryName: Yoga Classes
+            subcategoryUrlName: Yoga-Classes
+          - sortOrder: 5
+            categoryId: 26051
+            subcategoryId: 40286
+            subcategoryName: Art Classes
+            subcategoryUrlName: Art-Classes
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0a/03/9e/ca.jpg
+          groupName: Classes & Workshops
+          productCount: 12
+          groupUrlName: Classes-and-Workshops
+          id: 26051
+        - sortOrder: 3
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/e5/a3/54.jpg
+          subcategories:
+          - sortOrder: 1
+            categoryId: 3
+            subcategoryId: 5640
+            subcategoryName: Dinner Cruises
+            subcategoryUrlName: Dinner-Cruises
+          - sortOrder: 2
+            categoryId: 3
+            subcategoryId: 7
+            subcategoryName: Day Cruises
+            subcategoryUrlName: Day-Cruises
+          - sortOrder: 3
+            categoryId: 3
+            subcategoryId: 40295
+            subcategoryName: Water Tours
+            subcategoryUrlName: Water-Tours
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/e5/a3/54.jpg
+          groupName: Cruises, Sailing & Water Tours
+          productCount: 21
+          groupUrlName: Cruises-Sailing-and-Water-Tours
+          id: 3
+        - sortOrder: 4
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/06/73/48/34.jpg
+          subcategories:
+          - sortOrder: 1
+            categoryId: 4
+            subcategoryId: 14
+            subcategoryName: Literary, Art & Music Tours
+            subcategoryUrlName: Literary-Art-and-Music-Tours
+          - sortOrder: 2
+            categoryId: 4
+            subcategoryId: 118
+            subcategoryName: Ghost & Vampire Tours
+            subcategoryUrlName: Ghost-and-Vampire-Tours
+          - sortOrder: 3
+            categoryId: 4
+            subcategoryId: 12
+            subcategoryName: Historical & Heritage Tours
+            subcategoryUrlName: Historical-and-Heritage-Tours
+          - sortOrder: 4
+            categoryId: 4
+            subcategoryId: 11
+            subcategoryName: Cultural Tours
+            subcategoryUrlName: Cultural-Tours
+          - sortOrder: 5
+            categoryId: 4
+            subcategoryId: 26967
+            subcategoryName: Architecture Tours
+            subcategoryUrlName: Architecture-Tours
+          - sortOrder: 6
+            categoryId: 4
+            subcategoryId: 13
+            subcategoryName: Movie & TV Tours
+            subcategoryUrlName: Movie-and-TV-Tours
+          - sortOrder: 7
+            categoryId: 4
+            subcategoryId: 40338
+            subcategoryName: LGBT Friendly Tours
+            subcategoryUrlName: LGBT-Friendly-Tours
+          - sortOrder: 8
+            categoryId: 4
+            subcategoryId: 5332
+            subcategoryName: Archaeology Tours
+            subcategoryUrlName: Archaeology-Tours
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/73/48/34.jpg
+          groupName: Cultural & Theme Tours
+          productCount: 94
+          groupUrlName: Cultural-and-Theme-Tours
+          id: 4
+        dateStamp: 2020-02-06T19:47:58+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331001'
+    taxonomy-destinations-example_2:
+      summary: taxonomy destinations example
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          selectable: false
+          destinationUrlName: USA
+          defaultCurrencyCode: USD
+          lookupId: '8.77'
+          parentId: 8
+          timeZone: America/New_York
+          iataCode: null
+          destinationName: USA
+          destinationType: COUNTRY
+          destinationId: 77
+          latitude: 37.09024
+          longitude: -95.712891
+        - sortOrder: 1
+          selectable: true
+          destinationUrlName: Alabama
+          defaultCurrencyCode: USD
+          lookupId: 8.77.22212
+          parentId: 77
+          timeZone: ''
+          iataCode: null
+          destinationName: Alabama
+          destinationType: REGION
+          destinationId: 22212
+          latitude: 32.34
+          longitude: -86.26
+        - sortOrder: 2
+          selectable: true
+          destinationUrlName: Alaska
+          defaultCurrencyCode: USD
+          lookupId: 8.77.270
+          parentId: 77
+          timeZone: America/Anchorage
+          iataCode: null
+          destinationName: Alaska
+          destinationType: REGION
+          destinationId: 270
+          latitude: 63.588753
+          longitude: -154.4930619
+        - sortOrder: 3
+          selectable: true
+          destinationUrlName: Arizona
+          defaultCurrencyCode: USD
+          lookupId: 8.77.271
+          parentId: 77
+          timeZone: America/Phoenix
+          iataCode: null
+          destinationName: Arizona
+          destinationType: REGION
+          destinationId: 271
+          latitude: 34.0489281
+          longitude: -111.0937311
+        dateStamp: 2020-02-06T19:43:09+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331001'
+  parameters:
+    acceptLanguage:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
+    acceptLanguage_2:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
+        example: en-US
+  securitySchemes:
+    Legacy-API-key:
+      type: apiKey
+      in: query
+      name: apiKey
+    API-key:
+      type: apiKey
+      in: header
+      name: exp-api-key
+x-refined-from:
+- viator-affiliate-api-v1-openapi.json
+- viator-merchant-api-v1-openapi.json

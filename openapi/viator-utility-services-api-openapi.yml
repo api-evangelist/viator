@@ -1,0 +1,1457 @@
+openapi: 3.2.0
+info:
+  title: Viator API Documentation & Specification - Affiliate Partners Utility services API
+  description: "<style type='text/css'>\ncode { white-space: nowrap; }\na { font-weight: bold; }\n\nfigure {\n  width: 100%;\n  text-align: center;\n  font-style: italic;\n  font-size: smaller;\n  text-indent: 0;\n  border: thin silver solid;\n  margin: 0.5em;\n  padding: 0.5em;\n}\n\n</style>\n\n## Updates\n\n| Date | Description |\n|------|-------------|\n| 26 May 2022 | Added advice about review authenticity: [Key concepts - Review authenticity](#section/Key-concepts/Review-authenticity) |\n| 11 Feb 2022 | Added note about no-index policy to [/attraction](#operation/attraction), [/attraction/photos](#operation/attractionPhotos), [/attraction/reviews](#operation/attractionReviews) and [/search/attractions](#operation/searchAttractions) endpoints |\n| 16 Sep 2021 | Removed `topX` and modified options for `sortOrder` request parameters in [/attraction/reviews/](#operation/attractionReviews) endpoint |\n| 6 Sep 2021 | Modified available options for `sortOrder` request parameter in [/taxonomy/attractions](#operation/taxonomyAttractions) and [/search/attractions](#operation/searchAttractions) endpoints |\n| 3 March 2021 | Added `currencyCode` request parameter to [/attraction/products](#operation/attractionProducts) |\n| 19 Feb 2021 | Removed /support/terms and /support/faq endpoints |\n| 3 Feb 2021 | Added [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) section |\n| 9 June 2020 | Updated [Supported currencies](#section/Appendices/Supported-currency-codes) section and [/product](http://localhost:8080/#operation/product) endpoint description to reflect multiple currencies now being enabled for all accounts by default |\n| 2 June 2020 | Updated Postman collections and [Testing](#section/Testing) section |\n| 20 May 2020 | Updated Postman collection |\n| 19 May 2020 | Recompiled with latest version of ReDoc (0.9.8) |\n| 22 Apr 2020 | Revised list of available languages |\n| 21 Apr 2020 | Regenerated all endpoint examples |\n| 20 Apr 2020 | Updated Overview section to be more specific to the Content Affiliate partner type |\n| 10 Mar 2020 | Created new [Overview](#section/Overview) section \n\n# Overview\n\nThe API exposes a variety of services that allow the retrieval of all product details, such as descriptions, pricing, terms and conditions, photos and reviews. This data can either be ingested periodically and managed on your local system, or calls can be made in real time to retrieve content in response to your users' activity on your systems.\n\nThe API provides product content and availability functionality, along with various utility services to map between yours and Viator's data taxonomy.\n\n## Who is the API for?\n\nThe Viator Partner API is designed for use by organizations and individuals partnered with Viator as a Viator Branded Affiliate (VBA).\n\n### Viator Branded Affiliates (VBAs)\n\nVBAs have full access to the areas of the API relating to content, but sales of Viator products must be carried out on the Viator site itself; therefore, access to the booking or transactional endpoints necessary to operate as the merchant of record (i.e., merchant partners) is restricted. \n\nWhen a customer wishes to book a product from a VBA partner's site, they are instead redirected to [viator.com](https://viator.com) in order to complete the purchase; whereas, merchant partners are able to process and manage bookings through the Viator API itself, allowing their customers to book products without leaving the partner's site.\n\nViator affiliates instead generate unique URLs that redirect their users to the Viator site, resulting in a cookie being set such that all transactions will accrue a commission for that partner until the cookie expires.\n\nPurchases of products originating from the VBAs site are recorded and a commission on these sales is paid periodically.\n\n## Uses of the Viator Partner API\n\nThe Viator Partner API is used to carry out the following tasks:\n\n### Product search and ingestion\n\nPartners can use the product search endpoints to retrieve lists of products from Viator’s inventory relevant to their business. The available search criteria include:\n\n- The location (destination) in which the product operates\n- Whether the product is associated with a well-known tourist attraction; e.g., Empire State Building\n- The type of product (known as its category and/or subcategory)\n- The time period during which the product operates \n- Words or phrases that occur in a product's description via a free-text search\n\nPartners who prefer to download product details periodically (instead of performing all operations in real time in response to user behavior) do so by using the product search endpoints to compile a list of products that they wish to sell on their site. They then download comprehensive product details for each via the /product endpoint.\n\n#### Product search endpoints:\n\n| Endpoint | Use |\n|-|-|\n| [/search/products](#operation/searchProducts) | Allows searching for products according to: destination / location, relationship to a known tourist attraction; category and/or subcategory; date of operation |\n| [/search/products/codes](#operation/searchProductsCodes) | Retrieves product details for products that match a list of product codes (unique identifiers for the product) |\n| [/search/freetext](#operation/searchFreetext) | Retrieves product details for products that include the search terms in the product's description and details. |\n| [/available/products](#operation/availableProducts) | Retrieves products that are identified by specific product codes, operate during a specified day range and accept a certain number of adult travelers |\n\n#### Product information endpoints:\n\nAll information about a product that must be communicated to customers prior to purchase is available via [/product](#operation/product) and its auxiliary endpoints. This content is generally used to construct product display pages and for performing local searches.\n\nImportant information about a product includes:\n\n- Product and supplier names\n- Geographic location\n- Product description\n- Category and subcategory\n- Photos (from both users and the supplier)\n- User reviews and ratings\n- Product options (variants of the tour/activity, such as starting times, passenger mix options, and inclusions/add-ons, including basic pricing information for each)\n- Which age ranges can participate\n- Booking details\n- Terms and conditions\n- Basic pricing\n- Logistics\n  + Inclusions (e.g., provided meals)\n  + Exclusions (e.g., entrance fees to visited attractions)\n  + Health restrictions and accessibility\n  + Departure times\n  + Passenger pick-up\n  + Duration\n  + Tour routes\n\n### Auxiliary services\n\nTaxonomical data sets are required to interact meaningfully with the Viator Partner API; for example, mappings from destination (location of operation) to their respective identification codes. This information may occasionally change or be added to. Consequently, the API includes endpoints that return the most up-to-date versions of this information.\n\n#### Taxonomy endpoints\n\n| Endpoint | Use |\n|-|-|\n| [/taxonomy/destinations](#operation/taxonomyDestinations) | Retrieves a list of destination names, types and unique identifiers to be used when interacting with the Viator Partner API |\n| [/taxonomy/categories](#operation/taxonomyCategories) | Retrieves a list of product categories for a destination that can be used as a means of filtering when searching for products using the [/search/products](#operation/searchProducts) endpoint |\n| [/taxonomy/attractions](#operation/taxonomyAttractions) | Retrieves a list of tourist attractions (e.g., the Eiffel Tower or Empire State Building) and their associated identification codes to be used as a means of searching for available products; for example, in the [/search/products](#operation/searchProducts) service |\n| [/booking/hotels](#operation/bookingHotels) | Retrieves a list of hotels, including names and geographic locations, to be used when making booking requests |\n\n#### Utility endpoints\n\nThe following services are available that provide basic utility services to support the use of the API:\n\n| Endpoint | Use |\n|-|-|\n| [/util/ip2country](#operation/utilIp2country) | Returns the country-code for the country in which the IP is located. |\n| [/util/sitedetails](#operation/utilSitedetails) | Returns the site settings for your organization|\n| [/util/countrymap](#operation/countrymap) | Returns a dictionary mapping coutry-codes to their natural-language names and international dialling prefixes|\n| [/util/guid](#operation/utilGuid) | Generates and returns a GUID for general use |\n| [/util/siteBinaryData](#operation/utilSiteBinaryData) | Returns custom information for a partner, such as a logo, favicon or quick links |\n\n### Attraction services\n\nViator has a large database of attractions and traveler recommendations. These are associated with a destination and have their own photos and reviews as well as associated products that consumers can purchase.\n\nAn example Attraction is the Eiffel Tower. Viator sells a number of products that take customers to the tower and these are associated for cross selling purposes.\n\nRecommendations are authored by Viator and our customers and include recommended itineraries for visiting a city or favorite restaurants, etc.\n\nThe attraction endpoints can be used to get the attractions or recommendation lists, details and associated products, photos and reviews.\n\nAttractions and recommendations have a unique ID called the `seoId`. This is the unique identifier for an attraction and is available in the following services.\n\n| Endpoint | Use |\n|-|-|\n| [/search/attractions](#operation/searchAttractions) | Returns a list of attractions associated with the given destination |\n| [/attraction](#operation/attraction) | Returns the details of an attraction. |\n| [/attraction/reviews](#operation/attractionReviews) |  Returns reviews related to an attraction. These reviews might be associated indirectly through the related products.|\n| [/attraction/photos](#operation/attractionPhotos) | Returns photos that are related to an attraction (these may be associated indirectly if they are photos of products related to the attraction) |\n\n### Customer support services\n\nThe links to the terms and conditions, FAQ and customer care page is available to VBA partners.\n\nThe following services are available:\n\n| Endpoint | Use |\n|-|-|\n| [/support/terms](#operation/supportTerms) | Returns the URL for the terms and conditions. |\n| [/support/FAQ](#operation/supportFAQ) | Returns the URL to the FAQ page that the partner can link to within their app / website |\n| [/service/support/customercare](#operation/supportCustomercare) | Returns the URL to the customer care page that the partner can link to within their app / website. |\n\n---\n\n# Authentication\n\n## API key\n\nAccess to the API is managed using an **API key** that must be included as a **header parameter** to every call made to all API endpoints described in this document.\n\n| Header parameter name | Example value |\n|-----------------------|---------------|\n| exp-api-key | bcac8986-4c33-4fa0-ad3f-75409487026c |\n\nIf you do not know the API key for your organization, please contact your business development account manager for these details.\n\nWhen using this type of key, you must also include in your request the language you wish your response localized to via the `Accept-Language` header parameter. See [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes. Please note that, at present, only the language configured for your organization's point of sale will be available.\n\n## Legacy API key\n\nPreviously, authenticating to this API was accomplished by passing an API-key as a **query parameter** appended to the URI for each call; e.g.:\n\n```html\nGET https://viatorapi.viator.com/service/taxonomy/destinations?apiKey=xxxxxxxxxxxxxxxxxx\n```\n\nWhile this method of authentication remains available for backwards-compatibility, if you are still using this method for authentication, we recommend you contact your business development account manager to ask for a new-style API key as soon as possible.\n\n# Key concepts\n\n## Content ingestion and caching strategy\n\nMuch of the information you will need to retrieve from the Viator API – such as the taxonomy, product lists and product details – do not change frequently.\n\nTherefore, we recommend implementing a caching strategy in order to eliminate unnecessary traffic to Viator’s servers and improve the operation of your site. \n\nThis section discusses the different strategies for retrieving and caching Viator’s product catalogue.\n\nYou will need to decide on how you will retrieve and manage content from Viator’s product catalogue. The two main options are as follows:\n\n### 1. API response caching\n\n*Partners retrieve content as-needed and cache responses on a service-by-service basis*\n\nIf you do not need to store product details locally, we recommend performing caching of on a service-by-service basis; i.e., storing the entire response and applying a time-to-live (TTL) of less than 24 hours.\n\n#### Benefits of API response caching\n\n* All the benefits of caching with minimal overhead\n* Minimal risk of serving stale or invalid data cached on the partner's side\n* No need to download data about products that are not selling\n* A smaller volume of local data improves cache hit performance\n* Fewer requests made of Viator's systems\n* Avoids rate limitations\n* Closer adherence to best practices\n* Removes need to manage a complex data structure locally\n\n#### Service endpoints to cache\n\nCaching should only be applied to services that yield infrequently changing data; i.e.:\n\n* [/taxonomy/destinations](](#operation/taxonomyDestinations)\n* [/taxonomy/categories](#operation/taxonomyCategories)\n* [/taxonomy/attractions](#operation/taxonomyAttractions)\n* [/search/products](#operation/searchProducts)\n* [/search/products/codes](#operation/searchProductsCodes)\n* [/search/freetext](#operation/searchFreetext)\n* [/product](#operation/product)\n* [/product/reviews](#operation/productReviews)\n* [/product/photos](#operation/productPhotos)\n* [/available/products](#operation/availableProducts)\n\n**Note**: These services should be considered cacheable even though some are POST and no Cache-Control HTTP header is included in their response.\n\n### 2. Periodic content ingestion\n\n*Partners download either the full product catalogue or a subset of the catalogue at regular intervals based on destination, linked attraction, or product category filters.*\n\n#### Who should use periodic ingestion\nThis approach may be preferable for partners whose requirements include:\n* **System agnosticism/data centralization** – i.e., partners who are simultaneously selling products from vendors other than Viator, have existing product databases or are likely to want to maintain a central product catalogue with a unified taxonomy / data structure\n* **Enhanced search capability** – i.e., the ability to apply different categorization rules, filters, exclusions or search optimizations to the product catalogue; e.g., grouping or filtering products according to criteria other than those supported directly by the Viator API (destination, attraction-link or category)\n\n#### Frequency of content ingestion\nWe recommend that you perform an ingestion of the product catalogue once every 24 hours.\n\n#### How to retrieve product codes\n\nMake a call to one of the product search services:\n\n* [/search/products](#operation/searchProducts) – to search by `destId` (destination), `catId` (category), `subCatId` (subcategory) or `seoId` (attraction)\n* [/search/freetext](#operation/searchFreetext) – free-text search across all identifying fields \n\n#### How to retrieve all products in the catalogue\n\nTo retrieve all products from the Viator catalogue:\n\n* Retrieve all available destination identifiers (`destId`) from the [/taxonomy/destinations](#operation/taxonomyDestinations) service\n* Iterate through the complete list of `destId`s you retrieved in the previous step, and call [/search/products](#operation/searchProducts) for each `destId`\n\n**Note**: As some products operate in multiple destinations, the same product code may be returned for a range of different destinations. Therefore, make sure your list of product codes only contains one copy of each code.\n\nYou may then iterate through this list of product codes to retrieve any other product details necessary in order to properly populate your local database with the information you require.\n\n#### Retrieving a subsection of the product catalogue\n\nYou may wish to retrieve only some of the products available in the Viator catalogue; for example, if your organization is only interested in selling products that operate locally.\n\nYour top level search using [/search/products](#operation/searchProducts) is restricted to one of the three main categorization methods for products; i.e., destination, category/subcategory, or attraction-link; however, you may employ your own methods to filter the selection of products based on any attribute in the product data structure.\n\n#### Dealing with pagination using `totalCount` and `topX`\n\nDue to the large number of results that can be returned by the [/search/products](#operation/searchProducts) service, the request might exceed the 30-second time-out limitation. Therefore, you will need to make multiple requests to this service including pagination information in order to retrieve all products that match your search criteria.\n\nThis is accomplished by sequentially requesting successive segments of the results using the `topX` request parameter together with the `totalCount` response field; i.e.:\n\n* For your first request, specify a `topX` of `\"1-100\"`\n  - **Note**: this range is *inclusive*; i.e., `\"topX\": 1-100\"` will yield the first 100 records \n* The first response will indicate the total number of records available through the value of the `totalCount` field in the response object; e.g.: ```\"totalCount\": 13843```\n* For each subsequent request, specify the next logical 'chunk' of data via the `topX` parameter of the request; e.g.:\n  - \"topX\": \"1-100\"\n  - \"topX\": \"101-200\"\n  - ...\n  - \"topX\": \"13801-13843\"\n\n#### Rate limiting\n\nDue to the heavy load that pre-caching can place on Viator's servers and the downstream servers we connect to, we apply a rate limit of 150 requests per rolling 10 second time window.\n\nRequest rates exceeding this limit will result in a **HTTP 429 (Too Many Requests)** status code being returned.\n\n**Note**: The rate is calculated over a rolling 10-second time window.\n\n* In order to avoid running-up against rate limits:\n  - insert a delay of 2s if you receive a HTTP 429 status code\n  - do not run this as a multi-threaded process\n\n## Categorization of content\n\nThe products available in Viator’s catalogue are mainly categorized according to:\n\n1. **Destination**: every product in the Viator catalogue is categorized according to the destination/locale in which it operates. There are three kinds of destination:\n<table>\n  <thead>\n    <th>Destination type</th>\n    <th>Meaning</th>\n  </thead>\n  <tbody>\n    <tr>\n      <td>“COUNTRY”</td>\n      <td>A country; e.g., “Australia”, “Japan”, “USA”</td>\n    </tr>\n    <tr>\n      <td>\"REGION\"</td>\n      <td>A geographical region or state; e.g., “South Australia”, “French Riviera”, “Punjab”</td>\n    </tr>\n    <tr>\n      <td>\"CITY\"</td>\n      <td>A city within a state; e.g., “Townsville”, “Osaka”, “Singapore”</td>\n    </tr>\n  </tbody>\n</table>\n<table>\n  <thead>\n    <tr>\n      <th><code>destinationName</code></th>\n      <th><code>destId</code></th>\n      <th><code>destinationType</code></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>USA</td>\n      <td>77</td>\n      <td>COUNTRY</td>\n    </tr>\n    <tr>\n      <td>Wisconsin</td>\n      <td>22231</td>\n      <td>REGION</td>\n    </tr>\n    <tr>\n      <td>Madison</td>\n      <td>24146</td>\n      <td>CITY</td>\n    </tr>\n    <tr>\n      <td>France</td>\n      <td>51</td>\n      <td>COUNTRY</td>\n    </tr>\n    <tr>\n      <td>Brittany</td>\n      <td>21942</td>\n      <td>REGION</td>\n    </tr>\n    <tr>\n      <td>Rennes</td>\n      <td>21943</td>\n      <td>CITY</td>\n    </tr>\n  </tbody>\n</table>\n\n1. **Category and subcategory**: the products in the Viator catalogue are grouped according to the kind of activity they entail and may be subcategorized further to provide greater specificity; for example:\n<table>\n  <thead>\n    <tr>\n      <th>Category</th>\n      <th>Subcategories</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td rowspan=3>Air, Helicopter & Balloon Tours</td>\n      <td>Air Tours</td>\n    </tr>\n    <tr>\n      <td>Helicopter Tours</td>\n    </tr>\n    <tr>\n      <td>Balloon Rides</td>\n    </tr>\n    <tr>\n      <td rowspan=2>Weddings & Honeymoons</td>\n      <td>Wedding Packages</td>\n    </tr>\n    <tr>\n      <td>Honeymoon Packages</td>\n    </tr>\n  </tbody>\n</table>\n1. **Attraction link** (i.e., association to a particular \"point of interest\"); e.g.:\n<table>\n  <thead>\n    <tr>\n      <th>Attraction</th>\n      <th>`seoId`</th>\n    <tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Bellagio Fountains</td>\n      <td>1243</td>\n    </tr>\n    <tr>\n      <td>Black Canyon</td>\n      <td>4437</td>\n    </tr>\n    <tr>\n      <td>Epcot Centre</td>\n      <td>1141</td>\n    </tr>\n  </tbody>\n</table>\n\n## Localization and translation\n\n### Foreign language products\n\nThe products available through the Viator API have been created in a variety of languages, often by the suppliers of those products themselves. \n\nAlthough the majority of these have been created in English, many have been created in other languages. For example, a tour that operates in Paris might have been created in French.\n\nViator provides translation services to localize product descriptions to the language of the locale in which they are being presented. In this way, products with descriptions – for example, in French – can be displayed in English on English-language websites. Conversely, products with English-language-descriptions can be displayed in French on French-language websites.\n\n* **Note**: product descriptions are translated into the language specified in the `Locale` header parameter in the request to each endpoint.\n\n### Human and machine translation\n\nSome products have been translated by actual humans – 'human translated' –  while others have been automatically translated using Google Translate – 'machine translated'.\n\nThe type of translation that has been applied to a product (if any) is indicated by its `translationLevel`, a numeric specifer with meanings as follows:\n\n| `translationLevel` | Meaning |\n|-----------------|---------|\n| `0` | The product was created by the supplier in the language you specifed using the `Locale` header parameter in the request; i.e., the natural-language text in this response has not been translated |\n| `80` | All product information has been <u>machine translated</u> |\n| `90` or `100` | All product information has been <u>human translated</u> |\n\nTherefore, any product with a non-zero `translationLevel` has been translated.\n\nThe `translationLevel` field is returned in the response objects from the following services:\n\n* [/search/products](#operation/searchProducts)\n* [/search/products/codes](#operation/searchProductsCodes)\n* [/search/freetext](#operation/searchFreetext)\n* [/product](#operation/product)\n* [/available/products](#operation/availableProducts)\n\nWhen performing a product search using any of these services, you will receive - by default - products with a `translationLevel` of:\n\n* `0` (products that are in the language you specified in `Locale`), and\n* `90` or `100` (products that have been <u>fully human translated</u>)\n\n### Accessing machine-translated products\n\nIf your implementation can support the large number of products available that are machine translated, you can.\n\nHowever, access to the considerable volume of machine-translated products (level `80`), is <u>not granted by default</u>, as there may be quality issues regarding automatically-translated text.\n\nTo access machine-translated products, you will need to request access from your business development account manager.\n\n## How to report a product issue\n\nOccasionally, a product schema in the Viator database will contain incorrect or invalid information. Usually, this occurs due to a mistake made by the supplier of the product when creating the product or updating its details.\n\nNonetheless, it's in all our best interests for product information to be accurate and up-to-date; therefore, if you discover a problem with a product, we would greatly appreciate it if you could report the error through our [product issue reporting form](https://www.tfaforms.com/433240).\n\n### How to use the product issue reporting form\n\n1. Navigate to the [product issue reporting page](https://www.tfaforms.com/433240)\n2. Fill in the **Reporter**, **Supplier ID**, **Product Code** and **Booking ID** fields:\n\n| Field | How to fill it in | Example |\n|-------|-------------------|---------|\n| Reporter | Enter your email address for tracking or correspondence | `you@emailserver.com` |\n| Supplier ID | Enter the value returned in the `supplierCode` field by the [/product](#operation/product) service for the product in question. | `3072` |\n| Product Code | Enter the value returned in the `code` field by the [/product](#operation/product) service for the product in question. | `3072LASALL` |\n| Booking ID | Leave this field blank | |\n\n3. In the **Reason** box below, choose **Content** by clicking on its radio selector. A list of categories will appear, with meanings as follows:\n\n| Category | Included issues | \n|----------|---------|\n| Additional Info | clauses in the `additionalInfo` array in the response from [/product](#operation/product); e.g., departure time or hotel pick-up information |\n| Availability & Blockouts | N/A |\n| Booking Details | N/A |\n| Highlights | `highlights` array items in the response from [/product](#operation/product) |\n| Inclusions / Exclusions | `inclusions` or `exclusions` array items in the response from [/product](#operation/product) |\n| Images | `productPhotos` and `userPhotos` returned by [/product](#operation/product) or [/product/photos](#operation/productPhotos) |\n| Product Title | `title` in the response from [/product](#operation/product), [/search/products](#operation/searchProducts), [/search/products/codes](#operation/searchProductsCodes) and [/search/products/freetext](#operation/searchProductsFreetext) |\n| Product Descriptions | `description` and `shortDescription` in the response from [/product](#operation/product)|\n| SAPI | N/A |\n| Tour Options & Pricing | pricing issues; e.g. when the value of `merchantNetPrice` is `0`; or, if `merchantNetPrice` > `price` |\n| Taxonomy | <ul><li>destination issues in response from [/taxonomy/destination](#operation/taxonomyDestination)</li><li>category / subcategory issues in response from [/taxonomy/categories](#operation/taxonomyCategories)</li></ul> |\n| Translation Incorrect | mistakes in any natural-language field in the response from any service where `translationLevel` is non-zero |\n| TVRM | N/A |\n| VUC incorrect | N/A |\n\n4. After selecting the category of issue from the options shown, fill-in the **Description / Action Required** box with a good, clear description of the problem and any specific additional actions you would like us to take\n5. Click **Submit** to send the report\n\n<figure>\n    <img src=\"/partner-api/resources/affiliate/technical/img/tae-report-a-product-issue.jpg\" alt=\"Tripadvisor experiences report a product form\"/>\n    <figcaption>Example Report a Product Issue form</figcaption>\n</figure>\n\nOnce your report has been submitted, a member of our Supplier Support Team will contact the supplier of the product in question to resolve any problems with their listing.\n\n## Special offers and on-sale pricing\n\nSuppliers have the option of setting special pricing deals for their products. When a product is 'on sale'; i.e., has a temporarily lowered price, it will be reflected in the product content response, as follows:\n\n| Field name | Standard pricing | Special offer / on-sale pricing |\n|------------|----------------|-------------------------|\n| `specialOfferAvailable` | `false` | `true` |\n| `specialOffer` | `\"\"` (empty string) | e.g.: `\"Book by February 28 to save 10%\"` |\n| `rrp` | `0.0` | pre-discount price |\n| `rrpFormatted` | `\"\"` (empty string) | currency-formatted pre-discount price |\n| `onSale` | `false` | `true` |\n| `price` | standard price | special offer price |\n| `priceFormatted` | currency-formatted **standard price** | currency-formatted **special-offer price** |\n| `priceFrom` (in `tourgrades`) | standard price | special-offer price |\n| `priceFromFormatted` (in `tourgrades`) | currency-formatted **standard price** | currency-formatted **special-offer price** |\n| `savingAmount` | `0.0` | (`rrp` - `priceFrom`) |\n| `savingAmountFormated` | `\"\"` (empty string) | (`rrp` - `priceFrom`) currency formatted |\n\nYou can use this information to highlight which products are on special and provide details to the user about the special offer.\n\n\n## Making a booking\n\nAffiliate partners do not manage any aspect of the booking process. Instead, users on the affiliate's site click the link to the tour, which is provided in the `webURL` field in the product details in the responses from:\n\n- [/search/products](#operation/searchProducts)\n- [/search/products/codes](#operation/searchProductsCodes)\n- [/search/freetext](#operation/searchFreetext)\n- [/product](#operation/products)\n\n## Review authenticity\n\n### Viator performs checks on reviews\n\nYou can only submit a review or rating of an experience to Viator if you were the person who made the booking through Viator. Before publication, each review goes through an automated tracking system, which collects information for each of the following criteria: who, what, how, and when. \n\nIf the system detects something that contradicts our publication criteria, the review is not published. When the system detects a problem with a review, it may be automatically rejected, sent to the reviewer for validation, or manually reviewed by our team of content specialists who work 24/7 to maintain the quality of the reviews on our site. In some cases, we will also send Viator customers an email asking them to validate their review before it is published. <br /><br />All Viator customers need to do is click on the link provided in the email. \n\nAfter publication, our team checks each review reported to it as not meeting our publication criteria. Tripadvisor reviews that appear on the Viator site are subject to the same checks and moderation processes as set out above. It is not necessary to have booked an experience through Viator (or Tripadvisor) to submit a review of an experience to the Tripadvisor site.\n\n\n# Testing\n\n## Postman collection for testing\n\n<PullRight>\nTo facilitate your testing of the APIs functionality, please use the following collection, which can be loaded into the [Postman](https://www.getpostman.com/) API development environment via its **import** function.\n</PullRight>\n\n- [Viator affiliate partner API Postman collection](/partner-api/resources/affiliate/technical/postman/viator-content-partner-api.postman_collection.json)\n\n### Setting up API-key authentication in Postman\n\nBefore you start using the linked Postman collection for testing, you will need to set up the authorization method you wish to use. This can be either the new method (the `exp-api-key` <u>header</u> parameter) or, the legacy method (the `apiKey` <u>query</u> parameter).\n\nWhile both methods remain available, we strongly recommend that you use the new method, as it:\n\n1. Provides access to all languages available for your organization with a single API-key as opposed to one API-key per language\n2. Allows access to the new [booking cancellation endpoints](#section/Common-workflows-and-data-validation/Cancellation-API-workflow), as well as all newly-created endpoints in future\n \nPlease speak to your account manager if you are still using the legacy apiKey and would like to switch to our new authentication mechanism.\n\n#### How to set up the new exp-api-key header parameter\n\n1. Select **Edit** from the collection menu:\n\n![postman-testing-1](/partner-api/resources/affiliate/technical/img/postman-testing-1.png)\n\n2. Set the following values:\n\n* **Key**: `exp-api-key`\n* **Value**: Your organization's single exp-api-key, which will have an identical format to that shown in the image below\n* **Add to**: Header\n\n![postman-testing-2](/partner-api/resources/affiliate/technical/img/postman-testing-2.png)\n\n3. Click **Update**\n\n#### How to set up the legacy apiKey query parameter\n\n1. Select **Edit** from the collection menu:\n\n![postman-testing-1](/partner-api/resources/affiliate/technical/img/postman-testing-1.png)\n\n2. Set the following values:\n\n* **Key**: `apiKey`\n* **Value**: One of your organization's legacy apiKeys, which will have an identical format to that shown in the image below\n* **Add to**: Query Params\n\n![postman-testing-3](/partner-api/resources/affiliate/technical/img/postman-testing-3.png)\n\n3. Click **Update**\n\n# Appendices\n\n## Accept-Language header\n\nThe `Accept-Language` header parameter controls which language the natural language fields in the response from each endpoint will be translated into.\n\nNote that you can only specify languages that have been configured for your API-key. Therefore, if you wish to access additional languages, you will need to contact your business development account manager.\n\n| Language | Accept-Language parameter value |\n|----------|-------|\n| English | `en`, `en-US` |\n| Danish | `da`, `da-DK` |\n| Dutch | `nl`, `nl-NL` |\n| Norwegian | `no`, `no-NO` |\n| Spanish | `es`, `es-ES` |\n| Swedish | `sv`, `sv-SE` |\n| French | `fr`, `fr-FR` |\n| Italian | `it`, `it-IT` |\n| German | `de`, `de-DE` |\n| Portuguese | `pt`, `pt-PT` |\n| Japanese | `ja`, `ja-JP` |\n\n## Standard JSON fields\n\nEvery service returns a standard set of JSON fields at the end of the JSON response, which indicates if it was processed successfully by the API.\n\nIn addition to the success flag, you will also need to check the `errorMessage` values for the status of the response. Success: `true` and `errorType` / `errorMessage` `null` indicates that there were no errors.\n\n### Example JSON - successful:\n\n```javascript\n{\n  \"data\": [],\n  \"vmid\": \"321001\",\n  \"errorMessage\": null,\n  \"errorType\": null,\n  \"dateStamp\": \"2013-03-06T19:45:10+0000\",\n  \"errorReference\": null,\n  \"errorMessageText\": null,\n  \"success\": true,\n  \"totalCount\": 114,\n  \"errorName\": null\n}\n```\n\n### Example JSON - unsuccessful:\n\n```javascript\n{\n  \"errorReference\": \"~5793740141815885188840666\",\n  \"data\": null,\n  \"dateStamp\": \"2013-09-09T11:29:48+0000\",\n  \"errorType\": \"EXCEPTION\",\n  \"errorMessage\": [\"* Additional questions missing\\n\"],\n  \"errorName\": \"ValidationException\",\n  \"success\": false,\n  \"totalCount\": 1,\n  \"vmid\": \"221001\",\n  \"errorMessageText\": [\"* Additional questions missing\" ]\n}\n```\n\n| Element | Type | Comments | To be viewed by customer | Required |\n|---------|------|----------|:------------------------:|:--------:|\n| `vmid` | varchar | The server id that processed the service | ❌ | ✅ |\n| `errorMessage` | varchar | The error message in HTML | ❌ | ✅ |\n| `errorType` | varchar | Type of error: EXCEPTION | ❌ | ✅ |\n| `dateStamp` | datetime | timestamp of the response | ❌ | ✅ |\n| `errorReference` | varchar | The error reference is logged for future reference | ❌ | ✅ |\n| `errorMessageText` | varchar | The textual version of the error message | ✅<br /> (if an error has occurred) | ✅ |\n| `success` | boolean | <ul><li>`true` if the API request was successful with no errors</li><li>`false` if an error was encountered</li></ul> | ❌ | ✅ |\n| `totalCount` | smallint | The number of results returned (minimum = `1`) | ✅<br /> (if displaying the number of results found in a search etc.) | ✅ |\n| `errorName` | varchar | The name of the error type | ❌ | ✅ |\n\n## Country codes\n| Country code | Country |\n|--------------|---------|\n| AF | Afghanistan |\n| AL | Albania |\n| DZ | Algeria |\n| AS | American Samoa |\n| AD | Andorra |\n| AO | Angola |\n| AI | Anguilla |\n| AQ | Antarctica |\n| AG | Antigua and Barbuda |\n| AR | Argentina |\n| AM | Armenia |\n| AW | Aruba |\n| AU | Australia |\n| AT | Austria |\n| AZ | Azerbaijan |\n| BS | Bahamas |\n| BH | Bahrain |\n| BD | Bangladesh |\n| BB | Barbados |\n| BY | Belarus |\n| BE | Belgium |\n| BZ | Belize |\n| BJ | Benin |\n| BM | Bermuda |\n| BT | Bhutan |\n| BO | Bolivia |\n| BA | Bosnia Herzegovina |\n| BW | Botswana |\n| BR | Brazil |\n| BN | Brunei |\n| BG | Bulgaria |\n| BF | Burkina Faso |\n| BI | Burundi |\n| KH | Cambodia |\n| CM | Cameroon |\n| CA | Canada |\n| CV | Cape Verde |\n| KY | Cayman Islands |\n| CF | Central Africa |\n| TD | Chad |\n| CL | Chile |\n| CN | China |\n| CX | Christmas Island |\n| CC | Cocos (Keeling) Islands |\n| CO | Colombia |\n| KM | Comoros |\n| CK | Cook Islands |\n| CR | Costa Rica |\n| CI | Cote D'Ivoire |\n| HR | Croatia |\n| CY | Cyprus |\n| CZ | Czech Republic |\n| DK | Denmark |\n| DJ | Djibouti |\n| DM | Dominica |\n| DO | Dominican Republic |\n| EC | Ecuador |\n| EG | Egypt |\n| SV | El Salvador |\n| GQ | Equatorial Guinea |\n| ER | Eritrea |\n| EE | Estonia |\n| ET | Ethiopia |\n| FK | Falkland Island |\n| FO | Faroe Islands |\n| FJ | Fiji |\n| FI | Finland |\n| FR | France |\n| GF | French Guiana |\n| PF | French Polynesia |\n| GA | Gabon |\n| GM | Gambia |\n| GE | Georgia |\n| DE | Germany |\n| GH | Ghana |\n| GI | Gibraltar |\n| GR | Greece |\n| GL | Greenland |\n| GD | Grenada |\n| GP | Guadeloupe |\n| GU | Guam |\n| GT | Guatemala |\n| GN | Guinea |\n| GW | Guinea Bissau |\n| GY | Guyana |\n| HT | Haiti |\n| HN | Honduras |\n| HK | Hong Kong |\n| HU | Hungary |\n| IS | Iceland |\n| IN | India |\n| ID | Indonesia |\n| IQ | Iraq |\n| IE | Ireland |\n| IL | Israel |\n| IT | Italy |\n| JM | Jamaica |\n| JP | Japan |\n| JO | Jordan |\n| KZ | Kazakhstan |\n| KE | Kenya |\n| KI | Kiribati |\n| KW | Kuwait |\n| KG | Kyrgyzstan |\n| LA | Lao People's Democratic Republic |\n| LV | Latvia |\n| LB | Lebanon |\n| LS | Lesotho |\n| LR | Liberia |\n| LY | Libyan Arab Jamahiriya |\n| LI | Liechtenstein |\n| LT | Lithuania |\n| LU | Luxembourg |\n| MO | Macau |\n| MK | Macedonia |\n| MG | Madagascar |\n| MW | Malawi |\n| MY | Malaysia |\n| MV | Maldives |\n| ML | Mali |\n| MT | Malta |\n| MQ | Martinique |\n| MR | Mauritania |\n| MU | Mauritius |\n| YT | Mayotte |\n| MX | Mexico |\n| FM | Micronesia |\n| MD | Moldova |\n| MC | Monaco |\n| MN | Mongolia |\n| MS | Monserrat |\n| MA | Morocco |\n| MZ | Mozambique |\n| NA | Namibia |\n| NR | Nauru |\n| NP | Nepal |\n| NL | Netherlands |\n| AN | Netherlands Antilles |\n| KN | Nevis- St Kitts |\n| NC | New Caledonia |\n| NZ | New Zealand |\n| NI | Nicaragua |\n| NE | Niger |\n| NG | Nigeria |\n| NU | Niue |\n| NF | Norfolk Island |\n| KP | North Korea |\n| MP | Northern Mariana Islands |\n| NO | Norway |\n| OM | Oman |\n| PK | Pakistan |\n| PW | Palau |\n| PS | Palestinian Territory, Occupied |\n| PA | Panama |\n| PG | Papua New Guinea |\n| PY | Paraguay |\n| PE | Peru |\n| PH | Philippines |\n| PN | Pitcairn |\n| PL | Poland |\n| PT | Portugal |\n| PR | Puerto Rico |\n| QA | Qatar |\n| RE | Reunion |\n| RO | Romania |\n| RU | Russian Federation |\n| RW | Rwanda |\n| SH | Saint Helena |\n| LC | Saint Lucia |\n| SM | San Marino |\n| ST | Sao Tome and Principe |\n| SA | Saudi Arabia |\n| SN | Senegal |\n| YU | Serbia and Montenegro |\n| SC | Seychelles |\n| SL | Sierra Leone |\n| SG | Singapore |\n| SK | Slovakia |\n| SI | Slovenia |\n| SB | Solomon Islands |\n| SO | Somalia |\n| ZA | South Africa |\n| KR | South Korea |\n| ES | Spain |\n| LK | Sri Lanka |\n| PM | St Pierre Miquelon |\n| VC | St Vincent and Grenadines |\n| SR | Suriname |\n| SZ | Swaziland |\n| SE | Sweden |\n| CH | Switzerland |\n| SY | Syria |\n| TW | Taiwan |\n| TJ | Tajikistan |\n| TZ | Tanzania |\n| TH | Thailand |\n| TL | Timor-Leste |\n| TG | Togo |\n| TK | Tokelau |\n| TO | Tonga |\n| TT | Trinidad and Tobago |\n| TN | Tunisia |\n| TR | Turkey |\n| TM | Turkmenistan |\n| TC | Turks and Caicos Islands |\n| TV | Tuvalu |\n| UG | Uganda |\n| UA | Ukraine |\n| AE | United Arab Emirates |\n| GB | United Kingdom |\n| UY | Uruguay |\n| UM | US Minor Outlying Islands |\n| US | United States of America |\n| UZ | Uzbekistan |\n| VU | Vanuatu |\n| VE | Venezuela |\n| VN | Vietnam |\n| VG | Virgin Islands-British |\n| VI | Virgin Islands-US |\n| WF | Wallis and Futuna Islands |\n| WS | Western Samoa |\n| YE | Yemen Republic |\n| ZM | Zambia |\n| ZW | Zimbabwe |\n\n## US state codes\n| State code | State |\n|------------|-------|\n| AL | Alabama |\n| AK | Alaska |\n| AZ | Arizona |\n| AR | Arkansas |\n| CA | California |\n| CO | Colorado |\n| CT | Connecticut |\n| DE | Delaware |\n| DC | District of Columbia |\n| FL | Florida |\n| GA | Georgia |\n| HI | Hawaii |\n| ID | Idaho |\n| IL | Illinois |\n| IN | Indiana |\n| IA | Iowa |\n| KS | Kansas |\n| KY | Kentucky |\n| LA | Louisiana |\n| ME | Maine |\n| MD | Maryland |\n| MA | Massachusetts |\n| MI | Michigan |\n| MN | Minnesota |\n| MS | Mississippi |\n| MO | Missouri |\n| MT | Montana |\n| NE | Nebraska |\n| NV | Nevada |\n| NH | New Hampshire |\n| NJ | New Jersey |\n| NM | New Mexico |\n| NY | New York |\n| NC | North Carolina |\n| ND | North Dakota |\n| OH | Ohio |\n| OK | Oklahoma |\n| OR | Oregon |\n| PA | Pennsylvania |\n| RI | Rhode Island |\n| SC | South Carolina |\n| SD | South Dakota |\n| TN | Tennessee |\n| TX | Texas |\n| UT | Utah |\n| VT | Vermont |\n| VA | Virginia |\n| WA | Washington |\n| WV | West Virginia |\n| WI | Wisconsin |\n| WY | Wyoming |\n\n## Canadian provinces\n\n| Code | Province |\n|------|----------|\n| Alberta | Alberta |\n| British Columbia | British Columbia |\n| Manitoba | Manitoba |\n| New Brunswick | New Brunswick |\n| Newfoundland and Labrador | Newfoundland |\n| Northwest Territories | Northwest Territories |\n| Nova Scotia | Nova Scotia |\n| Nunavut | Nunavut |\n| Ontario | Ontario |\n| Prince Edward Island | Prince Edward Island |\n| Quebec | Quebec |\n| Saskatchewan | Saskatchewan |\n| Yukon | Yukon Territory |\n\n## Australian states\n\n| Code | State |\n|------|-------|\n| ACT | Australian Capital Territory |\n| NSW | New South Wales |\n| NT | Northern Territory |\n| QLD | Queensland |\n| SA | South Australia |\n| TAS | Tasmania |\n| VIC | Victoria |\n| WA | Western Australia |\n\n## Supported currency codes\n\nSupported currency codes for affiliate partners:\n\n| Currency code | Currency |\n|---------------|----------|\n| USD | US dollar |\n| GBP | British pound |\n| EUR | Euro |\n| AUD | Australian dollar |\n| HKD | Hong Kong Dollar |\n| SGD | Singapore Dollar |\n| CHF | Swiss Franc |\n| JPY | Japanese Yen |\n| NOK | Norwegian Krone |\n| CAD | Canadian Dollar |\n| NZD | New Zealand Dollar |\n| INR | Indian Rupee |\n| BRL | Brazillian Lire |\n| ZAR | South African Rand |\n| DKK | Danish Krone |\n| SEK | Swedish Krona |\n\n## Exception error codes\n\n| Error code | Services | Error message | Description |\n|------------|----------|---------------|-------------|\n| ATTRIBUTE_NOT_FOUND | [/product](#operation/product) |   |   |\n| TOUR_GONE | [/product](#operation/product) | \"We're sorry, we cannot find the tour, activity r attraction you are looking for\" | no product corresponding to the supplied details was found |\n| TOUR_NOT_FOUND | [/product](#operation/product) | \"We're sorry, we cannot find the tour, activity or attraction you are looking for\" | no product corresponding to the supplied details was found |\n| UNKNOWN_ERROR | *any* | *any* | the API reports this error when the exception from the underlying system (e.g. booking server) is not recognized |"
+  version: '1.0'
+  license:
+    name: CC BY 4.0
+    url: https://creativecommons.org/licenses/by/4.0/au
+  contact:
+    name: Viator Partner Support Team
+    email: affiliateapi@tripadvisor.com
+servers:
+- url: https://viatorapi.viator.com/service
+  description: Production server
+security:
+- API-key: []
+- Legacy-API-key: []
+tags:
+- name: Utility services
+  description: Utility services
+paths:
+  /util/sitedetails:
+    get:
+      tags:
+      - Utility services
+      summary: /util/sitedetails
+      operationId: utilSitedetails
+      description: Get site details – show the site settings for your organization
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      - $ref: '#/components/parameters/defaultCurrencyCode'
+      - in: query
+        name: centralURL
+        description: '**URL** for multi-URL sites that have a central URL for processing etc like www.alllasvegastours.com has content.allsightseeingtours.com'
+        example: alllasvegastours.com
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        showLogo:
+                          type: boolean
+                        showFavicon:
+                          type: boolean
+                        hasCustomHeaderHtml:
+                          type: boolean
+                        hasCustomFooterHtml:
+                          type: boolean
+                        hasCustomCss:
+                          type: boolean
+                        homepageDestIds:
+                          type: boolean
+                        piiSetting:
+                          type: boolean
+                        partnerPrivacyPolicyUrl:
+                          type: boolean
+                        pointsProgram:
+                          type: boolean
+                        pointsProgramName:
+                          type: boolean
+                        pointsProgramUserType:
+                          type: boolean
+                        pointsProgramHelpText:
+                          type: boolean
+                        puid:
+                          type: boolean
+                        retailSiteId:
+                          type: boolean
+                        companyName:
+                          type: boolean
+                        defaultCurrency:
+                          type: boolean
+                        centralURL:
+                          type: boolean
+                        permissionsDenied:
+                          type: array
+                          items:
+                            type: integer
+                        allowMultiCurrency:
+                          type: boolean
+                        mobileSiteDomain:
+                          type: string
+                          description: ignore (Viator only)
+                        showSupplierName:
+                          type: boolean
+                        showAllLangServices:
+                          type: boolean
+                        showPassbook:
+                          type: boolean
+                        urlPostFixedValue:
+                          type: string
+                          description: ignore (Viator only)
+                        canDisableBookEmail:
+                          type: boolean
+                        clientId:
+                          type: string
+                        locale:
+                          type: string
+                        enabled:
+                          type: boolean
+                        url:
+                          type: string
+                        id:
+                          type: integer
+                        channel:
+                          type: string
+              examples:
+                '1':
+                  $ref: '#/components/examples/util-sitedetails-example'
+  /util/countrymap:
+    get:
+      tags:
+      - Utility services
+      summary: /util/countrymap
+      operationId: utilCountrymap
+      description: Get a dictionary mapping coutry-codes to their natural-language names and international dialling prefixes
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        AF:
+                          type: object
+                          properties:
+                            countryName:
+                              type: string
+                              description: '**natural-language name** of the country that the country-code identifies'
+                            phoneCode:
+                              type: string
+                              description: '**[International Direct Dialling (IDD)](https://en.wikipedia.org/wiki/International_direct_dialing) prefix** for the country in question'
+                            countryId:
+                              type: string
+                              description: '**country-code** for the country in question'
+                        AX:
+                          type: object
+                          properties:
+                            countryName:
+                              type: string
+                              description: '**natural-language name** of the country that the country-code identifies'
+                            phoneCode:
+                              type: string
+                              description: '**[International Direct Dialling (IDD)](https://en.wikipedia.org/wiki/International_direct_dialing) prefix** for the country in question'
+                            countryId:
+                              type: string
+                              description: '**country-code** for the country in question'
+              examples:
+                '1':
+                  $ref: '#/components/examples/util-countrymap-example'
+  /util/guid:
+    get:
+      tags:
+      - Utility services
+      summary: /util/guid
+      operationId: utilGuid
+      description: This service can be used to generate a GUID if necessary
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: string
+                      description: '**[GUID (globally unique identifier)](https://en.wikipedia.org/wiki/Universally_unique_identifier)** for the request'
+              examples:
+                '1':
+                  $ref: '#/components/examples/util-guid-example'
+  /util/siteBinaryData:
+    post:
+      tags:
+      - Utility services
+      summary: /util/siteBinaryData
+      operationId: utilSiteBinaryData
+      description: Get partner custom information, such as Logo, Favicon or quick links (only necessary for some partners)
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                partnerCustomTypes:
+                  type: array
+                  items:
+                    type: string
+                    enum:
+                    - LOGO
+                    - LOGO_URL
+                    - FAVICON
+                    - HEADER_HTML
+                    - FOOTER_HTML
+                    - CSS
+                  description: '- `LOGO` - show base64-encoded data of partner''s logo
+
+                    - `LOGO_URL` - show base64-encoded data of partner''s logo URL
+
+                    - `FAVICON` - show base64-encoded data of partner''s favicon
+
+                    - `HEADER_HTML` - show base64-encoded data of the partner''s header HTML
+
+                    - `FOOTER_HTML` - show base64-encoded data of the partner''s footer HTML
+
+                    - `CSS` - show base64 based data of partner Site CSS
+
+                    '
+                  example:
+                  - LOGO
+                  - LOGO_URL
+                  - FAVICON
+                  - HEADER_HTML
+                  - FOOTER_HTML
+                  - CSS
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        favicon:
+                          type: string
+                          description: '**base64-encoded image** of the partner''s favicon'
+                        logo:
+                          type: string
+                          description: '**base64-encoded image** of the partner''s logo'
+                        logoUrl:
+                          type: string
+                          description: '**base64-encoded data** of the partner''s logo URL'
+                        headerHtml:
+                          type: string
+                          description: '**base64-encoded data** of the partner sites header HTML'
+                        footerHtml:
+                          type: string
+                          description: '**base64-encoded data** of the partner site''s footer HTMl'
+                        css:
+                          type: string
+                          description: '**base64-encoded image** of the partner''s site''s CSS'
+              examples:
+                '1':
+                  $ref: '#/components/examples/util-siteBinaryData-example'
+components:
+  parameters:
+    defaultCurrencyCode:
+      name: defaultCurrencyCode
+      in: query
+      description: '**currency code** (default) for pricing
+
+        - countries with standard currencies will default to *this* currency for pricing display prices displayed in this currency as the default currency
+
+        - other countries will default to `''USD''`
+
+        - e.g., Australia would be `''AUD''`; Vietnam would be `''USD''`
+
+        - See: [supported currencies](#section/Appendices/Supported-currency-codes)
+
+        '
+      schema:
+        type: string
+      example: USD
+    acceptLanguage:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
+  examples:
+    util-countrymap-example:
+      summary: /util/countrymap
+      value:
+        errorReference: null
+        data:
+          AF:
+            phoneCode: '+93'
+            countryName: Afghanistan
+            countryId: AF
+          AX:
+            phoneCode: '+358'
+            countryName: Aland Islands
+            countryId: AX
+          AL:
+            phoneCode: '+355'
+            countryName: Albania
+            countryId: AL
+          DZ:
+            phoneCode: '+213'
+            countryName: Algeria
+            countryId: DZ
+          AS:
+            phoneCode: +1-684
+            countryName: American Samoa
+            countryId: AS
+          AD:
+            phoneCode: '+376'
+            countryName: Andorra
+            countryId: AD
+          AO:
+            phoneCode: '+244'
+            countryName: Angola
+            countryId: AO
+          AI:
+            phoneCode: +1-264
+            countryName: Anguilla
+            countryId: AI
+          AQ:
+            phoneCode: '+672'
+            countryName: Antarctica
+            countryId: AQ
+          AG:
+            phoneCode: +1-268
+            countryName: Antigua and Barbuda
+            countryId: AG
+          AR:
+            phoneCode: '+54'
+            countryName: Argentina
+            countryId: AR
+          AM:
+            phoneCode: '+374'
+            countryName: Armenia
+            countryId: AM
+          AW:
+            phoneCode: '+297'
+            countryName: Aruba
+            countryId: AW
+          AC:
+            phoneCode: ''
+            countryName: Ascension
+            countryId: AC
+          AU:
+            phoneCode: '+61'
+            countryName: Australia
+            countryId: AU
+          AT:
+            phoneCode: '+43'
+            countryName: Austria
+            countryId: AT
+          AZ:
+            phoneCode: '+994'
+            countryName: Azerbaijan
+            countryId: AZ
+          BS:
+            phoneCode: +1-242
+            countryName: Bahamas
+            countryId: BS
+          BH:
+            phoneCode: '+973'
+            countryName: Bahrain
+            countryId: BH
+          BD:
+            phoneCode: '+880'
+            countryName: Bangladesh
+            countryId: BD
+          BB:
+            phoneCode: +1-246
+            countryName: Barbados
+            countryId: BB
+          BY:
+            phoneCode: '+375'
+            countryName: Belarus
+            countryId: BY
+          BE:
+            phoneCode: '+32'
+            countryName: Belgium
+            countryId: BE
+          BZ:
+            phoneCode: '+501'
+            countryName: Belize
+            countryId: BZ
+          BJ:
+            phoneCode: '+229'
+            countryName: Benin
+            countryId: BJ
+          BM:
+            phoneCode: +1-441
+            countryName: Bermuda
+            countryId: BM
+          BT:
+            phoneCode: '+975'
+            countryName: Bhutan
+            countryId: BT
+          BO:
+            phoneCode: '+591'
+            countryName: Bolivia
+            countryId: BO
+          BQ:
+            phoneCode: '+599'
+            countryName: Bonaire
+            countryId: BQ
+          BA:
+            phoneCode: '+387'
+            countryName: Bosnia and Herzegovina
+            countryId: BA
+          BW:
+            phoneCode: '+267'
+            countryName: Botswana
+            countryId: BW
+          BV:
+            phoneCode: '+55'
+            countryName: Bouvet Island
+            countryId: BV
+          BR:
+            phoneCode: '+55'
+            countryName: Brazil
+            countryId: BR
+          IO:
+            phoneCode: '+246'
+            countryName: British Indian Ocean Territory
+            countryId: IO
+          BN:
+            phoneCode: '+673'
+            countryName: Brunei Darussalam
+            countryId: BN
+          BG:
+            phoneCode: '+359'
+            countryName: Bulgaria
+            countryId: BG
+          BF:
+            phoneCode: '+226'
+            countryName: Burkina Faso
+            countryId: BF
+          XX:
+            phoneCode: ''
+            countryName: Burma (refer to Myanmar)
+            countryId: XX
+          BI:
+            phoneCode: '+257'
+            countryName: Burundi
+            countryId: BI
+          CV:
+            phoneCode: '+238'
+            countryName: Cabo Verde
+            countryId: CV
+          KH:
+            phoneCode: '+855'
+            countryName: Cambodia
+            countryId: KH
+          CM:
+            phoneCode: '+237'
+            countryName: Cameroon
+            countryId: CM
+          CA:
+            phoneCode: '+1'
+            countryName: Canada
+            countryId: CA
+          BQN:
+            phoneCode: ''
+            countryName: Caribbean Netherlands
+            countryId: BQN
+          KY:
+            phoneCode: +1-345
+            countryName: Cayman Islands
+            countryId: KY
+          CF:
+            phoneCode: '+236'
+            countryName: Central African Republic
+            countryId: CF
+          TD:
+            phoneCode: '+235'
+            countryName: Chad
+            countryId: TD
+          CL:
+            phoneCode: '+56'
+            countryName: Chile
+            countryId: CL
+          CN:
+            phoneCode: '+86'
+            countryName: China
+            countryId: CN
+          CX:
+            phoneCode: '+61'
+            countryName: Christmas Island
+            countryId: CX
+          CC:
+            phoneCode: '+61'
+            countryName: Cocos (Keeling) Islands
+            countryId: CC
+          CO:
+            phoneCode: '+57'
+            countryName: Colombia
+            countryId: CO
+          KM:
+            phoneCode: '+269'
+            countryName: Comoros
+            countryId: KM
+          CK:
+            phoneCode: '+682'
+            countryName: Cook Islands
+            countryId: CK
+          CR:
+            phoneCode: '+506'
+            countryName: Costa Rica
+            countryId: CR
+          CI:
+            phoneCode: '+225'
+            countryName: Cote d'Ivoire
+            countryId: CI
+          HR:
+            phoneCode: '+385'
+            countryName: Croatia
+            countryId: HR
+          CW:
+            phoneCode: '+599'
+            countryName: Curacao
+            countryId: CW
+          CY:
+            phoneCode: '+357'
+            countryName: Cyprus
+            countryId: CY
+          CZ:
+            phoneCode: '+420'
+            countryName: Czechia
+            countryId: CZ
+          DK:
+            phoneCode: '+45'
+            countryName: Denmark
+            countryId: DK
+          DJ:
+            phoneCode: '+253'
+            countryName: Djibouti
+            countryId: DJ
+          DM:
+            phoneCode: +1-767
+            countryName: Dominica
+            countryId: DM
+          DO:
+            phoneCode: +1-809
+            countryName: Dominican Republic
+            countryId: DO
+          EC:
+            phoneCode: '+593'
+            countryName: Ecuador
+            countryId: EC
+          EG:
+            phoneCode: '+20'
+            countryName: Egypt
+            countryId: EG
+          SV:
+            phoneCode: '+503'
+            countryName: El Salvador
+            countryId: SV
+          GQ:
+            phoneCode: '+240'
+            countryName: Equatorial Guinea
+            countryId: GQ
+          ER:
+            phoneCode: '+291'
+            countryName: Eritrea
+            countryId: ER
+          EE:
+            phoneCode: '+372'
+            countryName: Estonia
+            countryId: EE
+          ET:
+            phoneCode: '+251'
+            countryName: Ethiopia
+            countryId: ET
+          FK:
+            phoneCode: '+500'
+            countryName: Falkland Islands
+            countryId: FK
+          FO:
+            phoneCode: '+298'
+            countryName: Faroe Islands
+            countryId: FO
+          FJ:
+            phoneCode: '+679'
+            countryName: Fiji
+            countryId: FJ
+          FI:
+            phoneCode: '+358'
+            countryName: Finland
+            countryId: FI
+          FR:
+            phoneCode: '+33'
+            countryName: France
+            countryId: FR
+          GF:
+            phoneCode: '+594'
+            countryName: French Guiana
+            countryId: GF
+          PF:
+            phoneCode: '+689'
+            countryName: French Polynesia
+            countryId: PF
+          TF:
+            phoneCode: '+262'
+            countryName: French Southern Territories and Antarctic Lands
+            countryId: TF
+          GA:
+            phoneCode: '+241'
+            countryName: Gabon
+            countryId: GA
+          GM:
+            phoneCode: '+220'
+            countryName: Gambia
+            countryId: GM
+          GE:
+            phoneCode: '+995'
+            countryName: Georgia
+            countryId: GE
+          DE:
+            phoneCode: '+49'
+            countryName: Germany
+            countryId: DE
+          GH:
+            phoneCode: '+233'
+            countryName: Ghana
+            countryId: GH
+          GI:
+            phoneCode: '+350'
+            countryName: Gibraltar
+            countryId: GI
+          GR:
+            phoneCode: '+30'
+            countryName: Greece
+            countryId: GR
+          GL:
+            phoneCode: '+299'
+            countryName: Greenland
+            countryId: GL
+          GD:
+            phoneCode: +1-473
+            countryName: Grenada
+            countryId: GD
+          GP:
+            phoneCode: '+590'
+            countryName: Guadeloupe
+            countryId: GP
+          GU:
+            phoneCode: +1-671
+            countryName: Guam
+            countryId: GU
+          GT:
+            phoneCode: '+502'
+            countryName: Guatemala
+            countryId: GT
+          GG:
+            phoneCode: +44-1481
+            countryName: Guernsey
+            countryId: GG
+          GN:
+            phoneCode: '+224'
+            countryName: Guinea
+            countryId: GN
+          GW:
+            phoneCode: '+245'
+            countryName: Guinea-Bissau
+            countryId: GW
+          GY:
+            phoneCode: '+592'
+            countryName: Guyana
+            countryId: GY
+          HT:
+            phoneCode: '+509'
+            countryName: Haiti
+            countryId: HT
+          HM:
+            phoneCode: '+61'
+            countryName: Heard Island and McDonald Islands
+            countryId: HM
+          VA:
+            phoneCode: '+379'
+            countryName: Holy See (Vatican City State)
+            countryId: VA
+          HN:
+            phoneCode: '+504'
+            countryName: Honduras
+            countryId: HN
+          HK:
+            phoneCode: '+852'
+            countryName: Hong Kong
+            countryId: HK
+          HU:
+            phoneCode: '+36'
+            countryName: Hungary
+            countryId: HU
+          IS:
+            phoneCode: '+354'
+            countryName: Iceland
+            countryId: IS
+          IN:
+            phoneCode: '+91'
+            countryName: India
+            countryId: IN
+          ID:
+            phoneCode: '+62'
+            countryName: Indonesia
+            countryId: ID
+          IQ:
+            phoneCode: ''
+            countryName: Iraq
+            countryId: IQ
+          IE:
+            phoneCode: '+353'
+            countryName: Ireland
+            countryId: IE
+          IM:
+            phoneCode: +44-1624
+            countryName: Isle of Man
+            countryId: IM
+          IL:
+            phoneCode: '+972'
+            countryName: Israel
+            countryId: IL
+          IT:
+            phoneCode: '+39'
+            countryName: Italy
+            countryId: IT
+          JM:
+            phoneCode: +1-876
+            countryName: Jamaica
+            countryId: JM
+          JP:
+            phoneCode: '+81'
+            countryName: Japan
+            countryId: JP
+          JE:
+            phoneCode: +44-1534
+            countryName: Jersey
+            countryId: JE
+          JO:
+            phoneCode: '+962'
+            countryName: Jordan
+            countryId: JO
+          KZ:
+            phoneCode: '+7'
+            countryName: Kazakhstan
+            countryId: KZ
+          KE:
+            phoneCode: '+254'
+            countryName: Kenya
+            countryId: KE
+          KI:
+            phoneCode: '+686'
+            countryName: Kiribati
+            countryId: KI
+          KW:
+            phoneCode: '+965'
+            countryName: Kuwait
+            countryId: KW
+          KG:
+            phoneCode: '+996'
+            countryName: Kyrgyzstan
+            countryId: KG
+          LA:
+            phoneCode: '+856'
+            countryName: Lao People's Democratic Republic
+            countryId: LA
+          LV:
+            phoneCode: '+371'
+            countryName: Latvia
+            countryId: LV
+          LB:
+            phoneCode: '+961'
+            countryName: Lebanon
+            countryId: LB
+          LS:
+            phoneCode: '+266'
+            countryName: Lesotho
+            countryId: LS
+          LR:
+            phoneCode: '+231'
+            countryName: Liberia
+            countryId: LR
+          LY:
+            phoneCode: '+218'
+            countryName: Libya
+            countryId: LY
+          LI:
+            phoneCode: '+423'
+            countryName: Liechtenstein
+            countryId: LI
+          LT:
+            phoneCode: '+370'
+            countryName: Lithuania
+            countryId: LT
+          LU:
+            phoneCode: '+352'
+            countryName: Luxembourg
+            countryId: LU
+          MO:
+            phoneCode: '+853'
+            countryName: Macao
+            countryId: MO
+          MK:
+            phoneCode: '+389'
+            countryName: Macedonia
+            countryId: MK
+          MG:
+            phoneCode: '+261'
+            countryName: Madagascar
+            countryId: MG
+          MW:
+            phoneCode: '+265'
+            countryName: Malawi
+            countryId: MW
+          MY:
+            phoneCode: '+60'
+            countryName: Malaysia
+            countryId: MY
+          MV:
+            phoneCode: '+960'
+            countryName: Maldives
+            countryId: MV
+          ML:
+            phoneCode: '+223'
+            countryName: Mali
+            countryId: ML
+          MT:
+            phoneCode: '+356'
+            countryName: Malta
+            countryId: MT
+          MQ:
+            phoneCode: '+596'
+            countryName: Martinique
+            countryId: MQ
+          MR:
+            phoneCode: '+222'
+            countryName: Mauritania
+            countryId: MR
+          MU:
+            phoneCode: '+230'
+            countryName: Mauritius
+            countryId: MU
+          YT:
+            phoneCode: '+269'
+            countryName: Mayotte
+            countryId: YT
+          MX:
+            phoneCode: '+52'
+            countryName: Mexico
+            countryId: MX
+          FM:
+            phoneCode: '+691'
+            countryName: Micronesia
+            countryId: FM
+          MD:
+            phoneCode: '+373'
+            countryName: Moldova
+            countryId: MD
+          MC:
+            phoneCode: '+377'
+            countryName: Monaco
+            countryId: MC
+          MN:
+            phoneCode: '+976'
+            countryName: Mongolia
+            countryId: MN
+          ME:
+            phoneCode: '+382'
+            countryName: Montenegro
+            countryId: ME
+          MS:
+            phoneCode: +1-664
+            countryName: Montserrat
+            countryId: MS
+          MA:
+            phoneCode: '+212'
+            countryName: Morocco
+            countryId: MA
+          MZ:
+            phoneCode: '+258'
+            countryName: Mozambique
+            countryId: MZ
+          MM:
+            phoneCode: '+95'
+            countryName: Myanmar
+            countryId: MM
+          NA:
+            phoneCode: '+264'
+            countryName: Namibia
+            countryId: NA
+          NR:
+            phoneCode: '+674'
+            countryName: Nauru
+            countryId: NR
+          NP:
+            phoneCode: '+977'
+            countryName: Nepal
+            countryId: NP
+          NL:
+            phoneCode: '+31'
+            countryName: Netherlands
+            countryId: NL
+          AN:
+            phoneCode: '+599'
+            countryName: Netherlands Antilles
+            countryId: AN
+          NC:
+            phoneCode: '+687'
+            countryName: New Caledonia
+            countryId: NC
+          NZ:
+            phoneCode: '+64'
+            countryName: New Zealand
+            countryId: NZ
+          NI:
+            phoneCode: '+505'
+            countryName: Nicaragua
+            countryId: NI
+          NE:
+            phoneCode: '+227'
+            countryName: Niger
+            countryId: NE
+          NG:
+            phoneCode: '+234'
+            countryName: Nigeria
+            countryId: NG
+          NU:
+            phoneCode: '+683'
+            countryName: Niue
+            countryId: NU
+          NF:
+            phoneCode: '+672'
+            countryName: Norfolk Island
+            countryId: NF
+          MP:
+            phoneCode: +1-670
+            countryName: Northern Mariana Islands
+            countryId: MP
+          'NO':
+            phoneCode: '+47'
+            countryName: Norway
+            countryId: 'NO'
+          OM:
+            phoneCode: '+968'
+            countryName: Oman
+            countryId: OM
+          PK:
+            phoneCode: '+92'
+            countryName: Pakistan
+            countryId: PK
+          PW:
+            phoneCode: '+680'
+            countryName: Palau
+            countryId: PW
+          PS:
+            phoneCode: '+970'
+            countryName: Palestine, State of
+            countryId: PS
+          PA:
+            phoneCode: '+507'
+            countryName: Panama
+            countryId: PA
+          PG:
+            phoneCode: '+675'
+            countryName: Papua New Guinea
+            countryId: PG
+          PY:
+            phoneCode: '+595'
+            countryName: Paraguay
+            countryId: PY
+          PE:
+            phoneCode: '+51'
+            countryName: Peru
+            countryId: PE
+          PH:
+            phoneCode: '+63'
+            countryName: Philippines
+            countryId: PH
+          PN:
+            phoneCode: '+64'
+            countryName: Pitcairn
+            countryId: PN
+          PL:
+            phoneCode: '+48'
+            countryName: Poland
+            countryId: PL
+          PT:
+            phoneCode: '+351'
+            countryName: Portugal
+            countryId: PT
+          PR:
+            phoneCode: '+1'
+            countryName: Puerto Rico
+            countryId: PR
+          QA:
+            phoneCode: '+974'
+            countryName: Qatar
+            countryId: QA
+          RE:
+            phoneCode: '+262'
+            countryName: Reunion
+            countryId: RE
+          RO:
+            phoneCode: '+40'
+            countryName: Romania
+            countryId: RO
+          RU:
+            phoneCode: '+7'
+            countryName: Russian Federation
+            countryId: RU
+          RW:
+            phoneCode: '+250'
+            countryName: Rwanda
+            countryId: RW
+          BQS:
+            phoneCode: ''
+            countryName: Saba
+            countryId: BQS
+          SH:
+            phoneCode: '+290'
+            countryName: Saint Helena
+            countryId: SH
+          KN:
+            phoneCode: +1-869
+            countryName: Saint Kitts and Nevis
+            countryId: KN
+          LC:
+            phoneCode: +1-758
+            countryName: Saint Lucia
+            countryId: LC
+          MF:
+            phoneCode: '+590'
+            countryName: Saint Martin
+            countryId: MF
+          PM:
+            phoneCode: '+508'
+            countryName: Saint Pierre and Miquelon
+            countryId: PM
+          WS:
+            phoneCode: '+685'
+            countryName: Samoa
+            countryId: WS
+          SM:
+            phoneCode: '+378'
+            countryName: San Marino
+            countryId: SM
+          ST:
+            phoneCode: '+239'
+            countryName: Sao Tome and Principe
+            countryId: ST
+          SA:
+            phoneCode: '+966'
+            countryName: Saudi Arabia
+            countryId: SA
+          SN:
+            phoneCode: '+221'
+            countryName: Senegal
+            countryId: SN
+          RS:
+            phoneCode: '+381'
+            countryName: Serbia
+            countryId: RS
+          YU:
+            phoneCode: '+381'
+            countryName: Serbia and Montenegro
+            countryId: YU
+          SC:
+            phoneCode: '+248'
+            countryName: Seychelles
+            countryId: SC
+          SL:
+            phoneCode: '+232'
+            countryName: Sierra Leone
+            countryId: SL
+          SG:
+            phoneCode: '+65'
+            countryName: Singapore
+            countryId: SG
+          SX:
+            phoneCode: '+1721'
+            countryName: Sint Maarten
+            countryId: SX
+          SK:
+            phoneCode: '+421'
+            countryName: Slovakia
+            countryId: SK
+          SI:
+            phoneCode: '+386'
+            countryName: Slovenia
+            countryId: SI
+          SB:
+            phoneCode: '+677'
+            countryName: Solomon Islands
+            countryId: SB
+          SO:
+            phoneCode: '+252'
+            countryName: Somalia
+            countryId: SO
+          ZA:
+            phoneCode: '+27'
+            countryName: South Africa
+            countryId: ZA
+          KR:
+            phoneCode: '+82'
+            countryName: South Korea
+            countryId: KR
+          ES:
+            phoneCode: '+34'
+            countryName: Spain
+            countryId: ES
+          LK:
+            phoneCode: '+94'
+            countryName: Sri Lanka
+            countryId: LK
+          VC:
+            phoneCode: +1-784
+            countryName: St Vincent and Grenadines
+            countryId: VC
+          SR:
+            phoneCode: '+597'
+            countryName: Suriname
+            countryId: SR
+          SZ:
+            phoneCode: '+268'
+            countryName: Swaziland
+            countryId: SZ
+          SE:
+            phoneCode: '+46'
+            countryName: Sweden
+            countryId: SE
+          CH:
+            phoneCode: '+41'
+            countryName: Switzerland
+            countryId: CH
+          TW:
+            phoneCode: '+886'
+            countryName: Taiwan
+            countryId: TW
+          TJ:
+            phoneCode: '+992'
+            countryName: Tajikistan
+            countryId: TJ
+          TZ:
+            phoneCode: '+255'
+            countryName: Tanzania, United Republic of
+            countryId: TZ
+          TH:
+            phoneCode: '+66'
+            countryName: Thailand
+            countryId: TH
+          TL:
+            phoneCode: '+670'
+            countryName: Timor-Leste
+            countryId: TL
+          TG:
+            phoneCode: '+228'
+            countryName: Togo
+            countryId: TG
+          TK:
+            phoneCode: '+690'
+            countryName: Tokelau
+            countryId: TK
+          TO:
+            phoneCode: '+676'
+            countryName: Tonga
+            countryId: TO
+          TT:
+            phoneCode: +1-868
+            countryName: Trinidad and Tobago
+            countryId: TT
+          TN:
+            phoneCode: '+216'
+            countryName: Tunisia
+            countryId: TN
+          TR:
+            phoneCode: '+90'
+            countryName: Turkey
+            countryId: TR
+          TM:
+            phoneCode: '+993'
+            countryName: Turkmenistan
+            countryId: TM
+          TC:
+            phoneCode: +1-649
+            countryName: Turks and Caicos Islands
+            countryId: TC
+          TV:
+            phoneCode: '+688'
+            countryName: Tuvalu
+            countryId: TV
+          UG:
+            phoneCode: '+256'
+            countryName: Uganda
+            countryId: UG
+          UA:
+            phoneCode: '+380'
+            countryName: Ukraine
+            countryId: UA
+          AE:
+            phoneCode: '+971'
+            countryName: United Arab Emirates
+            countryId: AE
+          GB:
+            phoneCode: '+44'
+            countryName: United Kingdom
+            countryId: GB
+          UM:
+            phoneCode: '+1'
+            countryName: United States Minor Outlying Islands
+            countryId: UM
+          US:
+            phoneCode: '+1'
+            countryName: United States of America
+            countryId: US
+          UY:
+            phoneCode: '+598'
+            countryName: Uruguay
+            countryId: UY
+          UZ:
+            phoneCode: '+998'
+            countryName: Uzbekistan
+            countryId: UZ
+          VU:
+            phoneCode: '+678'
+            countryName: Vanuatu
+            countryId: VU
+          VE:
+            phoneCode: '+58'
+            countryName: Venezuela
+            countryId: VE
+          VN:
+            phoneCode: '+84'
+            countryName: Viet Nam
+            countryId: VN
+          VG:
+            phoneCode: +1-284
+            countryName: Virgin Islands (British)
+            countryId: VG
+          VI:
+            phoneCode: +1-340
+            countryName: Virgin Islands (U.S.)
+            countryId: VI
+          WF:
+            phoneCode: '+681'
+            countryName: Wallis and Futuna
+            countryId: WF
+          YE:
+            phoneCode: '+967'
+            countryName: Yemen
+            countryId: YE
+          ZM:
+            phoneCode: '+260'
+            countryName: Zambia
+            countryId: ZM
+          ZW:
+            phoneCode: '+263'
+            countryName: Zimbabwe
+            countryId: ZW
+        dateStamp: 2020-04-21T17:10:10+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331001'
+    util-guid-example:
+      summary: /util/guid
+      value:
+        errorReference: null
+        data: 331003-1969648698962354-6150751091453490107
+        dateStamp: 2020-04-21T17:14:06+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
+    util-sitedetails-example:
+      summary: /util/sitedetails
+      value:
+        errorReference: null
+        data:
+          showLogo: false
+          showFavicon: false
+          hasCustomHeaderHtml: false
+          hasCustomFooterHtml: false
+          hasCustomCss: false
+          homepageDestIds: []
+          piiSetting: NO_PII
+          partnerPrivacyPolicyUrl: ''
+          pointsProgram: false
+          pointsProgramName: ''
+          pointsProgramUserType: ''
+          pointsProgramHelpText: ''
+          puid: '00000'
+          retailSiteId: 00000.api.partner.viator.com
+          companyName: TheName
+          defaultCurrency: USD
+          centralURL: shop.live.rc.viator.com
+          permissionsDenied:
+          - 1
+          - 42
+          - 75
+          - 46
+          - 78
+          - 15
+          - 82
+          - 116
+          - 53
+          - 85
+          - 22
+          - 118
+          - 119
+          - 120
+          - 121
+          allowMultiCurrency: false
+          mobileSiteDomain: null
+          showSupplierName: false
+          showAllLangServices: false
+          showPassbook: false
+          urlPostFixedValue: eap=brand-subbrand-00000&aid=vba00000en
+          canDisableBookEmail: false
+          clientId: PARTNER:API-en:VBA:00000
+          locale: en
+          enabled: true
+          url: shop.live.rc.viator.com
+          id: 0
+          channel: PARTNER
+        dateStamp: 2020-04-21T17:22:00+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
+    util-siteBinaryData-example:
+      summary: /util/siteBinaryData
+      value:
+        errorReference: null
+        data:
+          favicon: null
+          logo: null
+          logoUrl: null
+          headerHtml: null
+          footerHtml: null
+          css: null
+        dateStamp: 2020-04-21T17:20:24+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331001'
+  schemas:
+    basicErrorModel:
+      type: object
+      properties:
+        errorReference:
+          type: string
+          example: null
+          description: '**reference number** of *this* error'
+        dateStamp:
+          type: string
+          example: 2017-11-24T21:30:47+0000
+          description: '**timestamp** of *this* response'
+        errorType:
+          type: string
+          description: '**code** specifying the type of error'
+          example: null
+        errorCodes:
+          type: array
+          description: '**array** of error codes pertaining to *this* error
+
+            - See: [Exception error codes](#section/Appendices/Exception-error-codes) for a list of possible error codes
+
+            '
+          items:
+            type: string
+          example: []
+        errorMessage:
+          type: array
+          description: '**array** of error message strings'
+          example: null
+        errorName:
+          type: string
+          example: null
+          description: '**name** of *this* type of error'
+        extraInfo:
+          type: object
+          description: ignore (Viator only)
+        extraObject:
+          type: object
+          description: ignore (Viator only)
+        success:
+          type: boolean
+          example: true
+          description: '**boolean indicator** of *this* request''s outcome
+
+            - `true`: the request was successful with no errors
+
+            - `false`: an error was encountered
+
+            '
+        totalCount:
+          type: integer
+          example: 1
+          description: '**number** of results available for *this* service
+
+            '
+        errorMessageText:
+          type: string
+          example: null
+          description: '**array** of error message strings in plain text'
+        vmid:
+          type: string
+          example: '321050'
+          description: '**unique numeric id** of the server that processed *this* request'
+  securitySchemes:
+    Legacy-API-key:
+      type: apiKey
+      in: query
+      name: apiKey
+    API-key:
+      type: apiKey
+      in: header
+      name: exp-api-key

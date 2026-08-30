@@ -1,0 +1,2228 @@
+openapi: 3.2.0
+info:
+  title: Viator API Documentation & Specification - Affiliate Partners Attraction services API
+  description: "<style type='text/css'>\ncode { white-space: nowrap; }\na { font-weight: bold; }\n\nfigure {\n  width: 100%;\n  text-align: center;\n  font-style: italic;\n  font-size: smaller;\n  text-indent: 0;\n  border: thin silver solid;\n  margin: 0.5em;\n  padding: 0.5em;\n}\n\n</style>\n\n## Updates\n\n| Date | Description |\n|------|-------------|\n| 26 May 2022 | Added advice about review authenticity: [Key concepts - Review authenticity](#section/Key-concepts/Review-authenticity) |\n| 11 Feb 2022 | Added note about no-index policy to [/attraction](#operation/attraction), [/attraction/photos](#operation/attractionPhotos), [/attraction/reviews](#operation/attractionReviews) and [/search/attractions](#operation/searchAttractions) endpoints |\n| 16 Sep 2021 | Removed `topX` and modified options for `sortOrder` request parameters in [/attraction/reviews/](#operation/attractionReviews) endpoint |\n| 6 Sep 2021 | Modified available options for `sortOrder` request parameter in [/taxonomy/attractions](#operation/taxonomyAttractions) and [/search/attractions](#operation/searchAttractions) endpoints |\n| 3 March 2021 | Added `currencyCode` request parameter to [/attraction/products](#operation/attractionProducts) |\n| 19 Feb 2021 | Removed /support/terms and /support/faq endpoints |\n| 3 Feb 2021 | Added [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) section |\n| 9 June 2020 | Updated [Supported currencies](#section/Appendices/Supported-currency-codes) section and [/product](http://localhost:8080/#operation/product) endpoint description to reflect multiple currencies now being enabled for all accounts by default |\n| 2 June 2020 | Updated Postman collections and [Testing](#section/Testing) section |\n| 20 May 2020 | Updated Postman collection |\n| 19 May 2020 | Recompiled with latest version of ReDoc (0.9.8) |\n| 22 Apr 2020 | Revised list of available languages |\n| 21 Apr 2020 | Regenerated all endpoint examples |\n| 20 Apr 2020 | Updated Overview section to be more specific to the Content Affiliate partner type |\n| 10 Mar 2020 | Created new [Overview](#section/Overview) section \n\n# Overview\n\nThe API exposes a variety of services that allow the retrieval of all product details, such as descriptions, pricing, terms and conditions, photos and reviews. This data can either be ingested periodically and managed on your local system, or calls can be made in real time to retrieve content in response to your users' activity on your systems.\n\nThe API provides product content and availability functionality, along with various utility services to map between yours and Viator's data taxonomy.\n\n## Who is the API for?\n\nThe Viator Partner API is designed for use by organizations and individuals partnered with Viator as a Viator Branded Affiliate (VBA).\n\n### Viator Branded Affiliates (VBAs)\n\nVBAs have full access to the areas of the API relating to content, but sales of Viator products must be carried out on the Viator site itself; therefore, access to the booking or transactional endpoints necessary to operate as the merchant of record (i.e., merchant partners) is restricted. \n\nWhen a customer wishes to book a product from a VBA partner's site, they are instead redirected to [viator.com](https://viator.com) in order to complete the purchase; whereas, merchant partners are able to process and manage bookings through the Viator API itself, allowing their customers to book products without leaving the partner's site.\n\nViator affiliates instead generate unique URLs that redirect their users to the Viator site, resulting in a cookie being set such that all transactions will accrue a commission for that partner until the cookie expires.\n\nPurchases of products originating from the VBAs site are recorded and a commission on these sales is paid periodically.\n\n## Uses of the Viator Partner API\n\nThe Viator Partner API is used to carry out the following tasks:\n\n### Product search and ingestion\n\nPartners can use the product search endpoints to retrieve lists of products from Viator’s inventory relevant to their business. The available search criteria include:\n\n- The location (destination) in which the product operates\n- Whether the product is associated with a well-known tourist attraction; e.g., Empire State Building\n- The type of product (known as its category and/or subcategory)\n- The time period during which the product operates \n- Words or phrases that occur in a product's description via a free-text search\n\nPartners who prefer to download product details periodically (instead of performing all operations in real time in response to user behavior) do so by using the product search endpoints to compile a list of products that they wish to sell on their site. They then download comprehensive product details for each via the /product endpoint.\n\n#### Product search endpoints:\n\n| Endpoint | Use |\n|-|-|\n| [/search/products](#operation/searchProducts) | Allows searching for products according to: destination / location, relationship to a known tourist attraction; category and/or subcategory; date of operation |\n| [/search/products/codes](#operation/searchProductsCodes) | Retrieves product details for products that match a list of product codes (unique identifiers for the product) |\n| [/search/freetext](#operation/searchFreetext) | Retrieves product details for products that include the search terms in the product's description and details. |\n| [/available/products](#operation/availableProducts) | Retrieves products that are identified by specific product codes, operate during a specified day range and accept a certain number of adult travelers |\n\n#### Product information endpoints:\n\nAll information about a product that must be communicated to customers prior to purchase is available via [/product](#operation/product) and its auxiliary endpoints. This content is generally used to construct product display pages and for performing local searches.\n\nImportant information about a product includes:\n\n- Product and supplier names\n- Geographic location\n- Product description\n- Category and subcategory\n- Photos (from both users and the supplier)\n- User reviews and ratings\n- Product options (variants of the tour/activity, such as starting times, passenger mix options, and inclusions/add-ons, including basic pricing information for each)\n- Which age ranges can participate\n- Booking details\n- Terms and conditions\n- Basic pricing\n- Logistics\n  + Inclusions (e.g., provided meals)\n  + Exclusions (e.g., entrance fees to visited attractions)\n  + Health restrictions and accessibility\n  + Departure times\n  + Passenger pick-up\n  + Duration\n  + Tour routes\n\n### Auxiliary services\n\nTaxonomical data sets are required to interact meaningfully with the Viator Partner API; for example, mappings from destination (location of operation) to their respective identification codes. This information may occasionally change or be added to. Consequently, the API includes endpoints that return the most up-to-date versions of this information.\n\n#### Taxonomy endpoints\n\n| Endpoint | Use |\n|-|-|\n| [/taxonomy/destinations](#operation/taxonomyDestinations) | Retrieves a list of destination names, types and unique identifiers to be used when interacting with the Viator Partner API |\n| [/taxonomy/categories](#operation/taxonomyCategories) | Retrieves a list of product categories for a destination that can be used as a means of filtering when searching for products using the [/search/products](#operation/searchProducts) endpoint |\n| [/taxonomy/attractions](#operation/taxonomyAttractions) | Retrieves a list of tourist attractions (e.g., the Eiffel Tower or Empire State Building) and their associated identification codes to be used as a means of searching for available products; for example, in the [/search/products](#operation/searchProducts) service |\n| [/booking/hotels](#operation/bookingHotels) | Retrieves a list of hotels, including names and geographic locations, to be used when making booking requests |\n\n#### Utility endpoints\n\nThe following services are available that provide basic utility services to support the use of the API:\n\n| Endpoint | Use |\n|-|-|\n| [/util/ip2country](#operation/utilIp2country) | Returns the country-code for the country in which the IP is located. |\n| [/util/sitedetails](#operation/utilSitedetails) | Returns the site settings for your organization|\n| [/util/countrymap](#operation/countrymap) | Returns a dictionary mapping coutry-codes to their natural-language names and international dialling prefixes|\n| [/util/guid](#operation/utilGuid) | Generates and returns a GUID for general use |\n| [/util/siteBinaryData](#operation/utilSiteBinaryData) | Returns custom information for a partner, such as a logo, favicon or quick links |\n\n### Attraction services\n\nViator has a large database of attractions and traveler recommendations. These are associated with a destination and have their own photos and reviews as well as associated products that consumers can purchase.\n\nAn example Attraction is the Eiffel Tower. Viator sells a number of products that take customers to the tower and these are associated for cross selling purposes.\n\nRecommendations are authored by Viator and our customers and include recommended itineraries for visiting a city or favorite restaurants, etc.\n\nThe attraction endpoints can be used to get the attractions or recommendation lists, details and associated products, photos and reviews.\n\nAttractions and recommendations have a unique ID called the `seoId`. This is the unique identifier for an attraction and is available in the following services.\n\n| Endpoint | Use |\n|-|-|\n| [/search/attractions](#operation/searchAttractions) | Returns a list of attractions associated with the given destination |\n| [/attraction](#operation/attraction) | Returns the details of an attraction. |\n| [/attraction/reviews](#operation/attractionReviews) |  Returns reviews related to an attraction. These reviews might be associated indirectly through the related products.|\n| [/attraction/photos](#operation/attractionPhotos) | Returns photos that are related to an attraction (these may be associated indirectly if they are photos of products related to the attraction) |\n\n### Customer support services\n\nThe links to the terms and conditions, FAQ and customer care page is available to VBA partners.\n\nThe following services are available:\n\n| Endpoint | Use |\n|-|-|\n| [/support/terms](#operation/supportTerms) | Returns the URL for the terms and conditions. |\n| [/support/FAQ](#operation/supportFAQ) | Returns the URL to the FAQ page that the partner can link to within their app / website |\n| [/service/support/customercare](#operation/supportCustomercare) | Returns the URL to the customer care page that the partner can link to within their app / website. |\n\n---\n\n# Authentication\n\n## API key\n\nAccess to the API is managed using an **API key** that must be included as a **header parameter** to every call made to all API endpoints described in this document.\n\n| Header parameter name | Example value |\n|-----------------------|---------------|\n| exp-api-key | bcac8986-4c33-4fa0-ad3f-75409487026c |\n\nIf you do not know the API key for your organization, please contact your business development account manager for these details.\n\nWhen using this type of key, you must also include in your request the language you wish your response localized to via the `Accept-Language` header parameter. See [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes. Please note that, at present, only the language configured for your organization's point of sale will be available.\n\n## Legacy API key\n\nPreviously, authenticating to this API was accomplished by passing an API-key as a **query parameter** appended to the URI for each call; e.g.:\n\n```html\nGET https://viatorapi.viator.com/service/taxonomy/destinations?apiKey=xxxxxxxxxxxxxxxxxx\n```\n\nWhile this method of authentication remains available for backwards-compatibility, if you are still using this method for authentication, we recommend you contact your business development account manager to ask for a new-style API key as soon as possible.\n\n# Key concepts\n\n## Content ingestion and caching strategy\n\nMuch of the information you will need to retrieve from the Viator API – such as the taxonomy, product lists and product details – do not change frequently.\n\nTherefore, we recommend implementing a caching strategy in order to eliminate unnecessary traffic to Viator’s servers and improve the operation of your site. \n\nThis section discusses the different strategies for retrieving and caching Viator’s product catalogue.\n\nYou will need to decide on how you will retrieve and manage content from Viator’s product catalogue. The two main options are as follows:\n\n### 1. API response caching\n\n*Partners retrieve content as-needed and cache responses on a service-by-service basis*\n\nIf you do not need to store product details locally, we recommend performing caching of on a service-by-service basis; i.e., storing the entire response and applying a time-to-live (TTL) of less than 24 hours.\n\n#### Benefits of API response caching\n\n* All the benefits of caching with minimal overhead\n* Minimal risk of serving stale or invalid data cached on the partner's side\n* No need to download data about products that are not selling\n* A smaller volume of local data improves cache hit performance\n* Fewer requests made of Viator's systems\n* Avoids rate limitations\n* Closer adherence to best practices\n* Removes need to manage a complex data structure locally\n\n#### Service endpoints to cache\n\nCaching should only be applied to services that yield infrequently changing data; i.e.:\n\n* [/taxonomy/destinations](](#operation/taxonomyDestinations)\n* [/taxonomy/categories](#operation/taxonomyCategories)\n* [/taxonomy/attractions](#operation/taxonomyAttractions)\n* [/search/products](#operation/searchProducts)\n* [/search/products/codes](#operation/searchProductsCodes)\n* [/search/freetext](#operation/searchFreetext)\n* [/product](#operation/product)\n* [/product/reviews](#operation/productReviews)\n* [/product/photos](#operation/productPhotos)\n* [/available/products](#operation/availableProducts)\n\n**Note**: These services should be considered cacheable even though some are POST and no Cache-Control HTTP header is included in their response.\n\n### 2. Periodic content ingestion\n\n*Partners download either the full product catalogue or a subset of the catalogue at regular intervals based on destination, linked attraction, or product category filters.*\n\n#### Who should use periodic ingestion\nThis approach may be preferable for partners whose requirements include:\n* **System agnosticism/data centralization** – i.e., partners who are simultaneously selling products from vendors other than Viator, have existing product databases or are likely to want to maintain a central product catalogue with a unified taxonomy / data structure\n* **Enhanced search capability** – i.e., the ability to apply different categorization rules, filters, exclusions or search optimizations to the product catalogue; e.g., grouping or filtering products according to criteria other than those supported directly by the Viator API (destination, attraction-link or category)\n\n#### Frequency of content ingestion\nWe recommend that you perform an ingestion of the product catalogue once every 24 hours.\n\n#### How to retrieve product codes\n\nMake a call to one of the product search services:\n\n* [/search/products](#operation/searchProducts) – to search by `destId` (destination), `catId` (category), `subCatId` (subcategory) or `seoId` (attraction)\n* [/search/freetext](#operation/searchFreetext) – free-text search across all identifying fields \n\n#### How to retrieve all products in the catalogue\n\nTo retrieve all products from the Viator catalogue:\n\n* Retrieve all available destination identifiers (`destId`) from the [/taxonomy/destinations](#operation/taxonomyDestinations) service\n* Iterate through the complete list of `destId`s you retrieved in the previous step, and call [/search/products](#operation/searchProducts) for each `destId`\n\n**Note**: As some products operate in multiple destinations, the same product code may be returned for a range of different destinations. Therefore, make sure your list of product codes only contains one copy of each code.\n\nYou may then iterate through this list of product codes to retrieve any other product details necessary in order to properly populate your local database with the information you require.\n\n#### Retrieving a subsection of the product catalogue\n\nYou may wish to retrieve only some of the products available in the Viator catalogue; for example, if your organization is only interested in selling products that operate locally.\n\nYour top level search using [/search/products](#operation/searchProducts) is restricted to one of the three main categorization methods for products; i.e., destination, category/subcategory, or attraction-link; however, you may employ your own methods to filter the selection of products based on any attribute in the product data structure.\n\n#### Dealing with pagination using `totalCount` and `topX`\n\nDue to the large number of results that can be returned by the [/search/products](#operation/searchProducts) service, the request might exceed the 30-second time-out limitation. Therefore, you will need to make multiple requests to this service including pagination information in order to retrieve all products that match your search criteria.\n\nThis is accomplished by sequentially requesting successive segments of the results using the `topX` request parameter together with the `totalCount` response field; i.e.:\n\n* For your first request, specify a `topX` of `\"1-100\"`\n  - **Note**: this range is *inclusive*; i.e., `\"topX\": 1-100\"` will yield the first 100 records \n* The first response will indicate the total number of records available through the value of the `totalCount` field in the response object; e.g.: ```\"totalCount\": 13843```\n* For each subsequent request, specify the next logical 'chunk' of data via the `topX` parameter of the request; e.g.:\n  - \"topX\": \"1-100\"\n  - \"topX\": \"101-200\"\n  - ...\n  - \"topX\": \"13801-13843\"\n\n#### Rate limiting\n\nDue to the heavy load that pre-caching can place on Viator's servers and the downstream servers we connect to, we apply a rate limit of 150 requests per rolling 10 second time window.\n\nRequest rates exceeding this limit will result in a **HTTP 429 (Too Many Requests)** status code being returned.\n\n**Note**: The rate is calculated over a rolling 10-second time window.\n\n* In order to avoid running-up against rate limits:\n  - insert a delay of 2s if you receive a HTTP 429 status code\n  - do not run this as a multi-threaded process\n\n## Categorization of content\n\nThe products available in Viator’s catalogue are mainly categorized according to:\n\n1. **Destination**: every product in the Viator catalogue is categorized according to the destination/locale in which it operates. There are three kinds of destination:\n<table>\n  <thead>\n    <th>Destination type</th>\n    <th>Meaning</th>\n  </thead>\n  <tbody>\n    <tr>\n      <td>“COUNTRY”</td>\n      <td>A country; e.g., “Australia”, “Japan”, “USA”</td>\n    </tr>\n    <tr>\n      <td>\"REGION\"</td>\n      <td>A geographical region or state; e.g., “South Australia”, “French Riviera”, “Punjab”</td>\n    </tr>\n    <tr>\n      <td>\"CITY\"</td>\n      <td>A city within a state; e.g., “Townsville”, “Osaka”, “Singapore”</td>\n    </tr>\n  </tbody>\n</table>\n<table>\n  <thead>\n    <tr>\n      <th><code>destinationName</code></th>\n      <th><code>destId</code></th>\n      <th><code>destinationType</code></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>USA</td>\n      <td>77</td>\n      <td>COUNTRY</td>\n    </tr>\n    <tr>\n      <td>Wisconsin</td>\n      <td>22231</td>\n      <td>REGION</td>\n    </tr>\n    <tr>\n      <td>Madison</td>\n      <td>24146</td>\n      <td>CITY</td>\n    </tr>\n    <tr>\n      <td>France</td>\n      <td>51</td>\n      <td>COUNTRY</td>\n    </tr>\n    <tr>\n      <td>Brittany</td>\n      <td>21942</td>\n      <td>REGION</td>\n    </tr>\n    <tr>\n      <td>Rennes</td>\n      <td>21943</td>\n      <td>CITY</td>\n    </tr>\n  </tbody>\n</table>\n\n1. **Category and subcategory**: the products in the Viator catalogue are grouped according to the kind of activity they entail and may be subcategorized further to provide greater specificity; for example:\n<table>\n  <thead>\n    <tr>\n      <th>Category</th>\n      <th>Subcategories</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td rowspan=3>Air, Helicopter & Balloon Tours</td>\n      <td>Air Tours</td>\n    </tr>\n    <tr>\n      <td>Helicopter Tours</td>\n    </tr>\n    <tr>\n      <td>Balloon Rides</td>\n    </tr>\n    <tr>\n      <td rowspan=2>Weddings & Honeymoons</td>\n      <td>Wedding Packages</td>\n    </tr>\n    <tr>\n      <td>Honeymoon Packages</td>\n    </tr>\n  </tbody>\n</table>\n1. **Attraction link** (i.e., association to a particular \"point of interest\"); e.g.:\n<table>\n  <thead>\n    <tr>\n      <th>Attraction</th>\n      <th>`seoId`</th>\n    <tr>\n  </thead>\n  <tbody>\n    <tr>\n      <td>Bellagio Fountains</td>\n      <td>1243</td>\n    </tr>\n    <tr>\n      <td>Black Canyon</td>\n      <td>4437</td>\n    </tr>\n    <tr>\n      <td>Epcot Centre</td>\n      <td>1141</td>\n    </tr>\n  </tbody>\n</table>\n\n## Localization and translation\n\n### Foreign language products\n\nThe products available through the Viator API have been created in a variety of languages, often by the suppliers of those products themselves. \n\nAlthough the majority of these have been created in English, many have been created in other languages. For example, a tour that operates in Paris might have been created in French.\n\nViator provides translation services to localize product descriptions to the language of the locale in which they are being presented. In this way, products with descriptions – for example, in French – can be displayed in English on English-language websites. Conversely, products with English-language-descriptions can be displayed in French on French-language websites.\n\n* **Note**: product descriptions are translated into the language specified in the `Locale` header parameter in the request to each endpoint.\n\n### Human and machine translation\n\nSome products have been translated by actual humans – 'human translated' –  while others have been automatically translated using Google Translate – 'machine translated'.\n\nThe type of translation that has been applied to a product (if any) is indicated by its `translationLevel`, a numeric specifer with meanings as follows:\n\n| `translationLevel` | Meaning |\n|-----------------|---------|\n| `0` | The product was created by the supplier in the language you specifed using the `Locale` header parameter in the request; i.e., the natural-language text in this response has not been translated |\n| `80` | All product information has been <u>machine translated</u> |\n| `90` or `100` | All product information has been <u>human translated</u> |\n\nTherefore, any product with a non-zero `translationLevel` has been translated.\n\nThe `translationLevel` field is returned in the response objects from the following services:\n\n* [/search/products](#operation/searchProducts)\n* [/search/products/codes](#operation/searchProductsCodes)\n* [/search/freetext](#operation/searchFreetext)\n* [/product](#operation/product)\n* [/available/products](#operation/availableProducts)\n\nWhen performing a product search using any of these services, you will receive - by default - products with a `translationLevel` of:\n\n* `0` (products that are in the language you specified in `Locale`), and\n* `90` or `100` (products that have been <u>fully human translated</u>)\n\n### Accessing machine-translated products\n\nIf your implementation can support the large number of products available that are machine translated, you can.\n\nHowever, access to the considerable volume of machine-translated products (level `80`), is <u>not granted by default</u>, as there may be quality issues regarding automatically-translated text.\n\nTo access machine-translated products, you will need to request access from your business development account manager.\n\n## How to report a product issue\n\nOccasionally, a product schema in the Viator database will contain incorrect or invalid information. Usually, this occurs due to a mistake made by the supplier of the product when creating the product or updating its details.\n\nNonetheless, it's in all our best interests for product information to be accurate and up-to-date; therefore, if you discover a problem with a product, we would greatly appreciate it if you could report the error through our [product issue reporting form](https://www.tfaforms.com/433240).\n\n### How to use the product issue reporting form\n\n1. Navigate to the [product issue reporting page](https://www.tfaforms.com/433240)\n2. Fill in the **Reporter**, **Supplier ID**, **Product Code** and **Booking ID** fields:\n\n| Field | How to fill it in | Example |\n|-------|-------------------|---------|\n| Reporter | Enter your email address for tracking or correspondence | `you@emailserver.com` |\n| Supplier ID | Enter the value returned in the `supplierCode` field by the [/product](#operation/product) service for the product in question. | `3072` |\n| Product Code | Enter the value returned in the `code` field by the [/product](#operation/product) service for the product in question. | `3072LASALL` |\n| Booking ID | Leave this field blank | |\n\n3. In the **Reason** box below, choose **Content** by clicking on its radio selector. A list of categories will appear, with meanings as follows:\n\n| Category | Included issues | \n|----------|---------|\n| Additional Info | clauses in the `additionalInfo` array in the response from [/product](#operation/product); e.g., departure time or hotel pick-up information |\n| Availability & Blockouts | N/A |\n| Booking Details | N/A |\n| Highlights | `highlights` array items in the response from [/product](#operation/product) |\n| Inclusions / Exclusions | `inclusions` or `exclusions` array items in the response from [/product](#operation/product) |\n| Images | `productPhotos` and `userPhotos` returned by [/product](#operation/product) or [/product/photos](#operation/productPhotos) |\n| Product Title | `title` in the response from [/product](#operation/product), [/search/products](#operation/searchProducts), [/search/products/codes](#operation/searchProductsCodes) and [/search/products/freetext](#operation/searchProductsFreetext) |\n| Product Descriptions | `description` and `shortDescription` in the response from [/product](#operation/product)|\n| SAPI | N/A |\n| Tour Options & Pricing | pricing issues; e.g. when the value of `merchantNetPrice` is `0`; or, if `merchantNetPrice` > `price` |\n| Taxonomy | <ul><li>destination issues in response from [/taxonomy/destination](#operation/taxonomyDestination)</li><li>category / subcategory issues in response from [/taxonomy/categories](#operation/taxonomyCategories)</li></ul> |\n| Translation Incorrect | mistakes in any natural-language field in the response from any service where `translationLevel` is non-zero |\n| TVRM | N/A |\n| VUC incorrect | N/A |\n\n4. After selecting the category of issue from the options shown, fill-in the **Description / Action Required** box with a good, clear description of the problem and any specific additional actions you would like us to take\n5. Click **Submit** to send the report\n\n<figure>\n    <img src=\"/partner-api/resources/affiliate/technical/img/tae-report-a-product-issue.jpg\" alt=\"Tripadvisor experiences report a product form\"/>\n    <figcaption>Example Report a Product Issue form</figcaption>\n</figure>\n\nOnce your report has been submitted, a member of our Supplier Support Team will contact the supplier of the product in question to resolve any problems with their listing.\n\n## Special offers and on-sale pricing\n\nSuppliers have the option of setting special pricing deals for their products. When a product is 'on sale'; i.e., has a temporarily lowered price, it will be reflected in the product content response, as follows:\n\n| Field name | Standard pricing | Special offer / on-sale pricing |\n|------------|----------------|-------------------------|\n| `specialOfferAvailable` | `false` | `true` |\n| `specialOffer` | `\"\"` (empty string) | e.g.: `\"Book by February 28 to save 10%\"` |\n| `rrp` | `0.0` | pre-discount price |\n| `rrpFormatted` | `\"\"` (empty string) | currency-formatted pre-discount price |\n| `onSale` | `false` | `true` |\n| `price` | standard price | special offer price |\n| `priceFormatted` | currency-formatted **standard price** | currency-formatted **special-offer price** |\n| `priceFrom` (in `tourgrades`) | standard price | special-offer price |\n| `priceFromFormatted` (in `tourgrades`) | currency-formatted **standard price** | currency-formatted **special-offer price** |\n| `savingAmount` | `0.0` | (`rrp` - `priceFrom`) |\n| `savingAmountFormated` | `\"\"` (empty string) | (`rrp` - `priceFrom`) currency formatted |\n\nYou can use this information to highlight which products are on special and provide details to the user about the special offer.\n\n\n## Making a booking\n\nAffiliate partners do not manage any aspect of the booking process. Instead, users on the affiliate's site click the link to the tour, which is provided in the `webURL` field in the product details in the responses from:\n\n- [/search/products](#operation/searchProducts)\n- [/search/products/codes](#operation/searchProductsCodes)\n- [/search/freetext](#operation/searchFreetext)\n- [/product](#operation/products)\n\n## Review authenticity\n\n### Viator performs checks on reviews\n\nYou can only submit a review or rating of an experience to Viator if you were the person who made the booking through Viator. Before publication, each review goes through an automated tracking system, which collects information for each of the following criteria: who, what, how, and when. \n\nIf the system detects something that contradicts our publication criteria, the review is not published. When the system detects a problem with a review, it may be automatically rejected, sent to the reviewer for validation, or manually reviewed by our team of content specialists who work 24/7 to maintain the quality of the reviews on our site. In some cases, we will also send Viator customers an email asking them to validate their review before it is published. <br /><br />All Viator customers need to do is click on the link provided in the email. \n\nAfter publication, our team checks each review reported to it as not meeting our publication criteria. Tripadvisor reviews that appear on the Viator site are subject to the same checks and moderation processes as set out above. It is not necessary to have booked an experience through Viator (or Tripadvisor) to submit a review of an experience to the Tripadvisor site.\n\n\n# Testing\n\n## Postman collection for testing\n\n<PullRight>\nTo facilitate your testing of the APIs functionality, please use the following collection, which can be loaded into the [Postman](https://www.getpostman.com/) API development environment via its **import** function.\n</PullRight>\n\n- [Viator affiliate partner API Postman collection](/partner-api/resources/affiliate/technical/postman/viator-content-partner-api.postman_collection.json)\n\n### Setting up API-key authentication in Postman\n\nBefore you start using the linked Postman collection for testing, you will need to set up the authorization method you wish to use. This can be either the new method (the `exp-api-key` <u>header</u> parameter) or, the legacy method (the `apiKey` <u>query</u> parameter).\n\nWhile both methods remain available, we strongly recommend that you use the new method, as it:\n\n1. Provides access to all languages available for your organization with a single API-key as opposed to one API-key per language\n2. Allows access to the new [booking cancellation endpoints](#section/Common-workflows-and-data-validation/Cancellation-API-workflow), as well as all newly-created endpoints in future\n \nPlease speak to your account manager if you are still using the legacy apiKey and would like to switch to our new authentication mechanism.\n\n#### How to set up the new exp-api-key header parameter\n\n1. Select **Edit** from the collection menu:\n\n![postman-testing-1](/partner-api/resources/affiliate/technical/img/postman-testing-1.png)\n\n2. Set the following values:\n\n* **Key**: `exp-api-key`\n* **Value**: Your organization's single exp-api-key, which will have an identical format to that shown in the image below\n* **Add to**: Header\n\n![postman-testing-2](/partner-api/resources/affiliate/technical/img/postman-testing-2.png)\n\n3. Click **Update**\n\n#### How to set up the legacy apiKey query parameter\n\n1. Select **Edit** from the collection menu:\n\n![postman-testing-1](/partner-api/resources/affiliate/technical/img/postman-testing-1.png)\n\n2. Set the following values:\n\n* **Key**: `apiKey`\n* **Value**: One of your organization's legacy apiKeys, which will have an identical format to that shown in the image below\n* **Add to**: Query Params\n\n![postman-testing-3](/partner-api/resources/affiliate/technical/img/postman-testing-3.png)\n\n3. Click **Update**\n\n# Appendices\n\n## Accept-Language header\n\nThe `Accept-Language` header parameter controls which language the natural language fields in the response from each endpoint will be translated into.\n\nNote that you can only specify languages that have been configured for your API-key. Therefore, if you wish to access additional languages, you will need to contact your business development account manager.\n\n| Language | Accept-Language parameter value |\n|----------|-------|\n| English | `en`, `en-US` |\n| Danish | `da`, `da-DK` |\n| Dutch | `nl`, `nl-NL` |\n| Norwegian | `no`, `no-NO` |\n| Spanish | `es`, `es-ES` |\n| Swedish | `sv`, `sv-SE` |\n| French | `fr`, `fr-FR` |\n| Italian | `it`, `it-IT` |\n| German | `de`, `de-DE` |\n| Portuguese | `pt`, `pt-PT` |\n| Japanese | `ja`, `ja-JP` |\n\n## Standard JSON fields\n\nEvery service returns a standard set of JSON fields at the end of the JSON response, which indicates if it was processed successfully by the API.\n\nIn addition to the success flag, you will also need to check the `errorMessage` values for the status of the response. Success: `true` and `errorType` / `errorMessage` `null` indicates that there were no errors.\n\n### Example JSON - successful:\n\n```javascript\n{\n  \"data\": [],\n  \"vmid\": \"321001\",\n  \"errorMessage\": null,\n  \"errorType\": null,\n  \"dateStamp\": \"2013-03-06T19:45:10+0000\",\n  \"errorReference\": null,\n  \"errorMessageText\": null,\n  \"success\": true,\n  \"totalCount\": 114,\n  \"errorName\": null\n}\n```\n\n### Example JSON - unsuccessful:\n\n```javascript\n{\n  \"errorReference\": \"~5793740141815885188840666\",\n  \"data\": null,\n  \"dateStamp\": \"2013-09-09T11:29:48+0000\",\n  \"errorType\": \"EXCEPTION\",\n  \"errorMessage\": [\"* Additional questions missing\\n\"],\n  \"errorName\": \"ValidationException\",\n  \"success\": false,\n  \"totalCount\": 1,\n  \"vmid\": \"221001\",\n  \"errorMessageText\": [\"* Additional questions missing\" ]\n}\n```\n\n| Element | Type | Comments | To be viewed by customer | Required |\n|---------|------|----------|:------------------------:|:--------:|\n| `vmid` | varchar | The server id that processed the service | ❌ | ✅ |\n| `errorMessage` | varchar | The error message in HTML | ❌ | ✅ |\n| `errorType` | varchar | Type of error: EXCEPTION | ❌ | ✅ |\n| `dateStamp` | datetime | timestamp of the response | ❌ | ✅ |\n| `errorReference` | varchar | The error reference is logged for future reference | ❌ | ✅ |\n| `errorMessageText` | varchar | The textual version of the error message | ✅<br /> (if an error has occurred) | ✅ |\n| `success` | boolean | <ul><li>`true` if the API request was successful with no errors</li><li>`false` if an error was encountered</li></ul> | ❌ | ✅ |\n| `totalCount` | smallint | The number of results returned (minimum = `1`) | ✅<br /> (if displaying the number of results found in a search etc.) | ✅ |\n| `errorName` | varchar | The name of the error type | ❌ | ✅ |\n\n## Country codes\n| Country code | Country |\n|--------------|---------|\n| AF | Afghanistan |\n| AL | Albania |\n| DZ | Algeria |\n| AS | American Samoa |\n| AD | Andorra |\n| AO | Angola |\n| AI | Anguilla |\n| AQ | Antarctica |\n| AG | Antigua and Barbuda |\n| AR | Argentina |\n| AM | Armenia |\n| AW | Aruba |\n| AU | Australia |\n| AT | Austria |\n| AZ | Azerbaijan |\n| BS | Bahamas |\n| BH | Bahrain |\n| BD | Bangladesh |\n| BB | Barbados |\n| BY | Belarus |\n| BE | Belgium |\n| BZ | Belize |\n| BJ | Benin |\n| BM | Bermuda |\n| BT | Bhutan |\n| BO | Bolivia |\n| BA | Bosnia Herzegovina |\n| BW | Botswana |\n| BR | Brazil |\n| BN | Brunei |\n| BG | Bulgaria |\n| BF | Burkina Faso |\n| BI | Burundi |\n| KH | Cambodia |\n| CM | Cameroon |\n| CA | Canada |\n| CV | Cape Verde |\n| KY | Cayman Islands |\n| CF | Central Africa |\n| TD | Chad |\n| CL | Chile |\n| CN | China |\n| CX | Christmas Island |\n| CC | Cocos (Keeling) Islands |\n| CO | Colombia |\n| KM | Comoros |\n| CK | Cook Islands |\n| CR | Costa Rica |\n| CI | Cote D'Ivoire |\n| HR | Croatia |\n| CY | Cyprus |\n| CZ | Czech Republic |\n| DK | Denmark |\n| DJ | Djibouti |\n| DM | Dominica |\n| DO | Dominican Republic |\n| EC | Ecuador |\n| EG | Egypt |\n| SV | El Salvador |\n| GQ | Equatorial Guinea |\n| ER | Eritrea |\n| EE | Estonia |\n| ET | Ethiopia |\n| FK | Falkland Island |\n| FO | Faroe Islands |\n| FJ | Fiji |\n| FI | Finland |\n| FR | France |\n| GF | French Guiana |\n| PF | French Polynesia |\n| GA | Gabon |\n| GM | Gambia |\n| GE | Georgia |\n| DE | Germany |\n| GH | Ghana |\n| GI | Gibraltar |\n| GR | Greece |\n| GL | Greenland |\n| GD | Grenada |\n| GP | Guadeloupe |\n| GU | Guam |\n| GT | Guatemala |\n| GN | Guinea |\n| GW | Guinea Bissau |\n| GY | Guyana |\n| HT | Haiti |\n| HN | Honduras |\n| HK | Hong Kong |\n| HU | Hungary |\n| IS | Iceland |\n| IN | India |\n| ID | Indonesia |\n| IQ | Iraq |\n| IE | Ireland |\n| IL | Israel |\n| IT | Italy |\n| JM | Jamaica |\n| JP | Japan |\n| JO | Jordan |\n| KZ | Kazakhstan |\n| KE | Kenya |\n| KI | Kiribati |\n| KW | Kuwait |\n| KG | Kyrgyzstan |\n| LA | Lao People's Democratic Republic |\n| LV | Latvia |\n| LB | Lebanon |\n| LS | Lesotho |\n| LR | Liberia |\n| LY | Libyan Arab Jamahiriya |\n| LI | Liechtenstein |\n| LT | Lithuania |\n| LU | Luxembourg |\n| MO | Macau |\n| MK | Macedonia |\n| MG | Madagascar |\n| MW | Malawi |\n| MY | Malaysia |\n| MV | Maldives |\n| ML | Mali |\n| MT | Malta |\n| MQ | Martinique |\n| MR | Mauritania |\n| MU | Mauritius |\n| YT | Mayotte |\n| MX | Mexico |\n| FM | Micronesia |\n| MD | Moldova |\n| MC | Monaco |\n| MN | Mongolia |\n| MS | Monserrat |\n| MA | Morocco |\n| MZ | Mozambique |\n| NA | Namibia |\n| NR | Nauru |\n| NP | Nepal |\n| NL | Netherlands |\n| AN | Netherlands Antilles |\n| KN | Nevis- St Kitts |\n| NC | New Caledonia |\n| NZ | New Zealand |\n| NI | Nicaragua |\n| NE | Niger |\n| NG | Nigeria |\n| NU | Niue |\n| NF | Norfolk Island |\n| KP | North Korea |\n| MP | Northern Mariana Islands |\n| NO | Norway |\n| OM | Oman |\n| PK | Pakistan |\n| PW | Palau |\n| PS | Palestinian Territory, Occupied |\n| PA | Panama |\n| PG | Papua New Guinea |\n| PY | Paraguay |\n| PE | Peru |\n| PH | Philippines |\n| PN | Pitcairn |\n| PL | Poland |\n| PT | Portugal |\n| PR | Puerto Rico |\n| QA | Qatar |\n| RE | Reunion |\n| RO | Romania |\n| RU | Russian Federation |\n| RW | Rwanda |\n| SH | Saint Helena |\n| LC | Saint Lucia |\n| SM | San Marino |\n| ST | Sao Tome and Principe |\n| SA | Saudi Arabia |\n| SN | Senegal |\n| YU | Serbia and Montenegro |\n| SC | Seychelles |\n| SL | Sierra Leone |\n| SG | Singapore |\n| SK | Slovakia |\n| SI | Slovenia |\n| SB | Solomon Islands |\n| SO | Somalia |\n| ZA | South Africa |\n| KR | South Korea |\n| ES | Spain |\n| LK | Sri Lanka |\n| PM | St Pierre Miquelon |\n| VC | St Vincent and Grenadines |\n| SR | Suriname |\n| SZ | Swaziland |\n| SE | Sweden |\n| CH | Switzerland |\n| SY | Syria |\n| TW | Taiwan |\n| TJ | Tajikistan |\n| TZ | Tanzania |\n| TH | Thailand |\n| TL | Timor-Leste |\n| TG | Togo |\n| TK | Tokelau |\n| TO | Tonga |\n| TT | Trinidad and Tobago |\n| TN | Tunisia |\n| TR | Turkey |\n| TM | Turkmenistan |\n| TC | Turks and Caicos Islands |\n| TV | Tuvalu |\n| UG | Uganda |\n| UA | Ukraine |\n| AE | United Arab Emirates |\n| GB | United Kingdom |\n| UY | Uruguay |\n| UM | US Minor Outlying Islands |\n| US | United States of America |\n| UZ | Uzbekistan |\n| VU | Vanuatu |\n| VE | Venezuela |\n| VN | Vietnam |\n| VG | Virgin Islands-British |\n| VI | Virgin Islands-US |\n| WF | Wallis and Futuna Islands |\n| WS | Western Samoa |\n| YE | Yemen Republic |\n| ZM | Zambia |\n| ZW | Zimbabwe |\n\n## US state codes\n| State code | State |\n|------------|-------|\n| AL | Alabama |\n| AK | Alaska |\n| AZ | Arizona |\n| AR | Arkansas |\n| CA | California |\n| CO | Colorado |\n| CT | Connecticut |\n| DE | Delaware |\n| DC | District of Columbia |\n| FL | Florida |\n| GA | Georgia |\n| HI | Hawaii |\n| ID | Idaho |\n| IL | Illinois |\n| IN | Indiana |\n| IA | Iowa |\n| KS | Kansas |\n| KY | Kentucky |\n| LA | Louisiana |\n| ME | Maine |\n| MD | Maryland |\n| MA | Massachusetts |\n| MI | Michigan |\n| MN | Minnesota |\n| MS | Mississippi |\n| MO | Missouri |\n| MT | Montana |\n| NE | Nebraska |\n| NV | Nevada |\n| NH | New Hampshire |\n| NJ | New Jersey |\n| NM | New Mexico |\n| NY | New York |\n| NC | North Carolina |\n| ND | North Dakota |\n| OH | Ohio |\n| OK | Oklahoma |\n| OR | Oregon |\n| PA | Pennsylvania |\n| RI | Rhode Island |\n| SC | South Carolina |\n| SD | South Dakota |\n| TN | Tennessee |\n| TX | Texas |\n| UT | Utah |\n| VT | Vermont |\n| VA | Virginia |\n| WA | Washington |\n| WV | West Virginia |\n| WI | Wisconsin |\n| WY | Wyoming |\n\n## Canadian provinces\n\n| Code | Province |\n|------|----------|\n| Alberta | Alberta |\n| British Columbia | British Columbia |\n| Manitoba | Manitoba |\n| New Brunswick | New Brunswick |\n| Newfoundland and Labrador | Newfoundland |\n| Northwest Territories | Northwest Territories |\n| Nova Scotia | Nova Scotia |\n| Nunavut | Nunavut |\n| Ontario | Ontario |\n| Prince Edward Island | Prince Edward Island |\n| Quebec | Quebec |\n| Saskatchewan | Saskatchewan |\n| Yukon | Yukon Territory |\n\n## Australian states\n\n| Code | State |\n|------|-------|\n| ACT | Australian Capital Territory |\n| NSW | New South Wales |\n| NT | Northern Territory |\n| QLD | Queensland |\n| SA | South Australia |\n| TAS | Tasmania |\n| VIC | Victoria |\n| WA | Western Australia |\n\n## Supported currency codes\n\nSupported currency codes for affiliate partners:\n\n| Currency code | Currency |\n|---------------|----------|\n| USD | US dollar |\n| GBP | British pound |\n| EUR | Euro |\n| AUD | Australian dollar |\n| HKD | Hong Kong Dollar |\n| SGD | Singapore Dollar |\n| CHF | Swiss Franc |\n| JPY | Japanese Yen |\n| NOK | Norwegian Krone |\n| CAD | Canadian Dollar |\n| NZD | New Zealand Dollar |\n| INR | Indian Rupee |\n| BRL | Brazillian Lire |\n| ZAR | South African Rand |\n| DKK | Danish Krone |\n| SEK | Swedish Krona |\n\n## Exception error codes\n\n| Error code | Services | Error message | Description |\n|------------|----------|---------------|-------------|\n| ATTRIBUTE_NOT_FOUND | [/product](#operation/product) |   |   |\n| TOUR_GONE | [/product](#operation/product) | \"We're sorry, we cannot find the tour, activity r attraction you are looking for\" | no product corresponding to the supplied details was found |\n| TOUR_NOT_FOUND | [/product](#operation/product) | \"We're sorry, we cannot find the tour, activity or attraction you are looking for\" | no product corresponding to the supplied details was found |\n| UNKNOWN_ERROR | *any* | *any* | the API reports this error when the exception from the underlying system (e.g. booking server) is not recognized |"
+  version: '1.0'
+  license:
+    name: CC BY 4.0
+    url: https://creativecommons.org/licenses/by/4.0/au
+  contact:
+    name: Viator Partner Support Team
+    email: affiliateapi@tripadvisor.com
+servers:
+- url: https://viatorapi.viator.com/service
+  description: Production server
+security:
+- API-key: []
+- Legacy-API-key: []
+tags:
+- name: Attraction services
+  description: Attraction services
+paths:
+  /search/attractions:
+    post:
+      tags:
+      - Attraction services
+      summary: /search/attractions
+      operationId: searchAttractions
+      description: '
+
+        This service retrieves a list of attractions associated with the given
+
+        destination
+
+
+        **Note**:
+
+
+        - Pages generated using data from this endpoint are subject to a **strict no-index policy**. If you are unsure about whether you are correctly following this rule, please reach out to your account manager for advice.
+
+
+
+        **Aliases**:
+
+
+        - [/search/recommendations](#operation/searchRecommendations)
+
+
+        - [/search/seo](#operation/searchSeo)
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                destId:
+                  type: integer
+                  description: '**unique numeric identifier** of the destination in which to search for attractions'
+                topX:
+                  $ref: '#/components/schemas/topX'
+                seoType:
+                  description: '**search specifier**: one of `''ATTRACTION''` or `''RECOMMENDATION''`'
+                  enum:
+                  - ATTRACTION
+                  - RECOMMENDATION
+                sortOrder:
+                  type: string
+                  description: 'Sort order for the results; one of:
+
+                    - `''RECOMMENDED''` – sorted in order of recommendation (**Note**: What Viator gets paid impacts this sort order)
+
+                    - `''SEO_ALPHABETICAL''` – Alphabetical (A->Z)
+
+                    '
+            example:
+              destId: 684
+              topX: 1-3
+              seoType: ATTRACTION
+              sortOrder: RECOMMENDED
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          sortOrder:
+                            type: integer
+                            description: '**sort-order* for *this* search result'
+                          panoramaCount:
+                            type: integer
+                            description: '**number** of panoramic images available for *this* attraction'
+                          webURL:
+                            $ref: '#/components/schemas/webURL'
+                          pageUrlName:
+                            description: '**URL-formatted title** of the attraction page'
+                            type: string
+                          primaryDestinationUrlName:
+                            type: string
+                            description: '**URL-formatted name** of the primary destination'
+                          publishedDate:
+                            type: string
+                            description: '**date** on which *this* review was published'
+                          userName:
+                            type: string
+                            description: ignore (Viator only)
+                          seoId:
+                            type: integer
+                            description: '**unique numeric identifier** for *this* attraction'
+                          productCount:
+                            type: integer
+                            description: '**number of products** available at *this* attraction'
+                          title:
+                            type: string
+                            description: '**natural-language title** of *this* attraction'
+                          thumbnailURL:
+                            type: string
+                            description: '**URL** for the thumbnail image to be displayed for *this* attraction'
+                          reviewCount:
+                            type: integer
+                            description: '**number** of reviews available for *this* attraction'
+                          photoCount:
+                            type: integer
+                            description: '**number** of photos available for *this* attraction'
+                          rating:
+                            type: integer
+                            description: '**average user rating** for *this* attraction'
+                          destinationId:
+                            type: integer
+                            description: '**unique numeric identifier** for *this* attraction'
+                          seoType:
+                            type: string
+                            description: '**indicator**: one of `''ATTRACTION''` or `''RECOMMENDATION''` depending on the type of *this* result'
+                          pageTitle:
+                            type: string
+                            description: '**title** of the page for *this* attraction'
+                          editorsPick:
+                            type: boolean
+                            description: '**indicator**: `true` if only the top (editor''s pick) attractions will be shown'
+                          keywords:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                keyword:
+                                  type: string
+                                  description: '**natural-language keyword or phrase** that describes *this* attraction'
+                                keywordId:
+                                  type: number
+                                  description: '**unique numeric identifier** for *this* keyword'
+                          showPhotos:
+                            type: boolean
+                            description: '**indicator**: `true` if photos should be shown for *this* attraction'
+                          primaryDestinationId:
+                            type: integer
+                            description: '**unique numeric identifier** for the primary destination associated with *this* attraction'
+                          primaryDestinationName:
+                            type: string
+                            description: '**natural-language name** of the primary destination identified by `primaryDestinationId`'
+                          thumbnailHiResURL:
+                            type: string
+                            description: '**URL** for the thumbnail image that should be used for *this* attraction'
+                          tabTitle:
+                            type: string
+                            description: '**title** for the tab on which this attraction is displayed'
+                          descriptionIntro:
+                            description: '**natural-language introduction** for the description of *this* attraction'
+                          descriptionText:
+                            type: string
+                            description: '**natural-language description** of *this* attraction'
+                          showReviews:
+                            type: boolean
+                            description: '**indicator**: `true` if review should be shown'
+                          attractionLatitude:
+                            type: number
+                            description: '**latitude component** of *this* attraction''s geolocation'
+                          attractionLongitude:
+                            type: number
+                            description: '**longitude component** of *this* attraction''s geolocation'
+                          attractionStreetAddress:
+                            type: string
+                            description: '**street address component** of *this* attraction''s address'
+                          attractionCity:
+                            type: string
+                            description: '**city component** of *this* attraction''s address'
+                          attractionState:
+                            type: string
+                            description: '**state component** of *this* attraction''s address'
+                          keywordCount:
+                            type: integer
+                            description: '**number** of keywords for *this* result'
+                          overviewSummary:
+                            type: string
+                            description: '**HTML-formatted overview summary** for *this* atraction'
+                          pagePrimaryLanguage:
+                            type: string
+                            description: '**language code** for the language that this content is primarily expressed in'
+              examples:
+                '1':
+                  $ref: '#/components/examples/search-attractions-example'
+  /attraction:
+    get:
+      tags:
+      - Attraction services
+      summary: /attraction
+      operationId: attraction
+      description: 'This service returns the details of an attraction.
+
+
+        **Note**:
+
+
+        - Pages generated using data from this endpoint are subject to a **strict no-index policy**. If you are unsure about whether you are correctly following this rule, please reach out to your account manager for advice.
+
+
+        **Aliases**:
+
+        - [/recommendation](#operation/attraction)
+
+        - [/seo](#operation/attraction)
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      - in: query
+        name: seoId
+        description: '**unique numeric identifier** for the attraction to retrieve details for'
+        example: 14235
+        schema:
+          type: integer
+      - in: query
+        name: currencyCode
+        description: '**currency-code** for the currency in which to display pricing details for the desired attraction'
+        example: EUR
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: object
+                      properties:
+                        panoramaCount:
+                          type: integer
+                          description: '**number of panoramas** available for this attraction'
+                          example: 0
+                        webURL:
+                          $ref: '#/components/schemas/webURL'
+                        userPhotos:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              sortOrder:
+                                type: integer
+                                description: '**sort order** for *this* result'
+                              ownerName:
+                                type: string
+                                description: '**name** of the owner of *this* photograph'
+                              ownerCountry:
+                                type: string
+                                description: '**natural-language name** of the country that the owner of this photo calls home'
+                              productTitle:
+                                type: string
+                                description: '**title** of the product that *this* photo represents'
+                              ownerAvatarURL:
+                                type: string
+                                description: '**URL** for the avatar image of the owner of this photo'
+                              productCode:
+                                type: string
+                                description: '**unique alpha-numeric identifier** of the product that this photo represents'
+                              title:
+                                type: string
+                                description: '**natural-language title** of the product that this photo represents'
+                              caption:
+                                type: string
+                                description: '**HTML-formatted caption** for *this* photo'
+                              thumbnailURL:
+                                type: string
+                                description: '**URL** for the thumbnail image of *this* photo'
+                              ownerId:
+                                type: integer
+                                description: '**unique numeric identifier** of the owner of *this* photo'
+                              editorsPick:
+                                type: boolean
+                                description: '**indicator**: `true` if this photo is an editor''s pick'
+                              photoHiResURL:
+                                type: string
+                                description: '**URL** for the high-resolution version of *this* photo'
+                              photoId:
+                                type: integer
+                                description: '**unique numeric identifier** for *this* photo'
+                              photoURL:
+                                type: string
+                                description: '**URL** for *this* photo'
+                              photoMediumResURL:
+                                type: string
+                                description: '**URL** for the medium-resolution version of *this* photo'
+                              timeUploaded:
+                                type: string
+                                description: '**date** on which *this* photo was uploaded formatted according to the example'
+                        reviews:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              sortOrder:
+                                type: integer
+                                description: '**sort order** for *this* result'
+                              ownerName:
+                                type: string
+                              ownerCountry:
+                                type: string
+                                description: ignore (Viator only)
+                              productTitle:
+                                type: string
+                                description: '**title** of the product that *this* photo represents'
+                              ownerAvatarURL:
+                                type: string
+                                description: ignore (Viator only)
+                              productCode:
+                                type: string
+                                description: '**unique alpha-numeric identifier** of the product that this photo represents'
+                              review:
+                                type: string
+                                description: '**HTML-formatted text** of *this* review'
+                              rating:
+                                type: integer
+                                description: '**numeric rating** given in *this* recommendation'
+                              ownerId:
+                                type: integer
+                                description: '**unique numeric identifier** for the owner of *this* review'
+                              viatorFeedback:
+                                type: string
+                                description: ignore (Viator only)
+                              reviewId:
+                                type: integer
+                                description: '**unique numeric identifier** for *this* review'
+                              submissionDate:
+                                type: string
+                                description: '**date** on which *this* review was submitted formatted according to the example'
+                              publishedDate:
+                                type: string
+                                description: '**date** on which *this* review was published'
+                              viatorNotes:
+                                type: string
+                                description: ignore (Viator only)
+                        products:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              sortOrder:
+                                type: integer
+                                description: '**sort order** for *this* result'
+                              supplierName:
+                                type: string
+                                description: ignore (Viator only)
+                              currencyCode:
+                                type: string
+                                description: '**currency-code** for the currency in which pricing information is displayed'
+                              catIds:
+                                type: string
+                                description: ignore (Viator only)
+                              subCatIds:
+                                type: string
+                                description: ignore (Viator only)
+                              webURL:
+                                $ref: '#/components/schemas/webURL'
+                              specialReservationDetails:
+                                type: string
+                                description: ignore (Viator only)
+                              panoramaCount:
+                                type: integer
+                                description: ignore (Viator only)
+                              merchantCancellable:
+                                type: boolean
+                                description: ignore (Viator only)
+                              duration:
+                                type: string
+                                description: '**natural-language duration** of *this* tour formatted according to the example'
+                              code:
+                                type: string
+                                description: '**unique alphanumeric identifier** for *this* product'
+                              shortDescription:
+                                type: string
+                                description: '**short natural-language descriuption* of *this* product'
+                              supplierCode:
+                                type: string
+                                description: '**unique numeric identifer** of the supplier of *this* product expressed as a string'
+                              title:
+                                type: string
+                                description: '**natural-language title** of *this* product'
+                              thumbnailURL:
+                                type: string
+                                description: '**URL** of the thumbnail image for *this* product'
+                              specialReservation:
+                                type: boolean
+                                description: ignore (Viator only)
+                              reviewCount:
+                                type: integer
+                                description: '**number of reviews** available for *this* product'
+                              photoCount:
+                                type: integer
+                                description: '**number of photos** available for *this* product'
+                              rating:
+                                type: string
+                                description: '**average user rating** for *this* product'
+                              rrp:
+                                type: number
+                                description: '**recommended retail price** for *this* product in the currency specified in `countryCode`'
+                              rrpformatted:
+                                type: string
+                                description: '**recommended retail price** for *this* product formatted according to the currency specified in `countryCode`'
+                              savingAmount:
+                                type: number
+                                description: '**magnitude of the discount** applied to *this* product represented in the currency specified in `countryCode`'
+                              savingAmountFormated:
+                                type: string
+                                description: '**magnitude of the discount** applied to *this* product represented and formatted according to the currency specified in `countryCode` (note misspelling - ''formated'')'
+                              price:
+                                type: number
+                                description: '**numeric price** for *this* product respresented in the currency specified in `countryCode`'
+                              videoCount:
+                                type: number
+                                description: ignore (Viator only) – videos are not available to partners
+                              onSale:
+                                type: boolean
+                                description: '**indicator**: `true` if a discount has been applied to *this* product''s price'
+                              shortTitle:
+                                type: string
+                                description: '**natural-language shortened title** of *this* product'
+                              translationLevel:
+                                type: integer
+                                description: '**specifier** of the level of translation that has been applied to this product'
+                              primaryDestinationId:
+                                type: integer
+                                description: '**unique numeric identifier** of the primary destination associated with *this* product'
+                              primaryDestinationName:
+                                type: string
+                                description: '**natural-language name** of the destination associated with *this* product'
+                              priceFormatted:
+                                type: string
+                                description: '**currency-formatted price** of the product'
+                              merchantNetPriceFrom:
+                                type: number
+                                description: ignore (Viator only)
+                              merchantNetPriceFromFormatted:
+                                type: string
+                                description: ignore (Viator only)
+                              specialOfferAvailable:
+                                type: boolean
+                                description: ignore (Viator only)
+                              thumbnailHiResURL:
+                                type: string
+                                description: '**URL** for the high-resolution version of the thumbnail image for this product'
+                        infoPageOverview1:
+                          type: string
+                          description: '**HTML-formatted overview** for *this* attraction: part 1'
+                        infoPageOverview2:
+                          type: string
+                          description: '**HTML-formatted overview** for this attraction: part 2'
+                        attractionAdmission:
+                          type: string
+                          description: '**natural-language descrption** of the admission terms for the attraction'
+                        attractionTransit:
+                          type: string
+                          description: ignore (Viator only)
+                        attractionOpenHours:
+                          type: string
+                          description: '**natural-language description of the opening hours for *this* attraction'
+                        infoPageOverviewTitle1:
+                          type: string
+                          description: '**first title** of overview info page'
+                        infoPageOverviewTitle2:
+                          type: string
+                          description: '**first title** of overview info page'
+                        seoId:
+                          type: integer
+                          description: '**unique numeric identifier** for *this* attraction'
+                        productCount:
+                          type: integer
+                          description: '**number** of products available for *this* attraction'
+                        title:
+                          type: string
+                          description: '**natural-language title** of *this* attraction'
+                        thumbnailURL:
+                          type: string
+                          description: '**URL** of the thumbnail image for *this* attraction'
+                        reviewCount:
+                          type: integer
+                          description: '**number** of reviews avaialable for *this* attraction'
+                        photoCount:
+                          type: integer
+                          description: '**number** of photos available for *this* attraction'
+                        rating:
+                          type: integer
+                          description: '**average user rating** for *this* attraction'
+                        destinationId:
+                          type: integer
+                          description: '**unique numeric identifier** for *this* attraction'
+                        seoType:
+                          type: string
+                          description: '**indicator**: one of `''recommendation''` or `''RECOMMENDATION''` depending on the type of *this* result'
+                        pageTitle:
+                          type: string
+                          description: '**title** of the page for *this* attraction'
+                        editorsPick:
+                          type: string
+                          description: ''
+                        keywords:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              keyword:
+                                type: string
+                                description: '**natural-language keyword or phrase** that describes *this* recommendation'
+                              keywordId:
+                                type: number
+                                description: '**unique numeric identifier** for *this* keyword'
+                        showPhotos:
+                          type: boolean
+                          description: '**specifier**: `true` if photos are to be shown'
+                        primaryDestinationId:
+                          type: integer
+                          description: '**unique numeric identifier** for the destination associated with *this* attraction'
+                        primaryDestinationName:
+                          type: string
+                          description: '**name** of the primary destination associated with *this* attraction'
+                        thumbnailHiResURL:
+                          type: string
+                          description: '**URL** for the high-resolution thumbnail image for *this* attraction'
+                        tabTitle:
+                          type: string
+                          description: '**title** for the tab for *this* attraction'
+                        descriptionIntro:
+                          type: string
+                          description: '**intro** for the description for *this* attraction'
+                        descriptionText:
+                          type: string
+                          description: '**HTML-formatted description** of *this* attraction'
+                        showReviews:
+                          type: boolean
+                          description: '**specifier**: `true` if reviews are to be shown'
+                        attractionLatitude:
+                          type: number
+                          description: '**latitude component** of *this* attraction''s geolocation'
+                        attractionLongitude:
+                          type: number
+                          description: '**longitude component** of *this* attraction''s geolocation'
+                        attractionStreetAddress:
+                          type: string
+                          description: '**street address component** of *this* attraction''s address'
+                        attractionCity:
+                          type: string
+                          description: '**city component** of *this* attraction''s address'
+                        attractionState:
+                          type: string
+                          description: '**state component** of *this* attraction''s address'
+                        keywordCount:
+                          type: integer
+                          description: '**number** of keywords in *this* response'
+                        overviewSummary:
+                          type: string
+                          description: '**summary description** of *this* attraction'
+                        pagePrimaryLanguage:
+                          type: string
+                          description: '**language-code** for the language that *this* attraction''s page is primarily expressed in'
+              examples:
+                '1':
+                  $ref: '#/components/examples/attraction-example'
+  /attraction/reviews:
+    get:
+      tags:
+      - Attraction services
+      summary: /attraction/reviews
+      operationId: attractionReviews
+      description: '
+
+        This service gets reviews related to an attraction. These reviews might be
+
+        associated indirectly through the related products.
+
+
+        **Note**:
+
+
+        - Pages generated using data from this endpoint are subject to a **strict no-index policy**. If you are unsure about whether you are correctly following this rule, please reach out to your account manager for advice.
+
+
+        **Aliases**:
+
+
+        - [/recommendation/reviews](#operation/attractionReviews)
+
+
+        - [/seo/reviews](#operation/attractionReviews)
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      - in: query
+        name: seoId
+        description: '**unique numeric identifier** of the attraction for which to retrieve reviews'
+        example: 14235
+        schema:
+          type: integer
+      - in: query
+        name: sortOrder
+        description: 'Sort order for the results; one of:
+
+
+          - `''SEO_REVIEW_RATING_D''` - sort by traveler rating (descending)
+
+          - `''SEO_REVIEW_RATING_PUBLISHED_DATE_D''` - sort by date of publication (most recent first)
+
+          '
+        example: SEO_REVIEW_RATING_D
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          sortOrder:
+                            type: integer
+                            description: '**sort order** for *this* review'
+                          ownerName:
+                            type: string
+                            description: '**name** of the owner of *this* review'
+                          ownerCountry:
+                            type: string
+                            description: '**country** in which the owner of *this* review is located'
+                          productTitle:
+                            type: string
+                            description: '**title** of the product that *this* review is about'
+                          productUrlName:
+                            type: string
+                            description: '**URL-formatted name** of the product *this* review is about'
+                          ownerAvatarURL:
+                            type: string
+                            description: ignore (Viator only)
+                          sslSupported:
+                            type: boolean
+                            description: ignore (Viator only)
+                          publishedDate:
+                            type: string
+                            description: '**date** on which *this* review was published'
+                          productCode:
+                            type: string
+                            description: '**unique alphanumeric identifier** of the product that *this* review is about'
+                          viatorNotes:
+                            type: string
+                            description: ignore (Viator only)
+                          submissionDate:
+                            type: string
+                            description: '**date** on which *this* review was submitted'
+                          rating:
+                            type: integer
+                            description: '**rating** given by the author of *this* review'
+                          review:
+                            type: string
+                            description: '**text content** of *this* review'
+                          ownerId:
+                            type: integer
+                            description: '**unique numeric identifier** of *this* review''s author'
+                          viatorFeedback:
+                            type: string
+                            description: ignore (Viator only)
+                          reviewId:
+                            type: integer
+                            description: '**unique numeric identifier** for *this* review'
+              examples:
+                '1':
+                  $ref: '#/components/examples/attraction-reviews-example'
+  /attraction/photos:
+    get:
+      tags:
+      - Attraction services
+      summary: /attraction/photos
+      operationId: attractionPhotos
+      description: '
+
+        This service returns photos that are related to an attraction. These may be
+
+        associated indirectly if they are photos of products related to the
+
+        attraction.
+
+
+        **Note**:
+
+
+        - Pages generated using data from this endpoint are subject to a **strict no-index policy**. If you are unsure about whether you are correctly following this rule, please reach out to your account manager for advice.
+
+
+        **Aliases**:
+
+
+        - [/recommendation/photos](#operation/attractionPhotos)
+
+
+        - [/seo/photos](#operation/attractionPhotos)
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      - $ref: '#/components/parameters/topX'
+      - in: query
+        name: seoId
+        description: '**unique numeric identifier** for the attraction to retrieve photos'
+        example: 14235
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          sortOrder:
+                            type: integer
+                            description: '**sort order** for *this* photo'
+                          ownerName:
+                            type: string
+                            description: '**name** of the owner of *this* photo'
+                          ownerCountry:
+                            type: string
+                            description: '**country** in which the owner of *this* photo is located'
+                          productTitle:
+                            type: string
+                            description: '**title** of the product that this photo depicts'
+                          productUrlName:
+                            type: string
+                            description: '**URL-formatted title** of the product that this photo depicts'
+                          ownerAvatarURL:
+                            type: string
+                            description: '**URL** of the avatar photo of the owner of *this* photo'
+                          sslSupported:
+                            type: boolean
+                            description: ignore (Viator only)
+                          title:
+                            type: string
+                            description: '**title** of *this* photo'
+                          ownerId:
+                            type: integer
+                            description: '**unique numeric identifier** of the owner of *this* product'
+                          productCode:
+                            type: string
+                            description: '**unique alphanumeric identifier** of the product that *this* photo depicts'
+                          caption:
+                            type: string
+                            description: '**HTML-formatted caption** for *this* photo'
+                          thumbnailURL:
+                            type: string
+                            description: '**URL** for the thumbnail version of *this* image'
+                          timeUploaded:
+                            type: string
+                            description: '**date stamp** indicating when *this* photo was uploaded'
+                          editorsPick:
+                            type: boolean
+                            description: '**indicator**: `true` if *this* photo has been selected as an editor''s pick'
+                          photoId:
+                            type: integer
+                            description: '**unique numeric identifier** for *this* photo'
+                          photoURL:
+                            type: string
+                            description: '**URL** at which *this* photo can be accessed'
+                          photoHiResURL:
+                            type: string
+                            description: '**URL** at which the high-resolution version of *this* photo can be accessed'
+                          photoMediumResURL:
+                            type: string
+                            description: '**URL** at which the medium-resolution version of *this* photo can be accessed'
+              examples:
+                '1':
+                  $ref: '#/components/examples/attraction-photos-example'
+  /attraction/products:
+    get:
+      tags:
+      - Attraction services
+      summary: /attraction/products
+      operationId: attractionProducts
+      description: 'This service gets attraction-related products (for cross-selling purposes)
+
+
+        **Aliases**:
+
+        - [/recommendation/products](#operation/attractionProducts)
+
+        - [/seo/products](#operation/attractionProducts)
+
+        '
+      parameters:
+      - $ref: '#/components/parameters/acceptLanguage'
+      - in: query
+        name: seoId
+        description: '**unique numeric identifier** for the attraction'
+        example: 14235
+        schema:
+          type: integer
+      - $ref: '#/components/parameters/topX'
+      - in: query
+        name: sortOrder
+        description: "Sort order for the results; one of:\n\n  - `'SEO_PRODUCT_TOP_SELLERS'` – top sellers (**Note**: What Viator gets paid impacts this sort order)\n  - `'SEO_PRODUCT_REVIEW_AVG_RATING_A'` – traveller rating (low->high)\n  - `'SEO_PRODUCT_REVIEW_AVG_RATING_D'` – traveller rating (high->low)\n  - `'SEO_PRODUCT_PRICE_FROM_A'` – price (low->high) \n  - `'SEO_PRODUCT_PRICE_FROM_D'` – price (high->low)\n"
+        example: SEO_PRODUCT_TOP_SELLERS
+        schema:
+          type: string
+      - in: query
+        name: currencyCode
+        description: '**currency-code** for the currency in which to display pricing details for the products related to the specified attraction.
+
+
+          **Note:**
+
+          - You must have multiple currencies enabled in order to set the currency using this parameter. Please speak to your account manager if you wish to have this enabled.
+
+          - If you omit this parameter; or, if you do not have multiple currencies enabled, pricing will be returned in the default currency for your account.
+
+          '
+        example: EUR
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/basicErrorModel'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          sortOrder:
+                            type: integer
+                            description: '**sort order** for *this* product'
+                          supplierName:
+                            type: string
+                            description: '**name** of the supplier of *this* product'
+                          currencyCode:
+                            $ref: '#/components/schemas/currencyCode'
+                          catIds:
+                            type: array
+                            description: '**array of numeric identifiers** for the categories *this* product falls into'
+                            items:
+                              type: integer
+                          subCatIds:
+                            type: array
+                            description: '**array of numeric identifiers** for the subcategories *this* product falls into'
+                            items:
+                              type: integer
+                          webURL:
+                            $ref: '#/components/schemas/webURL'
+                          specialReservationDetails:
+                            type: string
+                            description: ignore (Viator only)
+                          sslSupported:
+                            type: boolean
+                            description: '**ignore (Viator only)**'
+                          panoramaCount:
+                            type: integer
+                            description: '**number** of panoramas available for *this* product'
+                          merchantCancellable:
+                            type: boolean
+                            description: ignore (Viator only)
+                          bookingEngineId:
+                            $ref: '#/components/schemas/bookingEngineId'
+                          onRequestPeriod:
+                            type: string
+                            description: ignore (Viator only)
+                          primaryGroupId:
+                            type: string
+                            description: ignore (Viator only)
+                          pas:
+                            type: string
+                            description: ignore (Viator only)
+                          available:
+                            type: boolean
+                            description: ignore (Viator only)
+                          productUrlName:
+                            type: string
+                            description: '**URL-formatted name** of *this* product'
+                          primaryDestinationUrlName:
+                            type: string
+                            description: '**URL-formatted name** of the primary destination of *this* product'
+                          title:
+                            type: string
+                            description: '**natural-lannguage title** of *this* product'
+                          videoCount:
+                            type: integer
+                            description: ignore (Viator only) – videos are not available to partners
+                          rating:
+                            type: number
+                            description: '**average user rating** of *this* product'
+                          supplierCode:
+                            type: string
+                            description: '**alphanumeric identifier** for the supplier of *this* product'
+                          shortTitle:
+                            type: string
+                            description: '**title (short)** of *this* product'
+                          specialOfferAvailable:
+                            $ref: '#/components/schemas/specialOfferAvailable'
+                          price:
+                            $ref: '#/components/schemas/price'
+                          priceFormatted:
+                            $ref: '#/components/schemas/priceFormatted'
+                          rrp:
+                            type: integer
+                            $ref: '#/components/schemas/rrp'
+                          rrpformatted:
+                            $ref: '#/components/schemas/rrpFormatted'
+                          onSale:
+                            $ref: '#/components/schemas/onSale'
+                          savingAmount:
+                            $ref: '#/components/schemas/savingAmount'
+                          savingAmountFormated:
+                            $ref: '#/components/schemas/savingAmountFormated'
+                          translationLevel:
+                            type: integer
+                            description: '**translation level** of the foreign-language translation (if any) for *this* product'
+                          thumbnailHiResURL:
+                            type: string
+                            description: '**URL** for the high-resolution thumbnail image for *this* product'
+                          primaryDestinationName:
+                            type: string
+                            description: '**name** of the primary destination for *this* product'
+                          thumbnailURL:
+                            type: string
+                            description: '**URL** for the thumbnail image for *this* product'
+                          photoCount:
+                            type: integer
+                            description: '**number** of photos available for *this* product'
+                          reviewCount:
+                            type: integer
+                            description: '**number** of reviews available for *this* product'
+                          primaryDestinationId:
+                            type: integer
+                            description: '**numeric identifier** for *this* product''s primary destination'
+                          merchantNetPriceFrom:
+                            type: integer
+                            description: ignore (Viator only)
+                          specialReservation:
+                            type: integer
+                            description: ignore (Viator only)
+                          uniqueShortdescription:
+                            type: boolean
+                            description: ignore (Viator only)
+                          merchantNetPriceFromFormatted:
+                            type: string
+                            description: ignore (Viator only)
+                          essential:
+                            type: string
+                            description: ignore (Viator only)
+                          admission:
+                            type: string
+                            description: ignore (Viator only)
+                          shortdescription:
+                            type: string
+                            description: '**short description** of *this* product'
+                          duration:
+                            type: string
+                            description: '**duration** of this product'
+                          code:
+                            type: string
+                            description: '**unique alphanumeric identifier** for this product'
+              examples:
+                '1':
+                  $ref: '#/components/examples/attraction-products-example'
+components:
+  examples:
+    search-attractions-example:
+      summary: /search/attractions
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Carroll-Shelby-Museum/d684-a23402?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Carroll-Shelby-Museum
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-03-02'
+          panoramaCount: 0
+          userName: ''
+          keywordCount: 1
+          showReviews: true
+          tabTitle: ''
+          descriptionIntro: ''
+          keywords:
+          - keywordId: 623675
+            keyword: Museum
+          reviewCount: 10
+          seoType: ATTRACTION
+          pageTitle: Carroll Shelby Museum
+          editorsPick: false
+          showPhotos: true
+          descriptionText: ''
+          overviewSummary: <div style="">If you’re into American cars, it doesn’t get much better than Las Vegas’ Shelby Heritage Center, the brainchild of race car driver Carroll Shelby. Shelby American is behind the AC Cobra, and has churned out premier performance versions of Mustangs and other cars. Now fans can check out many of the company’s creations.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Opened in 2014, the Shelby Heritage Center includes the factory, a museum, and a gift shop. Find out more about the specialty car manufacturer’s history and founder, and get up close to many of the cars—including classic Mustangs, the very first Shelby Cobra, and more recent productions. Tours include a visit to the factory, where an area is sectioned off for viewing.&nbsp;</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>The Shelby Heritage Center is a must for car enthusiasts and historians.</li><li>Don’t confuse the Shelby Heritage Center with the Shelby American Collection in Boulder, Colorado—the latter features cars donated by owners and collectors.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">Located adjacent to Interstate 15 in Las Vegas, the Shelby Heritage Center is about 10 minutes away from the Strip by car. Taxis and rideshares are readily available.</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">The center is open daily, and guided tours are offered every day but Sunday. If you’re an early riser, get there Saturday morning for the weekly Cars and Coffee event, featuring breakfast food trucks and giveaways. Spring and fall typically see the most pleasant weather—and the biggest crowds.</div><div style=""><br></div><div style=""><b>Drive a Race Car in Las Vegas</b></div><div style="">If looking at cars isn’t enough, head to the Las Vegas Motor Speedway to learn how to maneuver a Ferrari, a Porsche, or maybe a Lamborghini. Get a lesson in the proper driving position, steering techniques, car specs, and racing lines. Then, take several laps around the track on your own.</div>
+          pagePrimaryLanguage: en
+          attractionLatitude: 36.072175
+          attractionLongitude: -115.179668
+          attractionStreetAddress: 6405 Ensworth St.
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          destinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/321988_Viator_TripAdvisor_UGC_171245.jpg
+          photoCount: 0
+          primaryDestinationId: 684
+          seoId: 23402
+          productCount: 2
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/321988_Viator_TripAdvisor_UGC_171245.jpg
+          rating: 5
+          title: Carroll Shelby Museum
+        - sortOrder: 2
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Shark-Reef-Aquarium-at-Mandalay-Bay/d684-a14235?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Shark-Reef-Aquarium-at-Mandalay-Bay
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-02-27'
+          panoramaCount: 0
+          userName: ''
+          keywordCount: 1
+          showReviews: true
+          tabTitle: Shark Reef
+          descriptionIntro: Shark Reef
+          keywords:
+          - keywordId: 623401
+            keyword: Hotel
+          reviewCount: 97
+          seoType: ATTRACTION
+          pageTitle: Shark Reef Aquarium at Mandalay Bay
+          editorsPick: false
+          showPhotos: true
+          descriptionText: "<p>Inside the Mandalay Bay Hotel and Casino is the Shark Reef Aquarium, showcasing more than 2,000 animals displayed in 14 different exhibits and almost 1.6 million gallons of water.</p><p>\n \nThe Shark Reef Aquarium was designed to be a “total sensory experience,” and part of that is achieved by leading visitors through an acrylic tunnel with water nearly surrounding them. This exhibit alone includes 15 different species of sharks along with all the other sea life in the tank.</p><p>\n \nOther species in the aquarium include golden crocodiles, sea turtles and piranhas, none of which are included in the touching pools where visitors can find out what some of the other sea creatures feel like.</p>"
+          overviewSummary: '<div style="">Get up close and personal with some of the most fearsome creatures of the deep at Mandalay Bay’s Shark Reef Aquarium. Designed to be a total sensory experience—with two underwater tunnels and multiple tanks and exhibits—the aquarium is home to more than 2,000 animals, including many species of sharks.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Wander through a viewing tunnel at the Shark Reef Aquarium’s largest exhibit, a shipwreck surrounded by 1.3 million gallons (4.9 million liters) of water. In addition to sharks, you’ll see salt- and freshwater fish, as well as sea turtles, golden crocodiles, giant rays, and more. The touch pool is a favorite among younger visitors, while certified divers have the opportunity to scuba dive in the tanks.</div><div style=""><br></div><div style="">Admission to the aquarium is included in some multi-attraction Las Vegas sightseeing passes.</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>Most visitors spend around 45 to 60 minutes at the Shark Reef Aquarium.</li><li>An audio guide is available in English and Spanish.</li><li>Guests staying at the Mandalay Bay Resort can watch the Shark Reef channel on TV.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">The Shark Reef Aquarium is located near the South Convention Center in the Mandalay Bay Resort, at the southern end of Las Vegas Boulevard. You can easily get to the resort by car, taxi, shuttle, or the free Excalibur–Luxor–Mandalay Bay tram.&nbsp;</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">The aquarium is open daily, usually with extended hours on weekends and over the summer. Last entry is an hour before closing. There’s no set schedule for animal feedings, but they often take place between 10am and 4pm.</div><div style=""><b><br></b></div><div style=""><b>Aquariums in Las Vegas</b></div><div style="">Las Vegas has more than 10 aquariums, some of which can be found inside casinos. Besides the Shark Reef, check out these other popular aquariums: the Tank at the Golden Nugget, SeaQuest Las Vegas, the Aquarium at the Silverton Hotel, and the Atlantis Aquarium at the Forum Shops at Caesars Palace.</div>'
+          pagePrimaryLanguage: en
+          attractionLatitude: 36.09215
+          attractionLongitude: -115.17665
+          attractionStreetAddress: 3950 Las Vegas Blvd South
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          destinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/563331_Viator_Photographer_394530.jpg
+          photoCount: 14
+          primaryDestinationId: 684
+          seoId: 14235
+          productCount: 1
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/563331_Viator_Photographer_394530.jpg
+          rating: 4.5
+          title: Shark Reef Aquarium at Mandalay Bay
+        - sortOrder: 3
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Welder-Up/d684-a24303?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Welder-Up
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-02-26'
+          panoramaCount: 0
+          userName: ''
+          keywordCount: 1
+          showReviews: true
+          tabTitle: ''
+          descriptionIntro: ''
+          keywords:
+          - keywordId: 623169
+            keyword: Museum
+          reviewCount: 4
+          seoType: ATTRACTION
+          pageTitle: Welder Up
+          editorsPick: false
+          showPhotos: true
+          descriptionText: ''
+          overviewSummary: <div style="">Custom car aficionados, gear heads, and fans of the TV show Vegas <i>Rat Rods</i> will want to visit at Welder Up, the custom-car fabrication garage featured on the show. See where owner Steve Darnell and his crew create their unique turbo-diesel builds, and take a tour of the showroom, which is full of one-of-a-kind vehicles.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Visit the garage on your own, or book a guided behind-the-scenes tour. However you choose to visit, you’ll be able to see Steve Darnell’s personal collection of rat rods and several of the custom builds featured on his TV show. Several Las Vegas sightseeing tours include a stop here, including tours focused on hot rods and those focused on local reality shows filming locations.</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>Entry to the showroom and the shop is free.</li><li>If you want to guarantee that you’ll see Steve Darnell or other members of the show, opt for a guided tour; all tours must be booked in advance.</li><li>Visitors must sign a waiver to enter the shop.</li><li>Some of the vehicles can be extremely loud; it’s a good idea to bring earplugs.</li><li>There’s a gift shop on site.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">The Welder Up shop is located on Highland Drive, west of the Las Vegas Strip. The shop is walking distance from the Wynn Las Vegas, but the easiest way to reach the site is by driving or taking a taxi. You can also see the shop on many guided city tours.</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">Welder Up is open daily, with limited hours on Sundays. Visitors are welcome to spend as much time at the showroom as they like during open hours.</div><div style=""><br></div><div style=""><b>Count’s Kustoms</b></div><div style="">Fans of custom cars may also want to visit Count’s Kustoms, the automobile restoration and customization company owned by Danny Koker, who is the star of<i> Counting Cars </i>and a guest expert on <i>Pawn Stars</i>. His shop is located less than a mile up the road from Welder Up, and visitors can tour the shop for free or take a behind-the-scenes tour.</div>
+          pagePrimaryLanguage: en
+          attractionLatitude: 36.133057
+          attractionLongitude: -115.17419
+          attractionStreetAddress: 3160 South Highland Drive, Suite D
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          destinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/365146_Viator_TripAdvisor_UGC_180066.jpg
+          photoCount: 0
+          primaryDestinationId: 684
+          seoId: 24303
+          productCount: 3
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/365146_Viator_TripAdvisor_UGC_180066.jpg
+          rating: 4.5
+          title: Welder Up
+        dateStamp: 2020-04-20T22:11:05+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 71
+        errorMessageText: null
+        vmid: '331003'
+    attraction-example:
+      summary: /attraction
+      value:
+        errorReference: null
+        data:
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Shark-Reef-Aquarium-at-Mandalay-Bay/d684-a14235?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Shark-Reef-Aquarium-at-Mandalay-Bay
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-02-27'
+          panoramaCount: 0
+          userName: ''
+          userPhotos:
+          - sortOrder: 1
+            ownerName: Viator Insider
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-1536tall.jpg
+            productCode: 5156SHARK
+            caption: Shark Reef Aquarium at Mandalay Bay.
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-133sq.jpg
+            ownerId: 9179657
+            timeUploaded: '2017-12-05'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-770tall.jpg
+            photoId: 29347647
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-260tall.jpg
+            title: Viator_Photographer_394507.jpg
+          - sortOrder: 2
+            ownerName: Viator Insider
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-1536tall.jpg
+            productCode: 5156SHARK
+            caption: Shark Reef Aquarium at Mandalay Bay.
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-133sq.jpg
+            ownerId: 9179657
+            timeUploaded: '2017-12-05'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-770tall.jpg
+            photoId: 29347642
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-260tall.jpg
+            title: Viator_Photographer_394530.jpg
+          - sortOrder: 3
+            ownerName: Viator Insider
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-1536tall.jpg
+            productCode: 5156SHARK
+            caption: A stingray swimming around the Shark Reef Aquarium at Mandalay Bay.
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-133sq.jpg
+            ownerId: 9179657
+            timeUploaded: '2017-12-05'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-770tall.jpg
+            photoId: 29347627
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-260tall.jpg
+            title: Viator_Photographer_394518.jpg
+          - sortOrder: 4
+            ownerName: Viator Insider
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/27/viator_photographer_394499-jpg-photo_29347623-1536tall.jpg
+            productCode: 5156SHARK
+            caption: Hammerhead shark at the Shark Reef Aquarium at Mandalay Bay.
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/27/viator_photographer_394499-jpg-photo_29347623-133sq.jpg
+            ownerId: 9179657
+            timeUploaded: '2017-12-05'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/27/viator_photographer_394499-jpg-photo_29347623-770tall.jpg
+            photoId: 29347623
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/27/viator_photographer_394499-jpg-photo_29347623-260tall.jpg
+            title: Viator_Photographer_394499.jpg
+          - sortOrder: 5
+            ownerName: Viator Insider
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/1e/viator_photographer_394526-jpg-photo_29347614-1536tall.jpg
+            productCode: 5156SHARK
+            caption: Jellyfish at the Shark Reef Aquarium at Mandalay Bay.
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/1e/viator_photographer_394526-jpg-photo_29347614-133sq.jpg
+            ownerId: 9179657
+            timeUploaded: '2017-12-05'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/1e/viator_photographer_394526-jpg-photo_29347614-770tall.jpg
+            photoId: 29347614
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/1e/viator_photographer_394526-jpg-photo_29347614-260tall.jpg
+            title: Viator_Photographer_394526.jpg
+          - sortOrder: 6
+            ownerName: Viator Insider
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/0f/viator_photographer_394532-jpg-photo_29347599-1536tall.jpg
+            productCode: 5156SHARK
+            caption: Shark swimming at the Shark Reef Aquarium at Mandalay Bay.
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/0f/viator_photographer_394532-jpg-photo_29347599-133sq.jpg
+            ownerId: 9179657
+            timeUploaded: '2017-12-05'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/0f/viator_photographer_394532-jpg-photo_29347599-770tall.jpg
+            photoId: 29347599
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/0f/viator_photographer_394532-jpg-photo_29347599-260tall.jpg
+            title: Viator_Photographer_394532.jpg
+          - sortOrder: 7
+            ownerName: Anonymous
+            ownerCountry: null
+            productTitle: null
+            productUrlName: null
+            ownerAvatarURL: null
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/48/fish-are-friends-not-food-photo_11060808-1536tall.jpg
+            productCode: null
+            caption: Fishy faces
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/48/fish-are-friends-not-food-photo_11060808-133sq.jpg
+            ownerId: 2
+            timeUploaded: '2015-01-09'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/48/fish-are-friends-not-food-photo_11060808-770tall.jpg
+            photoId: 11060808
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/48/fish-are-friends-not-food-photo_11060808-260tall.jpg
+            title: Fish are friends, not food
+          - sortOrder: 8
+            ownerName: Anonymous
+            ownerCountry: null
+            productTitle: null
+            productUrlName: null
+            ownerAvatarURL: null
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/29/shark-reef-photo_11060777-1536tall.jpg
+            productCode: null
+            caption: Make a fishy face!
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/29/shark-reef-photo_11060777-133sq.jpg
+            ownerId: 2
+            timeUploaded: '2015-01-09'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/29/shark-reef-photo_11060777-770tall.jpg
+            photoId: 11060777
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/29/shark-reef-photo_11060777-260tall.jpg
+            title: Shark Reef
+          - sortOrder: 9
+            ownerName: Anonymous
+            ownerCountry: null
+            productTitle: null
+            productUrlName: null
+            ownerAvatarURL: null
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/04/statue-photo_11060740-1536tall.jpg
+            productCode: null
+            caption: Underwater at the aquarium
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/04/statue-photo_11060740-133sq.jpg
+            ownerId: 2
+            timeUploaded: '2015-01-09'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/04/statue-photo_11060740-770tall.jpg
+            photoId: 11060740
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/04/statue-photo_11060740-260tall.jpg
+            title: Statue
+          - sortOrder: 10
+            ownerName: Anonymous
+            ownerCountry: null
+            productTitle: null
+            productUrlName: null
+            ownerAvatarURL: null
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/f8/fish-photo_11060728-1536tall.jpg
+            productCode: null
+            caption: Fish and sharks at the Shark Reef Aquarium
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/f8/fish-photo_11060728-133sq.jpg
+            ownerId: 2
+            timeUploaded: '2015-01-09'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/f8/fish-photo_11060728-770tall.jpg
+            photoId: 11060728
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/f8/fish-photo_11060728-260tall.jpg
+            title: Fish
+          - sortOrder: 11
+            ownerName: Anonymous
+            ownerCountry: null
+            productTitle: null
+            productUrlName: null
+            ownerAvatarURL: null
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/f0/shark-reef-photo_11060720-1536tall.jpg
+            productCode: null
+            caption: At Mandalay Bay Hotel and Casino
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/f0/shark-reef-photo_11060720-133sq.jpg
+            ownerId: 2
+            timeUploaded: '2015-01-09'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/f0/shark-reef-photo_11060720-770tall.jpg
+            photoId: 11060720
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/f0/shark-reef-photo_11060720-260tall.jpg
+            title: Shark Reef
+          - sortOrder: 12
+            ownerName: Anonymous
+            ownerCountry: null
+            productTitle: null
+            productUrlName: null
+            ownerAvatarURL: null
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/8d/admiring-the-sharks-photo_11060621-1536tall.jpg
+            productCode: null
+            caption: Lots of sharks and marine creatures in this exhibit
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/8d/admiring-the-sharks-photo_11060621-133sq.jpg
+            ownerId: 2
+            timeUploaded: '2015-01-09'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/8d/admiring-the-sharks-photo_11060621-770tall.jpg
+            photoId: 11060621
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/8d/admiring-the-sharks-photo_11060621-260tall.jpg
+            title: Admiring the sharks
+          - sortOrder: 13
+            ownerName: Anonymous
+            ownerCountry: null
+            productTitle: null
+            productUrlName: null
+            ownerAvatarURL: null
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/81/mandalay-bay-hotel-and-casino-photo_11060609-1536tall.jpg
+            productCode: null
+            caption: Aquarium
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/81/mandalay-bay-hotel-and-casino-photo_11060609-133sq.jpg
+            ownerId: 2
+            timeUploaded: '2015-01-09'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/81/mandalay-bay-hotel-and-casino-photo_11060609-770tall.jpg
+            photoId: 11060609
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/81/mandalay-bay-hotel-and-casino-photo_11060609-260tall.jpg
+            title: Mandalay Bay Hotel and Casino
+          - sortOrder: 14
+            ownerName: Anonymous
+            ownerCountry: null
+            productTitle: null
+            productUrlName: null
+            ownerAvatarURL: null
+            sslSupported: false
+            photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/7a/excited-to-see-the-fishies-photo_11060602-1536tall.jpg
+            productCode: null
+            caption: On the escalator heading up to the aquarium
+            thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/7a/excited-to-see-the-fishies-photo_11060602-133sq.jpg
+            ownerId: 2
+            timeUploaded: '2015-01-09'
+            editorsPick: false
+            photoURL: http://cache-graphicslib.viator.com/graphicslib/media/7a/excited-to-see-the-fishies-photo_11060602-770tall.jpg
+            photoId: 11060602
+            photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/7a/excited-to-see-the-fishies-photo_11060602-260tall.jpg
+            title: Excited to see the fishies!
+          reviews:
+          - sortOrder: 1
+            ownerName: gutschows
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2020-03-12'
+            rating: 5
+            review: <p>Great place to spend a afternoon.  Beautiful fish, sharks, jelly fish, turtles and so much more.   Touching a stingray was fun too.</p>
+            publishedDate: '2020-03-12'
+            ownerId: 23894614
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 71654393
+          - sortOrder: 2
+            ownerName: vicki28uk
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2020-02-26'
+            rating: 5
+            review: <p>Great place to see different sharks and fish, great experience. Really enjoyed it as I was travelling alone</p>
+            publishedDate: '2020-02-26'
+            ownerId: 1889937
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 70802193
+          - sortOrder: 3
+            ownerName: shivleeng
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2020-02-11'
+            rating: 5
+            review: <p>Wonderful I thinks the word well maintained. Beautiful and a great way to spend time . Loved the vibe there</p>
+            publishedDate: '2020-02-11'
+            ownerId: 67665869
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 69662485
+          - sortOrder: 4
+            ownerName: Anthony B
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2019-10-14'
+            rating: 5
+            review: <p>Grandparents and granddaughter and great grandson time together. We had a good time and will visit again. Thank you</p>
+            publishedDate: '2019-10-14'
+            ownerId: 59040249
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 62243787
+          - sortOrder: 5
+            ownerName: graffiti.rytr
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2019-09-02'
+            rating: 5
+            review: <p>The aquarium was a bit too short although I took lots of photos/videos. Don't get me wrong the aquarium was over all awesome. I would recommend to anyone</p>
+            publishedDate: '2019-09-02'
+            ownerId: 58547163
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 59023869
+          - sortOrder: 6
+            ownerName: Isabel F
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2019-07-22'
+            rating: 5
+            review: '<p>It''s worth going to the Shark Reef Aquarium. It''s spectacular and very educational. The beauty of the ocean is incomparable. You get to feel as if you''re under the sea. The bonus of using your ticket to enter the Mandalay Beach Pool<br/>
+
+              Is a definite plus. Great experience fabulous time!</p>'
+            publishedDate: '2019-07-22'
+            ownerId: 1913702
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 55258497
+          - sortOrder: 7
+            ownerName: Donna S
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2019-07-03'
+            rating: 5
+            review: <p>This is a wonderful experience for the entire family, the price was right and the views where awesome.This is a must see while in town.</p>
+            publishedDate: '2019-07-03'
+            ownerId: 44851193
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 53531115
+          - sortOrder: 8
+            ownerName: pepper34chin
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2018-02-22'
+            rating: 5
+            review: <p>Really nice aquarium.  Enjoyed reading the different plaques about certain sealife.  Liked touching the little sting rays/ horseshoe crabs.</p>
+            publishedDate: '2018-02-22'
+            ownerId: 30511118
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 30649951
+          - sortOrder: 9
+            ownerName: john w
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-11-05'
+            rating: 5
+            review: <p>must do this it is so brilliant.  a  must do.  thank you</p>
+            publishedDate: '2017-11-05'
+            ownerId: 15708306
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 28866080
+          - sortOrder: 10
+            ownerName: docproc67
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-10-24'
+            rating: 5
+            review: <p>Some great tanks.</p>
+            publishedDate: '2017-10-24'
+            ownerId: 27956292
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 28640398
+          - sortOrder: 11
+            ownerName: Betty L
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-10-11'
+            rating: 5
+            review: <p>Very interesting, enjoyed all the the different species</p>
+            publishedDate: '2017-10-11'
+            ownerId: 24024207
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 28357817
+          - sortOrder: 12
+            ownerName: Colin C
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-09-30'
+            rating: 5
+            review: <p>excellent venue loved it</p>
+            publishedDate: '2017-09-30'
+            ownerId: 20748734
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 28104861
+          - sortOrder: 13
+            ownerName: lindasiegel1
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-09-25'
+            rating: 5
+            review: <p>It was a wonderful experience. You see all the different types of sharks, and many other breeds.   Highly recommended.</p>
+            publishedDate: '2017-09-25'
+            ownerId: 24424327
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 27984575
+          - sortOrder: 14
+            ownerName: Raelita G
+            ownerCountry: United States of America
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-09-09'
+            rating: 5
+            review: <p>Small aquarium but spectacular.  You see the sea life close up. One section the fish SWIM over you. This was the first time that I have been able to see shark teeth.  All of the animals seem healthy.  This aquarium is great for children but adults like it as well.</p>
+            publishedDate: '2017-09-09'
+            ownerId: 6940192
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 27597846
+          - sortOrder: 15
+            ownerName: MISTY W
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-08-16'
+            rating: 5
+            review: <p>This was the highlight tour while in Vegas! Mandalay Bay Hotel is by far the best landscaped grounds on The Strip and the staff was wonderful.  We went on a Wednesday afternoon and the line was short but the sea life was long.  From the golden crocodile, to the glowing jelly fish and the incredible walk-under-the-sea through the curved glass tunnel, this was a simply amazing aquarium!</p>
+            publishedDate: '2017-08-16'
+            ownerId: 26171872
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 26972816
+          - sortOrder: 16
+            ownerName: Paul B
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-08-12'
+            rating: 5
+            review: <p>There are some negative reviews around, but we thought it was great. Yes it's not huge but I'm not sure what people expect. It's well done and it is impressive. My kids loved seeing all in here, but especially the sharks and jellyfish. And the discounted price using viator was excellent compared to the 'on the door' price. We went around 8pm and it was quite quiet and not packed</p>
+            publishedDate: '2017-08-12'
+            ownerId: 23667319
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 26841792
+          - sortOrder: 17
+            ownerName: kbobeen
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-08-01'
+            rating: 5
+            review: <p>This tour was great and well worth our time.  Loved this experience and getting to touch a stingray.</p>
+            publishedDate: '2017-08-01'
+            ownerId: 23800289
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 26520861
+          - sortOrder: 18
+            ownerName: Barney
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-07-25'
+            rating: 5
+            review: <p>Granddaughter loved the exhibit.  A worthwhile adventure for your family.</p>
+            publishedDate: '2017-07-25'
+            ownerId: 24710299
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 26345271
+          - sortOrder: 19
+            ownerName: rose C
+            ownerCountry: United States of America
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-05-24'
+            rating: 5
+            review: <p>So much fun,be aware the shark reef is at the very very end of the hotel, got a lot of great pictures of fish and jellyfish,sharks- there is also a tidal pool.</p>
+            publishedDate: '2017-05-24'
+            ownerId: 18107176
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 24602048
+          - sortOrder: 20
+            ownerName: Sergio S
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/33/sergio-s-account_18104627-45sq.jpg
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-04-22'
+            rating: 5
+            review: <p>It is a great place to see some great ocean and river Critters. If you show up at the right time, you can watch them feed the animals and not to mention the touch pool with Stingrays,horseshoe crabs. Great for all ages and you go at your own speed so you can watch the jellyfish or see the sharks in a shipwreck!!</p>
+            publishedDate: '2017-04-22'
+            ownerId: 18104627
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 23858904
+          - sortOrder: 21
+            ownerName: Fernando D
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/7e/fernando-d-account_22330494-45sq.jpg
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-03-24'
+            rating: 5
+            review: <p>Amazing sea animals to see.</p>
+            publishedDate: '2017-03-24'
+            ownerId: 22330494
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 23161710
+          - sortOrder: 22
+            ownerName: Marie S
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/f9/marie-s-account_22521337-45sq.jpg
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2017-02-20'
+            rating: 5
+            review: <p>My husband and I often check out aquariums in our travels.  This was better than others in this country that we've seen.  It wasn't huge, but what it had to show, it certainly did and in a great way!  We thoroughly enjoyed ourselves!</p>
+            publishedDate: '2017-02-20'
+            ownerId: 22521337
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 22560267
+          - sortOrder: 23
+            ownerName: Luri22
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: null
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2016-12-26'
+            rating: 5
+            review: <p>Great variety of aquatic animals to see, fun for the whole family</p>
+            publishedDate: '2016-12-26'
+            ownerId: 18171461
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 21698952
+          - sortOrder: 24
+            ownerName: Christina H
+            ownerCountry: null
+            productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/f0/christina-h-account_20040176-45sq.jpg
+            sslSupported: false
+            productCode: 5156SHARK
+            submissionDate: '2016-10-31'
+            rating: 5
+            review: <p>When we went to the Shark Reef, there were not a lot of people.  I hear it can get crowded.  It was awesome because some trainers were answering questions about the caged creatures.  The hands on sting ray/ horseshoe crab area was a HUGE hit!  You can touch these things and learn a lot about them from the trained staff member that is there to answer any questions you may have.   The shark display is neat, as you surround them and they surround you.</p>
+            publishedDate: '2016-10-31'
+            ownerId: 20040176
+            viatorFeedback: null
+            viatorNotes: null
+            reviewId: 20934157
+          products:
+          - sortOrder: 2
+            supplierName: MGM Resorts International
+            currencyCode: USD
+            catIds: null
+            subCatIds: null
+            webURL: http://shop.live.rc.viator.com/tours/Las-Vegas/Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino/d684-5156SHARK?eap=brand-subbrand-17895&aid=vba17895en
+            specialReservationDetails: null
+            sslSupported: false
+            panoramaCount: 0
+            merchantCancellable: false
+            bookingEngineId: FreesaleBE
+            onRequestPeriod: null
+            primaryGroupId: null
+            pas: null
+            available: true
+            productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+            primaryDestinationUrlName: Las-Vegas
+            shortDescription: Marvel at the incredible Shark Reef Aquarium in the heart of the desert at Mandalay Bay Hotel and Casino on the Las Vegas Strip. Explore the 14 exhibits containing exotic and endangered fish, reptiles and — of course — sharks. Enjoy up-close views of more than 100 sharks, including 30 in the 1.3 million-gallon (4.9 million-liter) main tank, one of the largest in the US. By walking through two underwater tunnels, get an even better sense of what it's like to be under the sea.
+            price: 22.49
+            supplierCode: '5156'
+            translationLevel: 0
+            thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/01/34/63.jpg
+            onSale: false
+            photoCount: 6
+            reviewCount: 98
+            primaryDestinationId: 684
+            merchantNetPriceFrom: 0
+            primaryDestinationName: Las Vegas
+            thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/01/34/63.jpg
+            priceFormatted: $22.49
+            rrp: 0
+            rrpformatted: ''
+            videoCount: 0
+            rating: 4.5
+            essential: '1'
+            admission: '1'
+            uniqueShortDescription: null
+            merchantNetPriceFromFormatted: ''
+            savingAmount: 0
+            savingAmountFormated: ''
+            specialReservation: false
+            shortTitle: Shark Reef Aquarium at Mandalay Bay Hotel in Las Vegas
+            specialOfferAvailable: false
+            duration: 10 hours
+            title: Shark Reef at Mandalay Bay Hotel and Casino
+            code: 5156SHARK
+          ratingCounts:
+            '1': 3
+            '2': 7
+            '3': 14
+            '4': 24
+            '5': 48
+          infoPageOverviewTitle1: ''
+          infoPageOverviewTitle2: ''
+          infoPageOverview1: '<div style="">Get up close and personal with some of the most fearsome creatures of the deep at Mandalay Bay’s Shark Reef Aquarium. Designed to be a total sensory experience—with two underwater tunnels and multiple tanks and exhibits—the aquarium is home to more than 2,000 animals, including many species of sharks.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Wander through a viewing tunnel at the Shark Reef Aquarium’s largest exhibit, a shipwreck surrounded by 1.3 million gallons (4.9 million liters) of water. In addition to sharks, you’ll see salt- and freshwater fish, as well as sea turtles, golden crocodiles, giant rays, and more. The touch pool is a favorite among younger visitors, while certified divers have the opportunity to scuba dive in the tanks.</div><div style=""><br></div><div style="">Admission to the aquarium is included in some multi-attraction Las Vegas sightseeing passes.</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>Most visitors spend around 45 to 60 minutes at the Shark Reef Aquarium.</li><li>An audio guide is available in English and Spanish.</li><li>Guests staying at the Mandalay Bay Resort can watch the Shark Reef channel on TV.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">The Shark Reef Aquarium is located near the South Convention Center in the Mandalay Bay Resort, at the southern end of Las Vegas Boulevard. You can easily get to the resort by car, taxi, shuttle, or the free Excalibur–Luxor–Mandalay Bay tram.&nbsp;</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">The aquarium is open daily, usually with extended hours on weekends and over the summer. Last entry is an hour before closing. There’s no set schedule for animal feedings, but they often take place between 10am and 4pm.</div><div style=""><b><br></b></div><div style=""><b>Aquariums in Las Vegas</b></div><div style="">Las Vegas has more than 10 aquariums, some of which can be found inside casinos. Besides the Shark Reef, check out these other popular aquariums: the Tank at the Golden Nugget, SeaQuest Las Vegas, the Aquarium at the Silverton Hotel, and the Atlantis Aquarium at the Forum Shops at Caesars Palace.</div>'
+          infoPageOverview2: ''
+          attractionAdmission: Varies
+          attractionTransit: ''
+          attractionOpenHours: ''
+          keywordCount: 1
+          showReviews: true
+          tabTitle: Shark Reef
+          descriptionIntro: Shark Reef
+          keywords:
+          - keywordId: 623401
+            keyword: Hotel
+          reviewCount: 97
+          seoType: ATTRACTION
+          pageTitle: Shark Reef Aquarium at Mandalay Bay
+          editorsPick: false
+          showPhotos: true
+          descriptionText: "<p>Inside the Mandalay Bay Hotel and Casino is the Shark Reef Aquarium, showcasing more than 2,000 animals displayed in 14 different exhibits and almost 1.6 million gallons of water.</p><p>\n \nThe Shark Reef Aquarium was designed to be a “total sensory experience,” and part of that is achieved by leading visitors through an acrylic tunnel with water nearly surrounding them. This exhibit alone includes 15 different species of sharks along with all the other sea life in the tank.</p><p>\n \nOther species in the aquarium include golden crocodiles, sea turtles and piranhas, none of which are included in the touching pools where visitors can find out what some of the other sea creatures feel like.</p>"
+          overviewSummary: '<div style="">Get up close and personal with some of the most fearsome creatures of the deep at Mandalay Bay’s Shark Reef Aquarium. Designed to be a total sensory experience—with two underwater tunnels and multiple tanks and exhibits—the aquarium is home to more than 2,000 animals, including many species of sharks.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Wander through a viewing tunnel at the Shark Reef Aquarium’s largest exhibit, a shipwreck surrounded by 1.3 million gallons (4.9 million liters) of water. In addition to sharks, you’ll see salt- and freshwater fish, as well as sea turtles, golden crocodiles, giant rays, and more. The touch pool is a favorite among younger visitors, while certified divers have the opportunity to scuba dive in the tanks.</div><div style=""><br></div><div style="">Admission to the aquarium is included in some multi-attraction Las Vegas sightseeing passes.</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>Most visitors spend around 45 to 60 minutes at the Shark Reef Aquarium.</li><li>An audio guide is available in English and Spanish.</li><li>Guests staying at the Mandalay Bay Resort can watch the Shark Reef channel on TV.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">The Shark Reef Aquarium is located near the South Convention Center in the Mandalay Bay Resort, at the southern end of Las Vegas Boulevard. You can easily get to the resort by car, taxi, shuttle, or the free Excalibur–Luxor–Mandalay Bay tram.&nbsp;</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">The aquarium is open daily, usually with extended hours on weekends and over the summer. Last entry is an hour before closing. There’s no set schedule for animal feedings, but they often take place between 10am and 4pm.</div><div style=""><b><br></b></div><div style=""><b>Aquariums in Las Vegas</b></div><div style="">Las Vegas has more than 10 aquariums, some of which can be found inside casinos. Besides the Shark Reef, check out these other popular aquariums: the Tank at the Golden Nugget, SeaQuest Las Vegas, the Aquarium at the Silverton Hotel, and the Atlantis Aquarium at the Forum Shops at Caesars Palace.</div>'
+          pagePrimaryLanguage: en
+          attractionLatitude: 36.09215
+          attractionLongitude: -115.17665
+          attractionStreetAddress: 3950 Las Vegas Blvd South
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          destinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/563331_Viator_Photographer_394530.jpg
+          photoCount: 14
+          primaryDestinationId: 684
+          seoId: 14235
+          productCount: 1
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/563331_Viator_Photographer_394530.jpg
+          rating: 4.5
+          title: Shark Reef Aquarium at Mandalay Bay
+        dateStamp: 2020-04-20T22:23:44+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
+    attraction-reviews-example:
+      summary: /attraction/reviews
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          ownerName: Natalia brigham B
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: null
+          sslSupported: false
+          viatorNotes: null
+          productCode: 5156SHARK
+          submissionDate: '2020-03-16'
+          rating: 1
+          review: <p>Overpriced and very crowded.  There are tons of interesting things to do in Vegas for families with kids but Shark Reef is NOT one of them...</p>
+          publishedDate: '2020-03-16'
+          ownerId: 6500184
+          viatorFeedback: null
+          reviewId: 71781077
+        - sortOrder: 2
+          ownerName: Philip J
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: null
+          sslSupported: false
+          viatorNotes: null
+          productCode: 5156SHARK
+          submissionDate: '2018-04-02'
+          rating: 1
+          review: <p>Took longer to walk from the parking garage than it did to go through it.</p>
+          publishedDate: '2018-04-02'
+          ownerId: 13474719
+          viatorFeedback: null
+          reviewId: 31509091
+        - sortOrder: 3
+          ownerName: Graham J
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: null
+          sslSupported: false
+          viatorNotes: ''
+          productCode: 5156SHARK
+          submissionDate: '2015-03-02'
+          rating: 1
+          review: <p>this was nothing like we expected.....it was a quick tour, not worth the $$</p>
+          publishedDate: '2015-03-03'
+          ownerId: 11252090
+          viatorFeedback: ''
+          reviewId: 11408189
+        dateStamp: 2020-04-20T22:37:31+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 97
+        errorMessageText: null
+        vmid: '331004'
+    attraction-photos-example:
+      summary: attraction/photos
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          ownerName: Viator Insider
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+          sslSupported: false
+          productCode: 5156SHARK
+          timeUploaded: '2017-12-05'
+          caption: Shark Reef Aquarium at Mandalay Bay.
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-133sq.jpg
+          ownerId: 9179657
+          editorsPick: false
+          photoId: 29347647
+          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-1536tall.jpg
+          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-260tall.jpg
+          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-770tall.jpg
+          title: Viator_Photographer_394507.jpg
+        - sortOrder: 2
+          ownerName: Viator Insider
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+          sslSupported: false
+          productCode: 5156SHARK
+          timeUploaded: '2017-12-05'
+          caption: Shark Reef Aquarium at Mandalay Bay.
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-133sq.jpg
+          ownerId: 9179657
+          editorsPick: false
+          photoId: 29347642
+          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-1536tall.jpg
+          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-260tall.jpg
+          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-770tall.jpg
+          title: Viator_Photographer_394530.jpg
+        - sortOrder: 3
+          ownerName: Viator Insider
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+          sslSupported: false
+          productCode: 5156SHARK
+          timeUploaded: '2017-12-05'
+          caption: A stingray swimming around the Shark Reef Aquarium at Mandalay Bay.
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-133sq.jpg
+          ownerId: 9179657
+          editorsPick: false
+          photoId: 29347627
+          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-1536tall.jpg
+          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-260tall.jpg
+          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-770tall.jpg
+          title: Viator_Photographer_394518.jpg
+        dateStamp: 2020-04-20T22:45:36+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 14
+        errorMessageText: null
+        vmid: '331002'
+    attraction-products-example:
+      summary: /attraction/products
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 2
+          supplierName: MGM Resorts International
+          currencyCode: USD
+          catIds: null
+          subCatIds: null
+          webURL: http://shop.live.rc.viator.com/tours/Las-Vegas/Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino/d684-5156SHARK?eap=brand-subbrand-17895&aid=vba17895en
+          specialReservationDetails: null
+          sslSupported: false
+          panoramaCount: 0
+          merchantCancellable: false
+          bookingEngineId: FreesaleBE
+          onRequestPeriod: null
+          primaryGroupId: null
+          pas: null
+          available: true
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          primaryDestinationUrlName: Las-Vegas
+          price: 22.49
+          specialOfferAvailable: false
+          supplierCode: '5156'
+          shortTitle: Shark Reef Aquarium at Mandalay Bay Hotel in Las Vegas
+          translationLevel: 0
+          thumbnailHiResURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/07/01/34/63.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/07/01/34/63.jpg
+          priceFormatted: $22.49
+          rrp: 0
+          rrpformatted: ''
+          primaryDestinationId: 684
+          merchantNetPriceFrom: 0
+          onSale: false
+          photoCount: 6
+          reviewCount: 98
+          videoCount: 0
+          rating: 4.5
+          specialReservation: false
+          uniqueShortDescription: null
+          merchantNetPriceFromFormatted: ''
+          savingAmount: 0
+          savingAmountFormated: ''
+          essential: '1'
+          admission: '1'
+          shortDescription: Marvel at the incredible Shark Reef Aquarium in the heart of the desert at Mandalay Bay Hotel and Casino on the Las Vegas Strip. Explore the 14 exhibits containing exotic and endangered fish, reptiles and — of course — sharks. Enjoy up-close views of more than 100 sharks, including 30 in the 1.3 million-gallon (4.9 million-liter) main tank, one of the largest in the US. By walking through two underwater tunnels, get an even better sense of what it's like to be under the sea.
+          duration: 10 hours
+          title: Shark Reef at Mandalay Bay Hotel and Casino
+          code: 5156SHARK
+        dateStamp: 2020-04-20T22:33:42+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331002'
+  parameters:
+    topX:
+      name: topX
+      in: query
+      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+      schema:
+        type: string
+      example: 1-3
+    acceptLanguage:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
+  schemas:
+    price:
+      description: '**suggested sell (''from'') price** for this product in the currency set in the `currencyCode` parameter. This is the cheapest sell price, taking into consideration off-peak periods and discounts on larger groups.
+
+        '
+      type: number
+    onSale:
+      type: boolean
+      description: '**indicator**: `true` if the product is ''on sale'' and a discount has been applied to the price. When a product is on sale, the `price` and `priceFormatted` fields give the discounted price, `rrp` and `rrpFormatted` give the original price, and `savingAmount`, `savingAmountFormated` give the difference between the discount and original prices. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+    basicErrorModel:
+      type: object
+      properties:
+        errorReference:
+          type: string
+          example: null
+          description: '**reference number** of *this* error'
+        dateStamp:
+          type: string
+          example: 2017-11-24T21:30:47+0000
+          description: '**timestamp** of *this* response'
+        errorType:
+          type: string
+          description: '**code** specifying the type of error'
+          example: null
+        errorCodes:
+          type: array
+          description: '**array** of error codes pertaining to *this* error
+
+            - See: [Exception error codes](#section/Appendices/Exception-error-codes) for a list of possible error codes
+
+            '
+          items:
+            type: string
+          example: []
+        errorMessage:
+          type: array
+          description: '**array** of error message strings'
+          example: null
+        errorName:
+          type: string
+          example: null
+          description: '**name** of *this* type of error'
+        extraInfo:
+          type: object
+          description: ignore (Viator only)
+        extraObject:
+          type: object
+          description: ignore (Viator only)
+        success:
+          type: boolean
+          example: true
+          description: '**boolean indicator** of *this* request''s outcome
+
+            - `true`: the request was successful with no errors
+
+            - `false`: an error was encountered
+
+            '
+        totalCount:
+          type: integer
+          example: 1
+          description: '**number** of results available for *this* service
+
+            '
+        errorMessageText:
+          type: string
+          example: null
+          description: '**array** of error message strings in plain text'
+        vmid:
+          type: string
+          example: '321050'
+          description: '**unique numeric id** of the server that processed *this* request'
+    rrpFormatted:
+      type: string
+      description: '**currency-formatted original price** for this product if the product is on special / a discount has been applied. Empty string if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+    specialOfferAvailable:
+      type: boolean
+      description: '**indicator**: `true` if a special offer is available for *this* product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+    topX:
+      type: string
+      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+      example: 1-3
+    currencyCode:
+      type: string
+      description: '**currency code** for the currency to use for pricing fields
+
+        - **Note**: See [Supported currency codes](#section/Appendices/Supported-currency-codes) for available currencies
+
+        - **Default**: the default currency set up for your account
+
+        '
+      example: USD
+    rrp:
+      type: integer
+      description: '**numeric original price** for this product if the product is on special / a discount has been applied. `0` if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+    bookingEngineId:
+      type: string
+      description: ignore (relevant only to merchant and transactional-affiliate partners)
+    savingAmountFormated:
+      type: string
+      description: "\n**currency-formatted price difference** of the price of this product (`price`) while on sale (`onSale` is `true`) compared to the product's original price (`rrp`)\n- if no discount has been applied, the value will be empty \n- Note: There is a typo in the spelling of this field name ('formated')\n- See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.\n"
+      example: ''
+    priceFormatted:
+      type: string
+      description: '**currency-formatted suggested sell (''from'') price** for this product in the currency set in the `currencyCode` parameter
+
+        '
+    webURL:
+      type: string
+      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
+    savingAmount:
+      type: integer
+      description: '**numeric price difference** of the price of this product (`price`) while on sale (`onSale` is `true`) compared to the product''s original price (`rrp`). See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+  securitySchemes:
+    Legacy-API-key:
+      type: apiKey
+      in: query
+      name: apiKey
+    API-key:
+      type: apiKey
+      in: header
+      name: exp-api-key
