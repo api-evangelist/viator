@@ -551,6 +551,8 @@ apis:
   humanURL: https://docs.viator.com/partner-api/technical/
   baseURL: https://api.viator.com/partner
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
@@ -649,6 +651,8 @@ apis:
   humanURL: https://docs.viator.com/partner-api/technical/
   baseURL: https://api.viator.com/partner
   tags:
+  - Support Services
+  tags_raw:
   - Support services
   properties:
   - type: OpenAPI
@@ -729,6 +733,8 @@ apis:
   humanURL: https://docs.viator.com/partner-api/technical/
   baseURL: https://api.viator.com/partner
   tags:
+  - Utility Services
+  tags_raw:
   - Utility services
   properties:
   - type: OpenAPI
