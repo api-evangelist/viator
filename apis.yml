@@ -2,22 +2,19 @@ aid: viator
 url: https://raw.githubusercontent.com/api-evangelist/viator/refs/heads/main/apis.yml
 name: Viator
 kind: company
-description: >-
-  Viator is a Tripadvisor company and the largest online marketplace for tours, activities and
-  travel experiences, headquartered in the United States and listing more than 300,000 bookable
-  products across roughly 2,500 destinations. It sits on the demand side of the travel
-  distribution chain as an aggregator and reseller of third-party operator inventory, and on the
-  supply side as the channel counterparty that tour operators' reservation systems connect into.
-  Its API posture is unusually open for travel: the full Viator Partner API v2 OpenAPI, the legacy
-  v1 affiliate and merchant specifications, the Viator Reservation System (supplier) API and four
-  Postman collections are all published without a login at docs.viator.com, and Basic Access
-  affiliate keys are issued self-serve at no cost on account creation. Everything beyond that is
-  gated - Full Access, Full Access plus Booking, Merchant and supplier connectivity all require
-  qualification by Viator and, for transactional integrations, passing a two-part front-end and
-  back-end certification. No open travel standard is referenced anywhere in the specifications:
-  the contract is entirely Viator-proprietary, product identifiers are Viator-internal, and
-  partners are contractually required to prevent search engines indexing Viator reviews and
-  unique content.
+description: 'Viator is a Tripadvisor company and the largest online marketplace for tours, activities
+  and travel experiences, headquartered in the United States and listing more than 300,000 bookable products
+  across roughly 2,500 destinations. It sits on the demand side of the travel distribution chain as an
+  aggregator and reseller of third-party operator inventory, and on the supply side as the channel counterparty
+  that tour operators'' reservation systems connect into. Its API posture is unusually open for travel:
+  the full Viator Partner API v2 OpenAPI, the legacy v1 affiliate and merchant specifications, the Viator
+  Reservation System (supplier) API and four Postman collections are all published without a login at
+  docs.viator.com, and Basic Access affiliate keys are issued self-serve at no cost on account creation.
+  Everything beyond that is gated - Full Access, Full Access plus Booking, Merchant and supplier connectivity
+  all require qualification by Viator and, for transactional integrations, passing a two-part front-end
+  and back-end certification. No open travel standard is referenced anywhere in the specifications: the
+  contract is entirely Viator-proprietary, product identifiers are Viator-internal, and partners are contractually
+  required to prevent search engines indexing Viator reviews and unique content.'
 deliveryModel:
   model: saas
   open_source: false
@@ -69,7 +66,7 @@ tags_raw:
 - Affiliate
 - Hospitality
 created: '2026-07-28'
-modified: '2026-07-28'
+modified: '2026-09-16'
 specificationVersion: '0.23'
 apis:
 - aid: viator:viator-attraction-services-api
@@ -314,11 +311,10 @@ apis:
     url: https://docs.viator.com/partner-api/affiliate/technical/
 - aid: viator:viator-deprecated-api
   name: Viator Deprecated API
-  description: >-
-    This section lists endpoints that are no longer recommended for new or updated integrations. These
-    endpoints remain available for existing connections only, will stop receiving new features or behavior
-    improvements, and will eventually be retired once an end-of-life procedure is agreed with Viator (see
-    the [v2 migration guide](#tag/v2-migration-guide) for details).
+  description: 'This section lists endpoints that are no longer recommended for new or updated integrations.
+    These endpoints remain available for existing connections only, will stop receiving new features or
+    behavior improvements, and will eventually be retired once an end-of-life procedure is agreed with
+    Viator (see the [v2 migration guide](#tag/v2-migration-guide) for details).
 
 
     For all new development, use the current, fully supported endpoints documented in the main sections
@@ -362,7 +358,7 @@ apis:
 
     - [Supplier-to-reseller WSDL](resources/api_specs/wsdl/tgds-supplier-to-reseller.wsdl)
 
-    - [API XSD](resources/api_specs/xsd/api.xsd)
+    - [API XSD](resources/api_specs/xsd/api.xsd)'
   humanURL: https://docs.viator.com/partner-api/technical/
   baseURL: https://api.viator.com/partner
   tags:
@@ -785,13 +781,12 @@ apis:
   - type: Documentation
     url: https://docs.viator.com/partner-api/affiliate/technical/
 - aid: viator:viator-viator-apis-api
-  name: Viator Viator APIs API
-  description: >-
-    This section describes the Viator built API(s) available for reservation system consumption.
+  name: Viator APIs
+  description: 'This section describes the Viator built API(s) available for reservation system consumption.
 
 
     **Note**: For these APIs, the request is sent **to** Viator and the response is received **from**
-    Viator.
+    Viator.'
   humanURL: https://docs.viator.com/partner-api/technical/
   baseURL: https://api.viator.com/partner
   tags:
@@ -903,7 +898,10 @@ common:
   url: asyncapi/viator-events.yml
 - type: X-MCPServerCandidate
   url: mcp/viator-mcp.yml
-  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type surfaces with a server that does not exist.'
+  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate
+    — a tool list derived from the published API contracts, not an existing server. The scorer already
+    read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type
+    surfaces with a server that does not exist.'
 - type: ToolCrosswalk
   url: mcp/viator-tool-crosswalk.yml
 - type: AgentSkill
