@@ -275,6 +275,8 @@ apis:
   humanURL: https://docs.viator.com/partner-api/technical/
   baseURL: https://api.viator.com/partner
   tags:
+  - Booking
+  tags_raw:
   - Bookings
   properties:
   - type: OpenAPI
