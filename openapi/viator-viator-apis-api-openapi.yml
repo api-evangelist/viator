@@ -9,7 +9,9 @@ info:
     name: API Integrations Support
     email: supplierAPI@viator.com
   version: ''
-  description: "<style>\n/* ----------------------------------------------------------------------\n   Stripe-inspired look & feel for the Viator Reservation System API docs.\n   Layout (3-panel nav/content/code) is provided by Redoc; this layer adds\n   typography, spacing and accent polish using Viator brand colors.\n   Accent teal #00876A · dark code rail #0a2a2e · light sidebar #f6f8f8\n   Type matches Stripe's scale (16px/400 body, weight-500 headings) and\n   uses Stripe's own font stack (Söhne -> system fallback) set in redocly.yaml.\n   ---------------------------------------------------------------------- */\n\n/* Logo: Viator wordmark, top-left of the sidebar (Stripe-style placement) */\nimg[alt=\"Viator\"] {\n    height: 30px;\n    width: auto;\n    max-width: 80%;\n    margin: 16px 0 10px 16px;\n    display: block;\n}\n\n/* Smoother text rendering, closer to Stripe's docs */\nbody,\n.redoc-wrap,\n[data-component-id] {\n    -webkit-font-smoothing: antialiased;\n    -moz-osx-font-smoothing: grayscale;\n    text-rendering: optimizeLegibility;\n}\n\n/* Headings: match Stripe's type scale (weight 500, generous sizes, tight\n   tracking). Scoped to .api-content with !important to win over Redoc's\n   built-in heading sizes. */\n.api-content h1, .api-content h2, .api-content h3,\n.api-content h4, .api-content h5 {\n    font-weight: 500 !important;\n}\n.api-content h1 {\n    font-size: 38px !important;\n    line-height: 48px !important;\n    letter-spacing: -0.02em !important;\n}\n.api-content h2 {\n    font-size: 28px !important;\n    line-height: 36px !important;\n    letter-spacing: -0.018em !important;\n}\n.api-content h3 {\n    font-size: 20px !important;\n    line-height: 28px !important;\n    letter-spacing: -0.012em !important;\n}\n.api-content h4, .api-content h5 {\n    font-weight: 600 !important;\n    letter-spacing: -0.006em !important;\n}\n\n/* Links: teal with a subtle hover underline */\na, a:visited {\n    color: #00876A;\n    text-decoration: none;\n}\na:hover {\n    color: #00694f;\n    text-decoration: underline;\n}\n\n/* Sidebar: light, airy, Stripe-like with a thin divider */\n.menu-content {\n    border-right: 1px solid #e3eae9;\n}\n.menu-content label[role=\"menuitem\"]:hover,\n.menu-content li[role=\"menuitem\"]:hover {\n    background-color: #eef3f2;\n}\n\n/* Active nav item: teal accent bar */\n.menu-content label.active,\n.menu-content li.active > label {\n    color: #00876A;\n    box-shadow: inset 3px 0 0 0 #00876A;\n}\n\n/* Search box: rounded, soft border to match Stripe's input style */\n[role=\"search\"] input,\n.search-input {\n    border: 1px solid #d7e0df !important;\n    border-radius: 8px !important;\n}\n\n/* Center and add border to all images (preserved from original) */\np img {\n    border-radius: 4px;\n    border: 1px solid #ddd;\n    margin-left: auto;\n    margin-right: auto;\n    display: block;\n    margin-bottom: 28px;\n}\n</style>\n\n# Introduction\nThese API specifications detail the technical requirements for integrating operator reservation systems with Viator. This guide is intended for developers and technical teams to ensure a standardized implementation and reliable data exchange.\n\n# Prerequisites\nAccess is restricted to operators registered with Viator and their authorized reservation system providers. Integration workflows may only proceed following technical evaluation and formal approval by Viator.\n\nFurthermore, development **may only commence** if Viator registered operators are using the reservation system. For operator onboarding details, please refer to the [supplier sign-up page](https://supplier.viator.com/sign-up-info).\n\n# Getting Started\nReview the following core components to begin your implementation:\n\n- [What’s new](#tag/What's-new)\n- [Connectivity overview](#tag/Connectivity-overview)\n- [API overview](#tag/API-overview)\n- [Implementation approach](#tag/Implementation-approach)\n- [Frequently asked questions](#tag/FAQs)\n\nAdherence to these specifications is crucial for successful integration, guaranteeing optimal performance, data integrity, and a superior user experience for both operators and Viator customers. \n\nIf at any point you need clarification or help, please don’t hesitate to [contact us here](#tag/Contact-us).\n"
+  description: '/* ----------------------------------------------------------------------
+
+    Stripe-inspired look & feel for the Viator Reservation System API docs.'
 servers:
 - url: https://your-reservation-system.example.com
   description: Placeholder for the reservation system's own server — replace with your actual domain. Viator calls this host for all operations except event and special offer notifications, which are sent by the reservation system to Viator instead (see below).
@@ -39,7 +41,42 @@ paths:
         source: "<?php\n$payload = <<<'JSON'\n{\n  \"supplierId\": 123,\n  \"updateType\": [\n    \"AVAILABILITY\",\n    \"PRICING\"\n  ],\n  \"productOptionIds\": [\n    \"r1172330\",\n    \"r1172331\"\n  ],\n  \"startDate\": \"2025-01-01\",\n  \"endDate\": \"2025-12-31\"\n}\nJSON;\n\n$ch = curl_init(\"https://api.viator.com/v2/notification/events\");\ncurl_setopt($ch, CURLOPT_POST, true);\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\n    \"X-Api-Key: <YOUR_API_KEY>\",\n    \"Content-Type: application/json\",\n]);\ncurl_setopt($ch, CURLOPT_POSTFIELDS, $payload);\ncurl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n$response = curl_exec($ch);\ncurl_close($ch);\necho $response;\n"
       tags:
       - Viator APIs
-      description: "The event notifications endpoint allows reservation systems to inform Viator of changes to events that affect salability, pricing, or capacity for a given date range. This endpoint ensures rapid synchronization of event updates with Viator.\n\nViator prioritizes callbacks for Event notifications based on the `updateType`. \n- \"AVAILABILITY\" and \"PRICING\" notifications receive the highest priority. \n- \"CAPACITY\" notifications are prioritized using several factors, including the proximity to the travel date.\n\nNOTE: If both \"AVAILABILITY\" and \"CAPACITY\" types are received in the same notification, the \"CAPACITY\" priority is used. \n\n**Automated Event Notification Enablement**\n\nNotifications must be sent only for **already connected product options**. Therefore, Event Notifications **must be enabled** for a product option immediately after a [Calendar API](#tag/Reservation-system-APIs/operation/calendar) request is received for that product option.\n\n**Automated Event Notification Disablement** \n\nNotifications for a product option must be disabled if a **422 Unprocessable Content** or **207 Multiple-status response** HTTP status code is received with any of the following errors:\n- INVALID_SUPPLIER\n- INVALID_PRODUCT_OPTION\n\nDisabling event notifications for affected product options will prevent further failed requests and increased error rates.\n\n**NOTE**: If a calendar request is subsequently received for a previously disabled product option, notifications **must be re-enabled**.\n\nThe event notifications endpoint replaces the existing V1.0 [Availability Notification 2 API](#tag/Deprecated/operation/availabilityNotification2).\n"
+      description: 'The event notifications endpoint allows reservation systems to inform Viator of changes to events that affect salability, pricing, or capacity for a given date range. This endpoint ensures rapid synchronization of event updates with Viator.
+
+
+        Viator prioritizes callbacks for Event notifications based on the `updateType`.
+
+        - "AVAILABILITY" and "PRICING" notifications receive the highest priority.
+
+        - "CAPACITY" notifications are prioritized using several factors, including the proximity to the travel date.
+
+
+        NOTE: If both "AVAILABILITY" and "CAPACITY" types are received in the same notification, the "CAPACITY" priority is used.
+
+
+        **Automated Event Notification Enablement**
+
+
+        Notifications must be sent only for **already connected product options**. Therefore, Event Notifications **must be enabled** for a product option immediately after a Calendar API request is received for that product option.
+
+
+        **Automated Event Notification Disablement**
+
+
+        Notifications for a product option must be disabled if a **422 Unprocessable Content** or **207 Multiple-status response** HTTP status code is received with any of the following errors:
+
+        - INVALID_SUPPLIER
+
+        - INVALID_PRODUCT_OPTION
+
+
+        Disabling event notifications for affected product options will prevent further failed requests and increased error rates.
+
+
+        **NOTE**: If a calendar request is subsequently received for a previously disabled product option, notifications **must be re-enabled**.
+
+
+        The event notifications endpoint replaces the existing V1.0 Availability Notification 2 API.'
       security:
       - ApiKeyHeader: []
       servers:
@@ -120,7 +157,30 @@ paths:
       - lang: PHP
         label: PHP
         source: "<?php\n$payload = <<<'JSON'\n{\n  \"supplierId\": 3456,\n  \"specialOfferIds\": [\n    \"A Unique id\",\n    \"A-unique-id-2\"\n  ]\n}\nJSON;\n\n$ch = curl_init(\"https://api.viator.com/v2/notification/special-offers\");\ncurl_setopt($ch, CURLOPT_POST, true);\ncurl_setopt($ch, CURLOPT_HTTPHEADER, [\n    \"X-Api-Key: <YOUR_API_KEY>\",\n    \"Content-Type: application/json\",\n]);\ncurl_setopt($ch, CURLOPT_POSTFIELDS, $payload);\ncurl_setopt($ch, CURLOPT_RETURNTRANSFER, true);\n$response = curl_exec($ch);\ncurl_close($ch);\necho $response;\n"
-      description: "The special offers notifications endpoint allows reservation systems to inform Viator of new or updated special offers for a given date range. This endpoint ensures rapid synchronization of special offers details with Viator.\n\nSpecial Offers notification triggers Viator to request additional details via the [Special Offers](#tag/Reservation-system-APIs/operation/specialOffers) endpoint **if the special offer is associated with an already connected product option**. This association is determined via the [Calendar](#tag/Reservation-system-APIs/operation/calendar) or [Availability check](#tag/Reservation-system-APIs/operation/availabilityCheck) endpoints.\n\n**Automated Special Offers Notification Enablement**\n\nNotifications must be sent only for **already connected product options**. Therefore, Special Offers notifications **must be enabled** for a product option immediately after a [Calendar API](#tag/Reservation-system-APIs/operation/calendar) request is received for that product option.\n\n**Automated Special Offers Notification Disablement** \n\nNotifications for a product option must be disabled if a **422 Unprocessable Content** HTTP status code is received with any of the following errors:\n- INVALID_SUPPLIER\n\nDisabling Special Offers notifications for affected product options will prevent further failed requests and increased error rates.\n\n**NOTE**: If a calendar request is subsequently received for a previously disabled product option, notifications **must be re-enabled**.\n"
+      description: 'The special offers notifications endpoint allows reservation systems to inform Viator of new or updated special offers for a given date range. This endpoint ensures rapid synchronization of special offers details with Viator.
+
+
+        Special Offers notification triggers Viator to request additional details via the Special Offers endpoint **if the special offer is associated with an already connected product option**. This association is determined via the Calendar or Availability check endpoints.
+
+
+        **Automated Special Offers Notification Enablement**
+
+
+        Notifications must be sent only for **already connected product options**. Therefore, Special Offers notifications **must be enabled** for a product option immediately after a Calendar API request is received for that product option.
+
+
+        **Automated Special Offers Notification Disablement**
+
+
+        Notifications for a product option must be disabled if a **422 Unprocessable Content** HTTP status code is received with any of the following errors:
+
+        - INVALID_SUPPLIER
+
+
+        Disabling Special Offers notifications for affected product options will prevent further failed requests and increased error rates.
+
+
+        **NOTE**: If a calendar request is subsequently received for a previously disabled product option, notifications **must be re-enabled**.'
       security:
       - ApiKeyHeader: []
       servers:
@@ -203,6 +263,20 @@ components:
                 enum:
                 - INVALID_PRODUCT_OPTION
                 example: INVALID_PRODUCT_OPTION
+    ContentErrorResponse:
+      type: object
+      description: Error response object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          description: "Code representing error reason. \n\nOne of:\n  - INVALID_SUPPLIER - the requested supplier is not valid.\n  - API_DISABLED - API endpoint is not enabled for the requested supplier.\n"
+          example: INVALID_SUPPLIER
+        message:
+          type: string
+          description: Human readable description of the error reason
+          example: Wrong Supplier ID
     SpecialOffersNotificationRequest:
       type: object
       description: Request object for the Special Offers Notification Operation.
@@ -224,46 +298,6 @@ components:
             type: string
             description: Unique identifier for the special offer.
             example: A Unique id
-    ContentErrorResponse:
-      type: object
-      description: Error response object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          description: "Code representing error reason. \n\nOne of:\n  - INVALID_SUPPLIER - the requested supplier is not valid.\n  - API_DISABLED - API endpoint is not enabled for the requested supplier.\n"
-          example: INVALID_SUPPLIER
-        message:
-          type: string
-          description: Human readable description of the error reason
-          example: Wrong Supplier ID
-    InternalErrorResponse:
-      type: object
-      description: Error response object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          description: "Code representing error reason. One of:\n  - INTERNAL_ERROR\n"
-          example: INTERNAL_ERROR
-        message:
-          type: string
-          description: Human readable description of the error reason
-          example: Unknown Error
-    SupplierId:
-      type: integer
-      description: Viator’s unique Supplier identifier.
-      example: 3456
-    BaseRequest:
-      type: object
-      description: Base request object.
-      required:
-      - supplierId
-      properties:
-        supplierId:
-          $ref: '#/components/schemas/SupplierId'
     EventNotificationUnprocessableContentResponse:
       type: object
       description: Response object for Unprocessable Content Event Notification
@@ -283,6 +317,32 @@ components:
           type: string
           description: Human readable description of the error reason
           example: All product options are invalid
+    BaseRequest:
+      type: object
+      description: Base request object.
+      required:
+      - supplierId
+      properties:
+        supplierId:
+          $ref: '#/components/schemas/SupplierId'
+    InternalErrorResponse:
+      type: object
+      description: Error response object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          description: "Code representing error reason. One of:\n  - INTERNAL_ERROR\n"
+          example: INTERNAL_ERROR
+        message:
+          type: string
+          description: Human readable description of the error reason
+          example: Unknown Error
+    ProductOptionId:
+      type: string
+      description: "Unique reservation system product option identifier. \nThis identifier is sourced from the [Tour List API](#operation/tourList) response.\n"
+      example: r1172330
     EventNotificationRequest:
       allOf:
       - $ref: '#/components/schemas/BaseRequest'
@@ -325,39 +385,11 @@ components:
 
               '
             example: '2026-01-25'
-    ProductOptionId:
-      type: string
-      description: "Unique reservation system product option identifier. \nThis identifier is sourced from the [Tour List API](#operation/tourList) response.\n"
-      example: r1172330
+    SupplierId:
+      type: integer
+      description: Viator’s unique Supplier identifier.
+      example: 3456
   examples:
-    eventNotificationUnprocessableResponse:
-      value:
-        error: INVALID_PRODUCT_OPTION
-        message: All product options are invalid
-    error500:
-      summary: Internal Server Error
-      value:
-        error: INTERNAL_ERROR
-        message: Unknown internal error
-    error422:
-      summary: Unprocessable Content error
-      value:
-        error: INVALID_SUPPLIER
-        message: Invalid supplier ID
-    SpecialOffersRequest:
-      value:
-        supplierId: 3456
-        specialOfferIds:
-        - A Unique id
-        - A-unique-id-2
-    eventNotificationResponse:
-      value:
-        results:
-        - productOptionId: r1172330
-          status: 200
-        - productOptionId: r1172331
-          status: 422
-          error: INVALID_PRODUCT_OPTION
     eventNotificationRequest:
       value:
         supplierId: 123
@@ -369,6 +401,34 @@ components:
         - r1172331
         startDate: '2025-01-01'
         endDate: '2025-12-31'
+    SpecialOffersRequest:
+      value:
+        supplierId: 3456
+        specialOfferIds:
+        - A Unique id
+        - A-unique-id-2
+    error500:
+      summary: Internal Server Error
+      value:
+        error: INTERNAL_ERROR
+        message: Unknown internal error
+    error422:
+      summary: Unprocessable Content error
+      value:
+        error: INVALID_SUPPLIER
+        message: Invalid supplier ID
+    eventNotificationResponse:
+      value:
+        results:
+        - productOptionId: r1172330
+          status: 200
+        - productOptionId: r1172331
+          status: 422
+          error: INVALID_PRODUCT_OPTION
+    eventNotificationUnprocessableResponse:
+      value:
+        error: INVALID_PRODUCT_OPTION
+        message: All product options are invalid
   securitySchemes:
     ApiKeyHeader:
       type: apiKey

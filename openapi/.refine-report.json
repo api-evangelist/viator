@@ -1,0 +1,62 @@
+{
+  "provider": "viator",
+  "sources": [
+    "_original/viator-affiliate-api-v1-openapi.json",
+    "_original/viator-merchant-api-v1-openapi.json",
+    "_original/viator-partner-api-v2-openapi.json",
+    "_original/viator-reservation-system-api-openapi.json"
+  ],
+  "outputs": [
+    "viator-attraction-services-api-openapi.yml",
+    "viator-product-services-api-openapi.yml",
+    "viator-support-services-api-openapi.yml",
+    "viator-taxonomy-services-api-openapi.yml",
+    "viator-utility-services-api-openapi.yml",
+    "viator-booking-services-api-openapi.yml",
+    "viator-deprecated-services-api-openapi.yml",
+    "viator-general-services-api-openapi.yml",
+    "viator-attractions-api-openapi.yml",
+    "viator-auxiliary-api-openapi.yml",
+    "viator-availability-api-openapi.yml",
+    "viator-bookings-api-openapi.yml",
+    "viator-payments-api-openapi.yml",
+    "viator-products-api-openapi.yml",
+    "viator-deprecated-api-openapi.yml",
+    "viator-reservation-system-apis-api-openapi.yml",
+    "viator-viator-apis-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [
+    "viator-reservation-system-api-openapi.json: info.version missing"
+  ],
+  "notes": [
+    "sourced from openapi/_original/ (4 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "viator-affiliate-api-v1-openapi.json: upgraded openapi 3.0.2 -> OpenAPI 3.2.0",
+    "viator-merchant-api-v1-openapi.json: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "viator-partner-api-v2-openapi.json: upgraded openapi 3.0.2 -> OpenAPI 3.2.0",
+    "viator-reservation-system-api-openapi.json: upgraded openapi 3.0.0 -> OpenAPI 3.2.0",
+    "tag 'Product services' spans 2 source specs (viator-affiliate-api-v1-openapi.json, viator-merchant-api-v1-openapi.json): per-path servers applied",
+    "tag 'Taxonomy services' spans 2 source specs (viator-affiliate-api-v1-openapi.json, viator-merchant-api-v1-openapi.json): per-path servers applied",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "viator-attraction-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-attractions-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-auxiliary-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-availability-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-booking-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-bookings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-deprecated-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-deprecated-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-general-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-payments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-product-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-products-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-reservation-system-apis-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-support-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-taxonomy-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-utility-services-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "viator-viator-apis-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}

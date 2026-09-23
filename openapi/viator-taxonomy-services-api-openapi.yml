@@ -28,9 +28,7 @@ paths:
 
         - Returns a complete list of Viator destinations, including destination names and parent identifiers
 
-        - Used to provide navigation through drill down lists or combo boxes
-
-        '
+        - Used to provide navigation through drill down lists or combo boxes'
       parameters:
       - $ref: '#/components/parameters/acceptLanguage'
       responses:
@@ -107,13 +105,11 @@ paths:
       - Taxonomy services
       summary: /taxonomy/categories
       operationId: taxonomyCategories
-      description: '- Retrieves a list of product categories for a destination that can be used as a means of filtering when searching for products using the [/search/products](#operation/searchProducts) service
+      description: '- Retrieves a list of product categories for a destination that can be used as a means of filtering when searching for products using the /search/products service
 
         - This service can be used to get a list of all categories and subcategories for a destination by including its `destId`, or you can omit the `destId` to get a list of all categories and subcategories
 
-        - **Note:** If no `destId` is passed, `productCount` and `thumbnailURL` will be `null` as they are destination-specific fields
-
-        '
+        - **Note:** If no `destId` is passed, `productCount` and `thumbnailURL` will be `null` as they are destination-specific fields'
       parameters:
       - $ref: '#/components/parameters/acceptLanguage'
       - in: query
@@ -200,9 +196,7 @@ paths:
       operationId: taxonomyAttractions
       description: '- Retrieves a list of attractions (things like the Eiffel Tower or Empire State Building) and their associated unique numeric identifiers
 
-        - The attraction''s identifier (`seoId`) can be used as a means of searching for available products; for example, in the [/search/products](#operation/searchProducts) service.
-
-        '
+        - The attraction''s identifier (`seoId`) can be used as a means of searching for available products; for example, in the /search/products service.'
       parameters:
       - $ref: '#/components/parameters/acceptLanguage'
       requestBody:
@@ -315,21 +309,13 @@ paths:
       description: Production server
 components:
   schemas:
-    destinationType:
+    topX:
       type: string
-      enum:
-      - CITY
-      - COUNTRY
-      - REGION
-      description: '**destination type specifier**
-
-        - `''COUNTRY''`: destination is a country
-
-        - `''REGION''`: destination is a recognized region of a country, such as a state, island within a country, stretch of coastline, etc.
-
-        - `''CITY''`: destination is a city
-
-        '
+      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+      example: 1-3
+    defaultCurrencyCode:
+      type: string
+      description: Default currency code
     basicErrorModel:
       type: object
       properties:
@@ -393,6 +379,9 @@ components:
           type: string
           example: '321050'
           description: '**unique numeric id** of the server that processed *this* request'
+    webURL:
+      type: string
+      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
     iataCode:
       type: string
       description: '**IATA airport code** for the destination
@@ -405,17 +394,7 @@ components:
 
         '
       example: null
-    webURL:
-      type: string
-      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
-    topX:
-      type: string
-      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
-      example: 1-3
-    defaultCurrencyCode:
-      type: string
-      description: Default currency code
-    destinationType_2:
+    destinationType:
       type: string
       enum:
       - CITY
@@ -423,13 +402,17 @@ components:
       - REGION
       description: '**destination type specifier**
 
-        - `"COUNTRY"`: destination is a country
+        - `''COUNTRY''`: destination is a country
 
-        - `"REGION"`: destination is a recognized region of a country, such as a state, island within a country, stretch of coastline, etc.
+        - `''REGION''`: destination is a recognized region of a country, such as a state, island within a country, stretch of coastline, etc.
 
-        - `"CITY"`: destination is a city
+        - `''CITY''`: destination is a city
 
         '
+    topX_2:
+      type: string
+      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n\n**Note**: \n- the maximum number of rows per request is 100; therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+      example: 1-3
     basicErrorModel_2:
       type: object
       properties:
@@ -508,6 +491,11 @@ components:
           - string
           - 'null'
           description: '**unique numeric id** of the server that processed *this* request'
+    webURL_2:
+      type:
+      - string
+      - 'null'
+      description: ignore (Viator only)
     iataCode_2:
       type:
       - string
@@ -521,16 +509,116 @@ components:
         - the IATA code is <u>not available</u> for destinations with a destination type of `''COUNTRY''` or `''REGION''`, as there could be more than one airport within a destination
 
         '
-    webURL_2:
-      type:
-      - string
-      - 'null'
-      description: ignore (Viator only)
-    topX_2:
+    destinationType_2:
       type: string
-      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n\n**Note**: \n- the maximum number of rows per request is 100; therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
-      example: 1-3
+      enum:
+      - CITY
+      - COUNTRY
+      - REGION
+      description: '**destination type specifier**
+
+        - `"COUNTRY"`: destination is a country
+
+        - `"REGION"`: destination is a recognized region of a country, such as a state, island within a country, stretch of coastline, etc.
+
+        - `"CITY"`: destination is a city
+
+        '
   examples:
+    taxonomy-destinations-example:
+      summary: /taxonomy/destinations
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          selectable: false
+          destinationUrlName: USA
+          defaultCurrencyCode: USD
+          lookupId: '8.77'
+          parentId: 8
+          timeZone: America/New_York
+          iataCode: null
+          destinationId: 77
+          destinationType: COUNTRY
+          destinationName: USA
+          latitude: 37.09024
+          longitude: -95.712891
+        - sortOrder: 1
+          selectable: true
+          destinationUrlName: Alabama
+          defaultCurrencyCode: USD
+          lookupId: 8.77.22212
+          parentId: 77
+          timeZone: ''
+          iataCode: null
+          destinationId: 22212
+          destinationType: REGION
+          destinationName: Alabama
+          latitude: 32.34
+          longitude: -86.26
+        - sortOrder: 2
+          selectable: true
+          destinationUrlName: Alaska
+          defaultCurrencyCode: USD
+          lookupId: 8.77.270
+          parentId: 77
+          timeZone: America/Anchorage
+          iataCode: null
+          destinationId: 270
+          destinationType: REGION
+          destinationName: Alaska
+          latitude: 63.588753
+          longitude: -154.4930619
+        - sortOrder: 3
+          selectable: true
+          destinationUrlName: Arizona
+          defaultCurrencyCode: USD
+          lookupId: 8.77.271
+          parentId: 77
+          timeZone: America/Phoenix
+          iataCode: null
+          destinationId: 271
+          destinationType: REGION
+          destinationName: Arizona
+          latitude: 34.0489281
+          longitude: -111.0937311
+        - sortOrder: 4
+          selectable: true
+          destinationUrlName: Arkansas
+          defaultCurrencyCode: USD
+          lookupId: 8.77.22213
+          parentId: 77
+          timeZone: ''
+          iataCode: null
+          destinationId: 22213
+          destinationType: REGION
+          destinationName: Arkansas
+          latitude: 35.2011
+          longitude: -91.8318
+        - sortOrder: 5
+          selectable: true
+          destinationUrlName: California
+          defaultCurrencyCode: USD
+          lookupId: 8.77.272
+          parentId: 77
+          timeZone: America/Los_Angeles
+          iataCode: null
+          destinationId: 272
+          destinationType: REGION
+          destinationName: California
+          latitude: 36.778261
+          longitude: -119.4179324
+        dateStamp: 2020-04-20T23:56:25+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331001'
     taxonomy-attractions-example:
       summary: /taxonomy/attractions
       value:
@@ -1375,8 +1463,8 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331004'
-    taxonomy-destinations-example:
-      summary: /taxonomy/destinations
+    taxonomy-destinations-example_2:
+      summary: taxonomy destinations example
       value:
         errorReference: null
         data:
@@ -1388,9 +1476,9 @@ components:
           parentId: 8
           timeZone: America/New_York
           iataCode: null
-          destinationId: 77
-          destinationType: COUNTRY
           destinationName: USA
+          destinationType: COUNTRY
+          destinationId: 77
           latitude: 37.09024
           longitude: -95.712891
         - sortOrder: 1
@@ -1401,9 +1489,9 @@ components:
           parentId: 77
           timeZone: ''
           iataCode: null
-          destinationId: 22212
-          destinationType: REGION
           destinationName: Alabama
+          destinationType: REGION
+          destinationId: 22212
           latitude: 32.34
           longitude: -86.26
         - sortOrder: 2
@@ -1414,9 +1502,9 @@ components:
           parentId: 77
           timeZone: America/Anchorage
           iataCode: null
-          destinationId: 270
-          destinationType: REGION
           destinationName: Alaska
+          destinationType: REGION
+          destinationId: 270
           latitude: 63.588753
           longitude: -154.4930619
         - sortOrder: 3
@@ -1427,38 +1515,12 @@ components:
           parentId: 77
           timeZone: America/Phoenix
           iataCode: null
-          destinationId: 271
-          destinationType: REGION
           destinationName: Arizona
+          destinationType: REGION
+          destinationId: 271
           latitude: 34.0489281
           longitude: -111.0937311
-        - sortOrder: 4
-          selectable: true
-          destinationUrlName: Arkansas
-          defaultCurrencyCode: USD
-          lookupId: 8.77.22213
-          parentId: 77
-          timeZone: ''
-          iataCode: null
-          destinationId: 22213
-          destinationType: REGION
-          destinationName: Arkansas
-          latitude: 35.2011
-          longitude: -91.8318
-        - sortOrder: 5
-          selectable: true
-          destinationUrlName: California
-          defaultCurrencyCode: USD
-          lookupId: 8.77.272
-          parentId: 77
-          timeZone: America/Los_Angeles
-          iataCode: null
-          destinationId: 272
-          destinationType: REGION
-          destinationName: California
-          latitude: 36.778261
-          longitude: -119.4179324
-        dateStamp: 2020-04-20T23:56:25+0000
+        dateStamp: 2020-02-06T19:43:09+0000
         errorType: null
         errorCodes: []
         errorMessage: null
@@ -1678,74 +1740,6 @@ components:
           groupUrlName: Cultural-and-Theme-Tours
           id: 4
         dateStamp: 2020-02-06T19:47:58+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331001'
-    taxonomy-destinations-example_2:
-      summary: taxonomy destinations example
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          selectable: false
-          destinationUrlName: USA
-          defaultCurrencyCode: USD
-          lookupId: '8.77'
-          parentId: 8
-          timeZone: America/New_York
-          iataCode: null
-          destinationName: USA
-          destinationType: COUNTRY
-          destinationId: 77
-          latitude: 37.09024
-          longitude: -95.712891
-        - sortOrder: 1
-          selectable: true
-          destinationUrlName: Alabama
-          defaultCurrencyCode: USD
-          lookupId: 8.77.22212
-          parentId: 77
-          timeZone: ''
-          iataCode: null
-          destinationName: Alabama
-          destinationType: REGION
-          destinationId: 22212
-          latitude: 32.34
-          longitude: -86.26
-        - sortOrder: 2
-          selectable: true
-          destinationUrlName: Alaska
-          defaultCurrencyCode: USD
-          lookupId: 8.77.270
-          parentId: 77
-          timeZone: America/Anchorage
-          iataCode: null
-          destinationName: Alaska
-          destinationType: REGION
-          destinationId: 270
-          latitude: 63.588753
-          longitude: -154.4930619
-        - sortOrder: 3
-          selectable: true
-          destinationUrlName: Arizona
-          defaultCurrencyCode: USD
-          lookupId: 8.77.271
-          parentId: 77
-          timeZone: America/Phoenix
-          iataCode: null
-          destinationName: Arizona
-          destinationType: REGION
-          destinationId: 271
-          latitude: 34.0489281
-          longitude: -111.0937311
-        dateStamp: 2020-02-06T19:43:09+0000
         errorType: null
         errorCodes: []
         errorMessage: null
