@@ -306,6 +306,28 @@ paths:
                   $ref: '#/components/examples/util-siteBinaryData-example'
 components:
   examples:
+    util-siteBinaryData-example:
+      summary: /util/siteBinaryData
+      value:
+        errorReference: null
+        data:
+          favicon: null
+          logo: null
+          logoUrl: null
+          headerHtml: null
+          footerHtml: null
+          css: null
+        dateStamp: 2020-04-21T17:20:24+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331001'
     util-guid-example:
       summary: /util/guid
       value:
@@ -1358,28 +1380,6 @@ components:
             countryName: Zimbabwe
             countryId: ZW
         dateStamp: 2020-04-21T17:10:10+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331001'
-    util-siteBinaryData-example:
-      summary: /util/siteBinaryData
-      value:
-        errorReference: null
-        data:
-          favicon: null
-          logo: null
-          logoUrl: null
-          headerHtml: null
-          footerHtml: null
-          css: null
-        dateStamp: 2020-04-21T17:20:24+0000
         errorType: null
         errorCodes: []
         errorMessage: null

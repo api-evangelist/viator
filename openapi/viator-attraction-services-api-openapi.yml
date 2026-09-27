@@ -1030,26 +1030,11 @@ paths:
                   $ref: '#/components/examples/attraction-products-example'
 components:
   schemas:
-    onSale:
-      type: boolean
-      description: '**indicator**: `true` if the product is ''on sale'' and a discount has been applied to the price. When a product is on sale, the `price` and `priceFormatted` fields give the discounted price, `rrp` and `rrpFormatted` give the original price, and `savingAmount`, `savingAmountFormated` give the difference between the discount and original prices. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
-    price:
-      description: '**suggested sell (''from'') price** for this product in the currency set in the `currencyCode` parameter. This is the cheapest sell price, taking into consideration off-peak periods and discounts on larger groups.
+    priceFormatted:
+      type: string
+      description: '**currency-formatted suggested sell (''from'') price** for this product in the currency set in the `currencyCode` parameter
 
         '
-      type: number
-    specialOfferAvailable:
-      type: boolean
-      description: '**indicator**: `true` if a special offer is available for *this* product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
-    bookingEngineId:
-      type: string
-      description: ignore (relevant only to merchant and transactional-affiliate partners)
-    savingAmount:
-      type: integer
-      description: '**numeric price difference** of the price of this product (`price`) while on sale (`onSale` is `true`) compared to the product''s original price (`rrp`). See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
-    rrpFormatted:
-      type: string
-      description: '**currency-formatted original price** for this product if the product is on special / a discount has been applied. Empty string if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
     currencyCode:
       type: string
       description: '**currency code** for the currency to use for pricing fields
@@ -1060,14 +1045,24 @@ components:
 
         '
       example: USD
-    rrp:
+    savingAmount:
       type: integer
-      description: '**numeric original price** for this product if the product is on special / a discount has been applied. `0` if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
-    priceFormatted:
+      description: '**numeric price difference** of the price of this product (`price`) while on sale (`onSale` is `true`) compared to the product''s original price (`rrp`). See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+    topX:
       type: string
-      description: '**currency-formatted suggested sell (''from'') price** for this product in the currency set in the `currencyCode` parameter
+      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+      example: 1-3
+    specialOfferAvailable:
+      type: boolean
+      description: '**indicator**: `true` if a special offer is available for *this* product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+    bookingEngineId:
+      type: string
+      description: ignore (relevant only to merchant and transactional-affiliate partners)
+    price:
+      description: '**suggested sell (''from'') price** for this product in the currency set in the `currencyCode` parameter. This is the cheapest sell price, taking into consideration off-peak periods and discounts on larger groups.
 
         '
+      type: number
     basicErrorModel:
       type: object
       properties:
@@ -1131,18 +1126,284 @@ components:
           type: string
           example: '321050'
           description: '**unique numeric id** of the server that processed *this* request'
+    webURL:
+      type: string
+      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
+    rrp:
+      type: integer
+      description: '**numeric original price** for this product if the product is on special / a discount has been applied. `0` if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+    onSale:
+      type: boolean
+      description: '**indicator**: `true` if the product is ''on sale'' and a discount has been applied to the price. When a product is on sale, the `price` and `priceFormatted` fields give the discounted price, `rrp` and `rrpFormatted` give the original price, and `savingAmount`, `savingAmountFormated` give the difference between the discount and original prices. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
     savingAmountFormated:
       type: string
       description: "\n**currency-formatted price difference** of the price of this product (`price`) while on sale (`onSale` is `true`) compared to the product's original price (`rrp`)\n- if no discount has been applied, the value will be empty \n- Note: There is a typo in the spelling of this field name ('formated')\n- See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.\n"
       example: ''
-    webURL:
+    rrpFormatted:
       type: string
-      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
-    topX:
-      type: string
-      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
-      example: 1-3
+      description: '**currency-formatted original price** for this product if the product is on special / a discount has been applied. Empty string if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
   examples:
+    attraction-reviews-example:
+      summary: /attraction/reviews
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          ownerName: Natalia brigham B
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: null
+          sslSupported: false
+          viatorNotes: null
+          productCode: 5156SHARK
+          submissionDate: '2020-03-16'
+          rating: 1
+          review: <p>Overpriced and very crowded.  There are tons of interesting things to do in Vegas for families with kids but Shark Reef is NOT one of them...</p>
+          publishedDate: '2020-03-16'
+          ownerId: 6500184
+          viatorFeedback: null
+          reviewId: 71781077
+        - sortOrder: 2
+          ownerName: Philip J
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: null
+          sslSupported: false
+          viatorNotes: null
+          productCode: 5156SHARK
+          submissionDate: '2018-04-02'
+          rating: 1
+          review: <p>Took longer to walk from the parking garage than it did to go through it.</p>
+          publishedDate: '2018-04-02'
+          ownerId: 13474719
+          viatorFeedback: null
+          reviewId: 31509091
+        - sortOrder: 3
+          ownerName: Graham J
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: null
+          sslSupported: false
+          viatorNotes: ''
+          productCode: 5156SHARK
+          submissionDate: '2015-03-02'
+          rating: 1
+          review: <p>this was nothing like we expected.....it was a quick tour, not worth the $$</p>
+          publishedDate: '2015-03-03'
+          ownerId: 11252090
+          viatorFeedback: ''
+          reviewId: 11408189
+        dateStamp: 2020-04-20T22:37:31+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 97
+        errorMessageText: null
+        vmid: '331004'
+    search-attractions-example:
+      summary: /search/attractions
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Carroll-Shelby-Museum/d684-a23402?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Carroll-Shelby-Museum
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-03-02'
+          panoramaCount: 0
+          userName: ''
+          keywordCount: 1
+          showReviews: true
+          tabTitle: ''
+          descriptionIntro: ''
+          keywords:
+          - keywordId: 623675
+            keyword: Museum
+          reviewCount: 10
+          seoType: ATTRACTION
+          pageTitle: Carroll Shelby Museum
+          editorsPick: false
+          showPhotos: true
+          descriptionText: ''
+          overviewSummary: <div style="">If you’re into American cars, it doesn’t get much better than Las Vegas’ Shelby Heritage Center, the brainchild of race car driver Carroll Shelby. Shelby American is behind the AC Cobra, and has churned out premier performance versions of Mustangs and other cars. Now fans can check out many of the company’s creations.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Opened in 2014, the Shelby Heritage Center includes the factory, a museum, and a gift shop. Find out more about the specialty car manufacturer’s history and founder, and get up close to many of the cars—including classic Mustangs, the very first Shelby Cobra, and more recent productions. Tours include a visit to the factory, where an area is sectioned off for viewing.&nbsp;</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>The Shelby Heritage Center is a must for car enthusiasts and historians.</li><li>Don’t confuse the Shelby Heritage Center with the Shelby American Collection in Boulder, Colorado—the latter features cars donated by owners and collectors.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">Located adjacent to Interstate 15 in Las Vegas, the Shelby Heritage Center is about 10 minutes away from the Strip by car. Taxis and rideshares are readily available.</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">The center is open daily, and guided tours are offered every day but Sunday. If you’re an early riser, get there Saturday morning for the weekly Cars and Coffee event, featuring breakfast food trucks and giveaways. Spring and fall typically see the most pleasant weather—and the biggest crowds.</div><div style=""><br></div><div style=""><b>Drive a Race Car in Las Vegas</b></div><div style="">If looking at cars isn’t enough, head to the Las Vegas Motor Speedway to learn how to maneuver a Ferrari, a Porsche, or maybe a Lamborghini. Get a lesson in the proper driving position, steering techniques, car specs, and racing lines. Then, take several laps around the track on your own.</div>
+          pagePrimaryLanguage: en
+          attractionLatitude: 36.072175
+          attractionLongitude: -115.179668
+          attractionStreetAddress: 6405 Ensworth St.
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          destinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/321988_Viator_TripAdvisor_UGC_171245.jpg
+          photoCount: 0
+          primaryDestinationId: 684
+          seoId: 23402
+          productCount: 2
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/321988_Viator_TripAdvisor_UGC_171245.jpg
+          rating: 5
+          title: Carroll Shelby Museum
+        - sortOrder: 2
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Shark-Reef-Aquarium-at-Mandalay-Bay/d684-a14235?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Shark-Reef-Aquarium-at-Mandalay-Bay
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-02-27'
+          panoramaCount: 0
+          userName: ''
+          keywordCount: 1
+          showReviews: true
+          tabTitle: Shark Reef
+          descriptionIntro: Shark Reef
+          keywords:
+          - keywordId: 623401
+            keyword: Hotel
+          reviewCount: 97
+          seoType: ATTRACTION
+          pageTitle: Shark Reef Aquarium at Mandalay Bay
+          editorsPick: false
+          showPhotos: true
+          descriptionText: "<p>Inside the Mandalay Bay Hotel and Casino is the Shark Reef Aquarium, showcasing more than 2,000 animals displayed in 14 different exhibits and almost 1.6 million gallons of water.</p><p>\n \nThe Shark Reef Aquarium was designed to be a “total sensory experience,” and part of that is achieved by leading visitors through an acrylic tunnel with water nearly surrounding them. This exhibit alone includes 15 different species of sharks along with all the other sea life in the tank.</p><p>\n \nOther species in the aquarium include golden crocodiles, sea turtles and piranhas, none of which are included in the touching pools where visitors can find out what some of the other sea creatures feel like.</p>"
+          overviewSummary: '<div style="">Get up close and personal with some of the most fearsome creatures of the deep at Mandalay Bay’s Shark Reef Aquarium. Designed to be a total sensory experience—with two underwater tunnels and multiple tanks and exhibits—the aquarium is home to more than 2,000 animals, including many species of sharks.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Wander through a viewing tunnel at the Shark Reef Aquarium’s largest exhibit, a shipwreck surrounded by 1.3 million gallons (4.9 million liters) of water. In addition to sharks, you’ll see salt- and freshwater fish, as well as sea turtles, golden crocodiles, giant rays, and more. The touch pool is a favorite among younger visitors, while certified divers have the opportunity to scuba dive in the tanks.</div><div style=""><br></div><div style="">Admission to the aquarium is included in some multi-attraction Las Vegas sightseeing passes.</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>Most visitors spend around 45 to 60 minutes at the Shark Reef Aquarium.</li><li>An audio guide is available in English and Spanish.</li><li>Guests staying at the Mandalay Bay Resort can watch the Shark Reef channel on TV.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">The Shark Reef Aquarium is located near the South Convention Center in the Mandalay Bay Resort, at the southern end of Las Vegas Boulevard. You can easily get to the resort by car, taxi, shuttle, or the free Excalibur–Luxor–Mandalay Bay tram.&nbsp;</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">The aquarium is open daily, usually with extended hours on weekends and over the summer. Last entry is an hour before closing. There’s no set schedule for animal feedings, but they often take place between 10am and 4pm.</div><div style=""><b><br></b></div><div style=""><b>Aquariums in Las Vegas</b></div><div style="">Las Vegas has more than 10 aquariums, some of which can be found inside casinos. Besides the Shark Reef, check out these other popular aquariums: the Tank at the Golden Nugget, SeaQuest Las Vegas, the Aquarium at the Silverton Hotel, and the Atlantis Aquarium at the Forum Shops at Caesars Palace.</div>'
+          pagePrimaryLanguage: en
+          attractionLatitude: 36.09215
+          attractionLongitude: -115.17665
+          attractionStreetAddress: 3950 Las Vegas Blvd South
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          destinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/563331_Viator_Photographer_394530.jpg
+          photoCount: 14
+          primaryDestinationId: 684
+          seoId: 14235
+          productCount: 1
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/563331_Viator_Photographer_394530.jpg
+          rating: 4.5
+          title: Shark Reef Aquarium at Mandalay Bay
+        - sortOrder: 3
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Welder-Up/d684-a24303?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Welder-Up
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-02-26'
+          panoramaCount: 0
+          userName: ''
+          keywordCount: 1
+          showReviews: true
+          tabTitle: ''
+          descriptionIntro: ''
+          keywords:
+          - keywordId: 623169
+            keyword: Museum
+          reviewCount: 4
+          seoType: ATTRACTION
+          pageTitle: Welder Up
+          editorsPick: false
+          showPhotos: true
+          descriptionText: ''
+          overviewSummary: <div style="">Custom car aficionados, gear heads, and fans of the TV show Vegas <i>Rat Rods</i> will want to visit at Welder Up, the custom-car fabrication garage featured on the show. See where owner Steve Darnell and his crew create their unique turbo-diesel builds, and take a tour of the showroom, which is full of one-of-a-kind vehicles.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Visit the garage on your own, or book a guided behind-the-scenes tour. However you choose to visit, you’ll be able to see Steve Darnell’s personal collection of rat rods and several of the custom builds featured on his TV show. Several Las Vegas sightseeing tours include a stop here, including tours focused on hot rods and those focused on local reality shows filming locations.</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>Entry to the showroom and the shop is free.</li><li>If you want to guarantee that you’ll see Steve Darnell or other members of the show, opt for a guided tour; all tours must be booked in advance.</li><li>Visitors must sign a waiver to enter the shop.</li><li>Some of the vehicles can be extremely loud; it’s a good idea to bring earplugs.</li><li>There’s a gift shop on site.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">The Welder Up shop is located on Highland Drive, west of the Las Vegas Strip. The shop is walking distance from the Wynn Las Vegas, but the easiest way to reach the site is by driving or taking a taxi. You can also see the shop on many guided city tours.</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">Welder Up is open daily, with limited hours on Sundays. Visitors are welcome to spend as much time at the showroom as they like during open hours.</div><div style=""><br></div><div style=""><b>Count’s Kustoms</b></div><div style="">Fans of custom cars may also want to visit Count’s Kustoms, the automobile restoration and customization company owned by Danny Koker, who is the star of<i> Counting Cars </i>and a guest expert on <i>Pawn Stars</i>. His shop is located less than a mile up the road from Welder Up, and visitors can tour the shop for free or take a behind-the-scenes tour.</div>
+          pagePrimaryLanguage: en
+          attractionLatitude: 36.133057
+          attractionLongitude: -115.17419
+          attractionStreetAddress: 3160 South Highland Drive, Suite D
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          destinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/365146_Viator_TripAdvisor_UGC_180066.jpg
+          photoCount: 0
+          primaryDestinationId: 684
+          seoId: 24303
+          productCount: 3
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/365146_Viator_TripAdvisor_UGC_180066.jpg
+          rating: 4.5
+          title: Welder Up
+        dateStamp: 2020-04-20T22:11:05+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 71
+        errorMessageText: null
+        vmid: '331003'
+    attraction-photos-example:
+      summary: attraction/photos
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          ownerName: Viator Insider
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+          sslSupported: false
+          productCode: 5156SHARK
+          timeUploaded: '2017-12-05'
+          caption: Shark Reef Aquarium at Mandalay Bay.
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-133sq.jpg
+          ownerId: 9179657
+          editorsPick: false
+          photoId: 29347647
+          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-1536tall.jpg
+          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-260tall.jpg
+          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-770tall.jpg
+          title: Viator_Photographer_394507.jpg
+        - sortOrder: 2
+          ownerName: Viator Insider
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+          sslSupported: false
+          productCode: 5156SHARK
+          timeUploaded: '2017-12-05'
+          caption: Shark Reef Aquarium at Mandalay Bay.
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-133sq.jpg
+          ownerId: 9179657
+          editorsPick: false
+          photoId: 29347642
+          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-1536tall.jpg
+          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-260tall.jpg
+          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-770tall.jpg
+          title: Viator_Photographer_394530.jpg
+        - sortOrder: 3
+          ownerName: Viator Insider
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+          sslSupported: false
+          productCode: 5156SHARK
+          timeUploaded: '2017-12-05'
+          caption: A stingray swimming around the Shark Reef Aquarium at Mandalay Bay.
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-133sq.jpg
+          ownerId: 9179657
+          editorsPick: false
+          photoId: 29347627
+          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-1536tall.jpg
+          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-260tall.jpg
+          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-770tall.jpg
+          title: Viator_Photographer_394518.jpg
+        dateStamp: 2020-04-20T22:45:36+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 14
+        errorMessageText: null
+        vmid: '331002'
     attraction-example:
       summary: /attraction
       value:
@@ -1895,267 +2156,6 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331003'
-    attraction-photos-example:
-      summary: attraction/photos
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          ownerName: Viator Insider
-          ownerCountry: null
-          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
-          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
-          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
-          sslSupported: false
-          productCode: 5156SHARK
-          timeUploaded: '2017-12-05'
-          caption: Shark Reef Aquarium at Mandalay Bay.
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-133sq.jpg
-          ownerId: 9179657
-          editorsPick: false
-          photoId: 29347647
-          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-1536tall.jpg
-          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-260tall.jpg
-          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-770tall.jpg
-          title: Viator_Photographer_394507.jpg
-        - sortOrder: 2
-          ownerName: Viator Insider
-          ownerCountry: null
-          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
-          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
-          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
-          sslSupported: false
-          productCode: 5156SHARK
-          timeUploaded: '2017-12-05'
-          caption: Shark Reef Aquarium at Mandalay Bay.
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-133sq.jpg
-          ownerId: 9179657
-          editorsPick: false
-          photoId: 29347642
-          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-1536tall.jpg
-          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-260tall.jpg
-          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-770tall.jpg
-          title: Viator_Photographer_394530.jpg
-        - sortOrder: 3
-          ownerName: Viator Insider
-          ownerCountry: null
-          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
-          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
-          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
-          sslSupported: false
-          productCode: 5156SHARK
-          timeUploaded: '2017-12-05'
-          caption: A stingray swimming around the Shark Reef Aquarium at Mandalay Bay.
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-133sq.jpg
-          ownerId: 9179657
-          editorsPick: false
-          photoId: 29347627
-          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-1536tall.jpg
-          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-260tall.jpg
-          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-770tall.jpg
-          title: Viator_Photographer_394518.jpg
-        dateStamp: 2020-04-20T22:45:36+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 14
-        errorMessageText: null
-        vmid: '331002'
-    attraction-reviews-example:
-      summary: /attraction/reviews
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          ownerName: Natalia brigham B
-          ownerCountry: null
-          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
-          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
-          ownerAvatarURL: null
-          sslSupported: false
-          viatorNotes: null
-          productCode: 5156SHARK
-          submissionDate: '2020-03-16'
-          rating: 1
-          review: <p>Overpriced and very crowded.  There are tons of interesting things to do in Vegas for families with kids but Shark Reef is NOT one of them...</p>
-          publishedDate: '2020-03-16'
-          ownerId: 6500184
-          viatorFeedback: null
-          reviewId: 71781077
-        - sortOrder: 2
-          ownerName: Philip J
-          ownerCountry: null
-          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
-          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
-          ownerAvatarURL: null
-          sslSupported: false
-          viatorNotes: null
-          productCode: 5156SHARK
-          submissionDate: '2018-04-02'
-          rating: 1
-          review: <p>Took longer to walk from the parking garage than it did to go through it.</p>
-          publishedDate: '2018-04-02'
-          ownerId: 13474719
-          viatorFeedback: null
-          reviewId: 31509091
-        - sortOrder: 3
-          ownerName: Graham J
-          ownerCountry: null
-          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
-          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
-          ownerAvatarURL: null
-          sslSupported: false
-          viatorNotes: ''
-          productCode: 5156SHARK
-          submissionDate: '2015-03-02'
-          rating: 1
-          review: <p>this was nothing like we expected.....it was a quick tour, not worth the $$</p>
-          publishedDate: '2015-03-03'
-          ownerId: 11252090
-          viatorFeedback: ''
-          reviewId: 11408189
-        dateStamp: 2020-04-20T22:37:31+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 97
-        errorMessageText: null
-        vmid: '331004'
-    search-attractions-example:
-      summary: /search/attractions
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Carroll-Shelby-Museum/d684-a23402?eap=brand-subbrand-17895&aid=vba17895en
-          pageUrlName: Carroll-Shelby-Museum
-          primaryDestinationUrlName: Las-Vegas
-          publishedDate: '2020-03-02'
-          panoramaCount: 0
-          userName: ''
-          keywordCount: 1
-          showReviews: true
-          tabTitle: ''
-          descriptionIntro: ''
-          keywords:
-          - keywordId: 623675
-            keyword: Museum
-          reviewCount: 10
-          seoType: ATTRACTION
-          pageTitle: Carroll Shelby Museum
-          editorsPick: false
-          showPhotos: true
-          descriptionText: ''
-          overviewSummary: <div style="">If you’re into American cars, it doesn’t get much better than Las Vegas’ Shelby Heritage Center, the brainchild of race car driver Carroll Shelby. Shelby American is behind the AC Cobra, and has churned out premier performance versions of Mustangs and other cars. Now fans can check out many of the company’s creations.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Opened in 2014, the Shelby Heritage Center includes the factory, a museum, and a gift shop. Find out more about the specialty car manufacturer’s history and founder, and get up close to many of the cars—including classic Mustangs, the very first Shelby Cobra, and more recent productions. Tours include a visit to the factory, where an area is sectioned off for viewing.&nbsp;</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>The Shelby Heritage Center is a must for car enthusiasts and historians.</li><li>Don’t confuse the Shelby Heritage Center with the Shelby American Collection in Boulder, Colorado—the latter features cars donated by owners and collectors.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">Located adjacent to Interstate 15 in Las Vegas, the Shelby Heritage Center is about 10 minutes away from the Strip by car. Taxis and rideshares are readily available.</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">The center is open daily, and guided tours are offered every day but Sunday. If you’re an early riser, get there Saturday morning for the weekly Cars and Coffee event, featuring breakfast food trucks and giveaways. Spring and fall typically see the most pleasant weather—and the biggest crowds.</div><div style=""><br></div><div style=""><b>Drive a Race Car in Las Vegas</b></div><div style="">If looking at cars isn’t enough, head to the Las Vegas Motor Speedway to learn how to maneuver a Ferrari, a Porsche, or maybe a Lamborghini. Get a lesson in the proper driving position, steering techniques, car specs, and racing lines. Then, take several laps around the track on your own.</div>
-          pagePrimaryLanguage: en
-          attractionLatitude: 36.072175
-          attractionLongitude: -115.179668
-          attractionStreetAddress: 6405 Ensworth St.
-          attractionCity: Las Vegas
-          attractionState: Nevada
-          destinationId: 684
-          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/321988_Viator_TripAdvisor_UGC_171245.jpg
-          photoCount: 0
-          primaryDestinationId: 684
-          seoId: 23402
-          productCount: 2
-          primaryDestinationName: Las Vegas
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/321988_Viator_TripAdvisor_UGC_171245.jpg
-          rating: 5
-          title: Carroll Shelby Museum
-        - sortOrder: 2
-          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Shark-Reef-Aquarium-at-Mandalay-Bay/d684-a14235?eap=brand-subbrand-17895&aid=vba17895en
-          pageUrlName: Shark-Reef-Aquarium-at-Mandalay-Bay
-          primaryDestinationUrlName: Las-Vegas
-          publishedDate: '2020-02-27'
-          panoramaCount: 0
-          userName: ''
-          keywordCount: 1
-          showReviews: true
-          tabTitle: Shark Reef
-          descriptionIntro: Shark Reef
-          keywords:
-          - keywordId: 623401
-            keyword: Hotel
-          reviewCount: 97
-          seoType: ATTRACTION
-          pageTitle: Shark Reef Aquarium at Mandalay Bay
-          editorsPick: false
-          showPhotos: true
-          descriptionText: "<p>Inside the Mandalay Bay Hotel and Casino is the Shark Reef Aquarium, showcasing more than 2,000 animals displayed in 14 different exhibits and almost 1.6 million gallons of water.</p><p>\n \nThe Shark Reef Aquarium was designed to be a “total sensory experience,” and part of that is achieved by leading visitors through an acrylic tunnel with water nearly surrounding them. This exhibit alone includes 15 different species of sharks along with all the other sea life in the tank.</p><p>\n \nOther species in the aquarium include golden crocodiles, sea turtles and piranhas, none of which are included in the touching pools where visitors can find out what some of the other sea creatures feel like.</p>"
-          overviewSummary: '<div style="">Get up close and personal with some of the most fearsome creatures of the deep at Mandalay Bay’s Shark Reef Aquarium. Designed to be a total sensory experience—with two underwater tunnels and multiple tanks and exhibits—the aquarium is home to more than 2,000 animals, including many species of sharks.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Wander through a viewing tunnel at the Shark Reef Aquarium’s largest exhibit, a shipwreck surrounded by 1.3 million gallons (4.9 million liters) of water. In addition to sharks, you’ll see salt- and freshwater fish, as well as sea turtles, golden crocodiles, giant rays, and more. The touch pool is a favorite among younger visitors, while certified divers have the opportunity to scuba dive in the tanks.</div><div style=""><br></div><div style="">Admission to the aquarium is included in some multi-attraction Las Vegas sightseeing passes.</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>Most visitors spend around 45 to 60 minutes at the Shark Reef Aquarium.</li><li>An audio guide is available in English and Spanish.</li><li>Guests staying at the Mandalay Bay Resort can watch the Shark Reef channel on TV.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">The Shark Reef Aquarium is located near the South Convention Center in the Mandalay Bay Resort, at the southern end of Las Vegas Boulevard. You can easily get to the resort by car, taxi, shuttle, or the free Excalibur–Luxor–Mandalay Bay tram.&nbsp;</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">The aquarium is open daily, usually with extended hours on weekends and over the summer. Last entry is an hour before closing. There’s no set schedule for animal feedings, but they often take place between 10am and 4pm.</div><div style=""><b><br></b></div><div style=""><b>Aquariums in Las Vegas</b></div><div style="">Las Vegas has more than 10 aquariums, some of which can be found inside casinos. Besides the Shark Reef, check out these other popular aquariums: the Tank at the Golden Nugget, SeaQuest Las Vegas, the Aquarium at the Silverton Hotel, and the Atlantis Aquarium at the Forum Shops at Caesars Palace.</div>'
-          pagePrimaryLanguage: en
-          attractionLatitude: 36.09215
-          attractionLongitude: -115.17665
-          attractionStreetAddress: 3950 Las Vegas Blvd South
-          attractionCity: Las Vegas
-          attractionState: Nevada
-          destinationId: 684
-          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/563331_Viator_Photographer_394530.jpg
-          photoCount: 14
-          primaryDestinationId: 684
-          seoId: 14235
-          productCount: 1
-          primaryDestinationName: Las Vegas
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/563331_Viator_Photographer_394530.jpg
-          rating: 4.5
-          title: Shark Reef Aquarium at Mandalay Bay
-        - sortOrder: 3
-          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Welder-Up/d684-a24303?eap=brand-subbrand-17895&aid=vba17895en
-          pageUrlName: Welder-Up
-          primaryDestinationUrlName: Las-Vegas
-          publishedDate: '2020-02-26'
-          panoramaCount: 0
-          userName: ''
-          keywordCount: 1
-          showReviews: true
-          tabTitle: ''
-          descriptionIntro: ''
-          keywords:
-          - keywordId: 623169
-            keyword: Museum
-          reviewCount: 4
-          seoType: ATTRACTION
-          pageTitle: Welder Up
-          editorsPick: false
-          showPhotos: true
-          descriptionText: ''
-          overviewSummary: <div style="">Custom car aficionados, gear heads, and fans of the TV show Vegas <i>Rat Rods</i> will want to visit at Welder Up, the custom-car fabrication garage featured on the show. See where owner Steve Darnell and his crew create their unique turbo-diesel builds, and take a tour of the showroom, which is full of one-of-a-kind vehicles.</div><div style=""><br></div><div style=""><b>The Basics</b></div><div style="">Visit the garage on your own, or book a guided behind-the-scenes tour. However you choose to visit, you’ll be able to see Steve Darnell’s personal collection of rat rods and several of the custom builds featured on his TV show. Several Las Vegas sightseeing tours include a stop here, including tours focused on hot rods and those focused on local reality shows filming locations.</div><div style=""><br></div><div style=""><b>Things to Know Before You Go</b></div><div style=""><ul><li>Entry to the showroom and the shop is free.</li><li>If you want to guarantee that you’ll see Steve Darnell or other members of the show, opt for a guided tour; all tours must be booked in advance.</li><li>Visitors must sign a waiver to enter the shop.</li><li>Some of the vehicles can be extremely loud; it’s a good idea to bring earplugs.</li><li>There’s a gift shop on site.</li></ul></div><div style=""><br></div><div style=""><b>How to Get There</b></div><div style="">The Welder Up shop is located on Highland Drive, west of the Las Vegas Strip. The shop is walking distance from the Wynn Las Vegas, but the easiest way to reach the site is by driving or taking a taxi. You can also see the shop on many guided city tours.</div><div style=""><br></div><div style=""><b>When to Get There</b></div><div style="">Welder Up is open daily, with limited hours on Sundays. Visitors are welcome to spend as much time at the showroom as they like during open hours.</div><div style=""><br></div><div style=""><b>Count’s Kustoms</b></div><div style="">Fans of custom cars may also want to visit Count’s Kustoms, the automobile restoration and customization company owned by Danny Koker, who is the star of<i> Counting Cars </i>and a guest expert on <i>Pawn Stars</i>. His shop is located less than a mile up the road from Welder Up, and visitors can tour the shop for free or take a behind-the-scenes tour.</div>
-          pagePrimaryLanguage: en
-          attractionLatitude: 36.133057
-          attractionLongitude: -115.17419
-          attractionStreetAddress: 3160 South Highland Drive, Suite D
-          attractionCity: Las Vegas
-          attractionState: Nevada
-          destinationId: 684
-          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/365146_Viator_TripAdvisor_UGC_180066.jpg
-          photoCount: 0
-          primaryDestinationId: 684
-          seoId: 24303
-          productCount: 3
-          primaryDestinationName: Las Vegas
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/365146_Viator_TripAdvisor_UGC_180066.jpg
-          rating: 4.5
-          title: Welder Up
-        dateStamp: 2020-04-20T22:11:05+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 71
-        errorMessageText: null
-        vmid: '331003'
     attraction-products-example:
       summary: /attraction/products
       value:
@@ -2219,6 +2219,13 @@ components:
         errorMessageText: null
         vmid: '331002'
   parameters:
+    topX:
+      name: topX
+      in: query
+      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+      schema:
+        type: string
+      example: 1-3
     acceptLanguage:
       in: header
       name: Accept-Language
@@ -2228,13 +2235,6 @@ components:
       required: true
       schema:
         type: string
-    topX:
-      name: topX
-      in: query
-      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
-      schema:
-        type: string
-      example: 1-3
   securitySchemes:
     Legacy-API-key:
       type: apiKey

@@ -171,526 +171,7 @@ paths:
         '503':
           $ref: '#/components/responses/ServiceUnavailable'
 components:
-  headers:
-    RateLimit-Reset:
-      required: true
-      schema:
-        type: string
-        description: 'The fixed window in time, in seconds, which represents when a limit is fully replenished. For informational purposes only.
-
-          '
-    XUniqueId:
-      required: true
-      schema:
-        type: string
-        description: 'Tracking identifier for this response. Please include the value of this field when making help requests.
-
-          - **Example**: `"0A871A13:DE2A_0A8712F9:01BB_5DCCC98C_260DAA:0D5B"`
-
-          '
-    RateLimit-Remaining:
-      required: true
-      schema:
-        type: string
-        description: 'Remaining requests for this endpoint for a given window. For informational purposes only
-
-          '
-    Retry-After:
-      required: true
-      schema:
-        type: string
-        description: 'The fixed window in time, in seconds, which represents when a limit is fully replenished. For informational purposes only.
-
-          '
-    RateLimit-Limit:
-      required: true
-      schema:
-        type: string
-        description: 'Total limit of requests for this endpoint for a given window. For informational purposes only.
-
-          '
-  responses:
-    Forbidden:
-      description: Forbidden
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"FORBIDDEN"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Request is forbidden"`
-
-                    '
-              example:
-                code: FORBIDDEN
-                message: Request is forbidden
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    MethodNotAllowed:
-      description: HTTP Method Not Allowed
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"METHOD_NOT_ALLOWED"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"HTTP 405 Method Not Allowed"`
-
-                    '
-            - type: object
-              example:
-                code: METHOD_NOT_ALLOWED
-                message: HTTP 405 Method Not Allowed
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    TooManyRequests:
-      description: Too Many Requests
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"TOO_MANY_REQUESTS"`
-
-
-                    See [Workflows - Rate limiting](#section/Workflows/Rate-limiting) for more information about this error.
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Too many requests, please try again"`
-
-                    '
-            - type: object
-              example:
-                code: TOO_MANY_REQUESTS
-                message: Too many requests
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    InternalServerError:
-      description: Internal Server Error
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"INTERNAL_SERVER_ERROR"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Internal server error"`
-
-                    '
-            - type: object
-              example:
-                code: INTERNAL_SERVER_ERROR
-                message: Internal Server Error
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    ServiceUnavailable:
-      description: Service Unavailable
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"SERVICE_UNAVAILABLE"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Service unavailable"`
-
-                    '
-            - type: object
-              example:
-                code: SERVICE_UNAVAILABLE
-                message: Service Unavailable
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    BadRequest:
-      description: Bad Request
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"BAD_REQUEST"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Invalid request"`
-
-                    '
-            - type: object
-              example:
-                code: BAD_REQUEST
-                message: Invalid request
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    NotFound:
-      description: Not Found
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"NOT_FOUND"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"The specified resource was not found"`
-
-                    '
-            - type: object
-              example:
-                code: NOT_FOUND
-                message: The specified resource was not found
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    Unauthorized:
-      description: Unauthorized
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"UNAUTHORIZED"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Invalid API Key"`
-
-                    '
-            - type: object
-              example:
-                code: UNAUTHORIZED
-                message: Invalid API Key
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    NotAcceptable:
-      description: Not Acceptable
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"NOT_ACCEPTABLE"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Not acceptable"`
-
-                    '
-            - type: object
-              example:
-                code: NOT_ACCEPTABLE
-                message: Not acceptable
-                timestamp: '2019-09-17T03:20:45.737043Z'
   schemas:
-    LocationCenter:
-      type: object
-      description: Geographic coordinates (latitude/longitude) for this location
-      properties:
-        latitude:
-          type: number
-          description: "Latitude of this location\n\n  - **Example**: `-33.870037`\n"
-        longitude:
-          type: number
-          description: "Longitude of this location\n\n  - **Example**: `151.20955`\n"
-    TranslationDetails:
-      type: object
-      description: Information about whether the text in this response was machine-translated
-      required:
-      - containsMachineTranslatedText
-      - translationSource
-      properties:
-        containsMachineTranslatedText:
-          type: boolean
-          description: Indicates whether this product description utilizes text in any of its natural language fields that was automatically machine-translated with no human oversight
-        translationSource:
-          type: string
-          description: "One of:\n- `\"MACHINE\"` – The text provided by the supplier is in a **different language** and has been **automatically translated** by our systems with no human oversight.\n- `\"ORIGINAL\"` – The text provided by the supplier is in the language that is standard for their locale.\n- `\"MANUAL\"` – The text provided by the supplier was in a different language to the standard for their locale; however, whether this is a direct translation of the original text (performed either by machine or human) or whether it is a customised description for speakers of this language is not known. \n"
-        translationAttribution:
-          type: string
-          description: "Value specifying the machine-translation service vendor. At present, translation attribution is not a requirement.\n\n  - **Example**: `\"GOOGLE\"`\n"
-    AttractionsSearchRequest:
-      type: object
-      required:
-      - destinationId
-      properties:
-        destinationId:
-          type: integer
-          description: 'Unique numeric identifier of the destination to retrieve attractions for
-
-            '
-        sorting:
-          type: object
-          description: How the search results will be sorted
-          properties:
-            sort:
-              type: string
-              default: DEFAULT
-              description: 'Method by which attraction results will be sorted; one of:
-
-
-                - `"DEFAULT"`: the default sort, where ''featured'' attractions appear first (Note: What Viator gets paid impacts this sort order).
-
-                - `"ALPHABETICAL"`: attractions are sorted by alphabetical ascending order
-
-                - `"REVIEW_AVG_RATING"`: attractions are sorted by reviews average rating descending order
-
-                '
-        pagination:
-          type: object
-          description: Pagination details specifying which search results to return based on start position and item count
-          properties:
-            start:
-              type: integer
-              default: 1
-              minimum: 1
-              description: 'Position of first filtered and ordered search result to be included in the response (1-based)
-
-                '
-            count:
-              type: integer
-              default: 30
-              maximum: 30
-              minimum: 1
-              description: 'Number of filtered and ordered search results to be returned in the response
-
-                '
-    ProductReviewsSummarySource:
-      type: object
-      required:
-      - provider
-      - totalCount
-      properties:
-        provider:
-          type: string
-          description: 'Provider for this set of reviews; one of:
-
-            - `"VIATOR"`
-
-            - `"TRIPADVISOR"`
-
-            '
-        reviewCounts:
-          type: array
-          description: Breakdown of number of reviews per rating for reviews sourced from this provider
-          items:
-            $ref: '#/components/schemas/ProductReviewsSummaryCount'
-        totalCount:
-          type: integer
-          format: int64
-          description: Total number of reviews for this product sourced from this provider
-    ImageVariant:
-      type: object
-      required:
-      - height
-      - width
-      - url
-      properties:
-        height:
-          type: integer
-          description: "Height of this image in pixels\n\n  - Example: `'480'`\n"
-        width:
-          type: integer
-          description: 'Width of this image in pixels
-
-            - Example `''720''`
-
-            '
-        url:
-          type: string
-          pattern: (?s).*[\S].*
-          description: 'URL from which this image can be retrieved.
-
-            '
-    ProductReviewsSummaryCount:
-      type: object
-      required:
-      - rating
-      - count
-      properties:
-        rating:
-          type: number
-          description: This object refers to reviews with this star-rating
-          format: float
-        count:
-          type: integer
-          description: Number of reviews for this product with a star-rating of `rating`
-          format: int64
     AttractionDetails:
       type: object
       required:
@@ -804,17 +285,92 @@ components:
             postcode:
               type: string
               description: Postcode in which the attraction is located
-    AttractionsSearchResponse:
+    AttractionsSearchRequest:
       type: object
+      required:
+      - destinationId
       properties:
-        attractions:
+        destinationId:
+          type: integer
+          description: 'Unique numeric identifier of the destination to retrieve attractions for
+
+            '
+        sorting:
+          type: object
+          description: How the search results will be sorted
+          properties:
+            sort:
+              type: string
+              default: DEFAULT
+              description: 'Method by which attraction results will be sorted; one of:
+
+
+                - `"DEFAULT"`: the default sort, where ''featured'' attractions appear first (Note: What Viator gets paid impacts this sort order).
+
+                - `"ALPHABETICAL"`: attractions are sorted by alphabetical ascending order
+
+                - `"REVIEW_AVG_RATING"`: attractions are sorted by reviews average rating descending order
+
+                '
+        pagination:
+          type: object
+          description: Pagination details specifying which search results to return based on start position and item count
+          properties:
+            start:
+              type: integer
+              default: 1
+              minimum: 1
+              description: 'Position of first filtered and ordered search result to be included in the response (1-based)
+
+                '
+            count:
+              type: integer
+              default: 30
+              maximum: 30
+              minimum: 1
+              description: 'Number of filtered and ordered search results to be returned in the response
+
+                '
+    ProductReviewsSummarySource:
+      type: object
+      required:
+      - provider
+      - totalCount
+      properties:
+        provider:
+          type: string
+          description: 'Provider for this set of reviews; one of:
+
+            - `"VIATOR"`
+
+            - `"TRIPADVISOR"`
+
+            '
+        reviewCounts:
           type: array
+          description: Breakdown of number of reviews per rating for reviews sourced from this provider
           items:
-            $ref: '#/components/schemas/AttractionDetails'
+            $ref: '#/components/schemas/ProductReviewsSummaryCount'
         totalCount:
           type: integer
-          format: int32
-          description: Total number of products matching the filtering criteria – these may be accessed via multiple calls to this service using the pagination feature
+          format: int64
+          description: Total number of reviews for this product sourced from this provider
+    TranslationDetails:
+      type: object
+      description: Information about whether the text in this response was machine-translated
+      required:
+      - containsMachineTranslatedText
+      - translationSource
+      properties:
+        containsMachineTranslatedText:
+          type: boolean
+          description: Indicates whether this product description utilizes text in any of its natural language fields that was automatically machine-translated with no human oversight
+        translationSource:
+          type: string
+          description: "One of:\n- `\"MACHINE\"` – The text provided by the supplier is in a **different language** and has been **automatically translated** by our systems with no human oversight.\n- `\"ORIGINAL\"` – The text provided by the supplier is in the language that is standard for their locale.\n- `\"MANUAL\"` – The text provided by the supplier was in a different language to the standard for their locale; however, whether this is a direct translation of the original text (performed either by machine or human) or whether it is a customised description for speakers of this language is not known. \n"
+        translationAttribution:
+          type: string
+          description: "Value specifying the machine-translation service vendor. At present, translation attribution is not a requirement.\n\n  - **Example**: `\"GOOGLE\"`\n"
     ErrorResponse:
       type: object
       properties:
@@ -829,6 +385,16 @@ components:
         trackingId:
           type: string
           description: "Tracking identifier for this error response. \n\n**Example**: `\"0A871A13:DE2A_0A8712F9:01BB_5DCCC98C_260DAA:0D5B\"`\n"
+    LocationCenter:
+      type: object
+      description: Geographic coordinates (latitude/longitude) for this location
+      properties:
+        latitude:
+          type: number
+          description: "Latitude of this location\n\n  - **Example**: `-33.870037`\n"
+        longitude:
+          type: number
+          description: "Longitude of this location\n\n  - **Example**: `151.20955`\n"
     ProductReviewsSummary:
       type: object
       description: "Summary of reviews and ratings for this attraction\n\n**Note**:\n  - Review data is updated daily; i.e., all reviews received on a day will be added and averages re-calculated in a single event.\n  - Viator performs checks on reviews - for more information, see [Review authenticity](#section/Key-concepts/Review-authenticity)\n"
@@ -853,6 +419,440 @@ components:
           description: Combined average rating for this product across all reviews from all sources
           type: number
           format: float
+    ProductReviewsSummaryCount:
+      type: object
+      required:
+      - rating
+      - count
+      properties:
+        rating:
+          type: number
+          description: This object refers to reviews with this star-rating
+          format: float
+        count:
+          type: integer
+          description: Number of reviews for this product with a star-rating of `rating`
+          format: int64
+    AttractionsSearchResponse:
+      type: object
+      properties:
+        attractions:
+          type: array
+          items:
+            $ref: '#/components/schemas/AttractionDetails'
+        totalCount:
+          type: integer
+          format: int32
+          description: Total number of products matching the filtering criteria – these may be accessed via multiple calls to this service using the pagination feature
+    ImageVariant:
+      type: object
+      required:
+      - height
+      - width
+      - url
+      properties:
+        height:
+          type: integer
+          description: "Height of this image in pixels\n\n  - Example: `'480'`\n"
+        width:
+          type: integer
+          description: 'Width of this image in pixels
+
+            - Example `''720''`
+
+            '
+        url:
+          type: string
+          pattern: (?s).*[\S].*
+          description: 'URL from which this image can be retrieved.
+
+            '
+  responses:
+    NotFound:
+      description: Not Found
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"NOT_FOUND"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"The specified resource was not found"`
+
+                    '
+            - type: object
+              example:
+                code: NOT_FOUND
+                message: The specified resource was not found
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    InternalServerError:
+      description: Internal Server Error
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"INTERNAL_SERVER_ERROR"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Internal server error"`
+
+                    '
+            - type: object
+              example:
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    Unauthorized:
+      description: Unauthorized
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"UNAUTHORIZED"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Invalid API Key"`
+
+                    '
+            - type: object
+              example:
+                code: UNAUTHORIZED
+                message: Invalid API Key
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    MethodNotAllowed:
+      description: HTTP Method Not Allowed
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"METHOD_NOT_ALLOWED"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"HTTP 405 Method Not Allowed"`
+
+                    '
+            - type: object
+              example:
+                code: METHOD_NOT_ALLOWED
+                message: HTTP 405 Method Not Allowed
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    TooManyRequests:
+      description: Too Many Requests
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"TOO_MANY_REQUESTS"`
+
+
+                    See [Workflows - Rate limiting](#section/Workflows/Rate-limiting) for more information about this error.
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Too many requests, please try again"`
+
+                    '
+            - type: object
+              example:
+                code: TOO_MANY_REQUESTS
+                message: Too many requests
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    ServiceUnavailable:
+      description: Service Unavailable
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"SERVICE_UNAVAILABLE"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Service unavailable"`
+
+                    '
+            - type: object
+              example:
+                code: SERVICE_UNAVAILABLE
+                message: Service Unavailable
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    BadRequest:
+      description: Bad Request
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"BAD_REQUEST"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Invalid request"`
+
+                    '
+            - type: object
+              example:
+                code: BAD_REQUEST
+                message: Invalid request
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    NotAcceptable:
+      description: Not Acceptable
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"NOT_ACCEPTABLE"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Not acceptable"`
+
+                    '
+            - type: object
+              example:
+                code: NOT_ACCEPTABLE
+                message: Not acceptable
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    Forbidden:
+      description: Forbidden
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"FORBIDDEN"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Request is forbidden"`
+
+                    '
+              example:
+                code: FORBIDDEN
+                message: Request is forbidden
+                timestamp: '2019-09-17T03:20:45.737043Z'
+  headers:
+    RateLimit-Remaining:
+      required: true
+      schema:
+        type: string
+        description: 'Remaining requests for this endpoint for a given window. For informational purposes only
+
+          '
+    RateLimit-Limit:
+      required: true
+      schema:
+        type: string
+        description: 'Total limit of requests for this endpoint for a given window. For informational purposes only.
+
+          '
+    Retry-After:
+      required: true
+      schema:
+        type: string
+        description: 'The fixed window in time, in seconds, which represents when a limit is fully replenished. For informational purposes only.
+
+          '
+    XUniqueId:
+      required: true
+      schema:
+        type: string
+        description: 'Tracking identifier for this response. Please include the value of this field when making help requests.
+
+          - **Example**: `"0A871A13:DE2A_0A8712F9:01BB_5DCCC98C_260DAA:0D5B"`
+
+          '
+    RateLimit-Reset:
+      required: true
+      schema:
+        type: string
+        description: 'The fixed window in time, in seconds, which represents when a limit is fully replenished. For informational purposes only.
+
+          '
   parameters:
     accept:
       in: header

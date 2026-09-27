@@ -313,9 +313,6 @@ components:
       type: string
       description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
       example: 1-3
-    defaultCurrencyCode:
-      type: string
-      description: Default currency code
     basicErrorModel:
       type: object
       properties:
@@ -379,9 +376,6 @@ components:
           type: string
           example: '321050'
           description: '**unique numeric id** of the server that processed *this* request'
-    webURL:
-      type: string
-      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
     iataCode:
       type: string
       description: '**IATA airport code** for the destination
@@ -409,6 +403,12 @@ components:
         - `''CITY''`: destination is a city
 
         '
+    defaultCurrencyCode:
+      type: string
+      description: Default currency code
+    webURL:
+      type: string
+      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
     topX_2:
       type: string
       description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n\n**Note**: \n- the maximum number of rows per request is 100; therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
@@ -491,11 +491,6 @@ components:
           - string
           - 'null'
           description: '**unique numeric id** of the server that processed *this* request'
-    webURL_2:
-      type:
-      - string
-      - 'null'
-      description: ignore (Viator only)
     iataCode_2:
       type:
       - string
@@ -524,6 +519,11 @@ components:
         - `"CITY"`: destination is a city
 
         '
+    webURL_2:
+      type:
+      - string
+      - 'null'
+      description: ignore (Viator only)
   examples:
     taxonomy-destinations-example:
       summary: /taxonomy/destinations
@@ -617,82 +617,6 @@ components:
         extraObject: null
         success: true
         totalCount: 1
-        errorMessageText: null
-        vmid: '331001'
-    taxonomy-attractions-example:
-      summary: /taxonomy/attractions
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Carroll-Shelby-Museum/d684-a23402?eap=brand-subbrand-17895&aid=vba17895en
-          pageUrlName: Carroll-Shelby-Museum
-          primaryDestinationUrlName: Las-Vegas
-          publishedDate: '2020-03-02'
-          destinationId: 684
-          seoId: 23402
-          productCount: 2
-          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/321988_Viator_TripAdvisor_UGC_171245.jpg
-          primaryDestinationName: Las Vegas
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/321988_Viator_TripAdvisor_UGC_171245.jpg
-          photoCount: 0
-          primaryDestinationId: 684
-          rating: 5
-          attractionLatitude: 36.072175
-          attractionLongitude: -115.179668
-          attractionStreetAddress: 6405 Ensworth St.
-          attractionCity: Las Vegas
-          attractionState: Nevada
-          title: Carroll Shelby Museum
-        - sortOrder: 2
-          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Shark-Reef-Aquarium-at-Mandalay-Bay/d684-a14235?eap=brand-subbrand-17895&aid=vba17895en
-          pageUrlName: Shark-Reef-Aquarium-at-Mandalay-Bay
-          primaryDestinationUrlName: Las-Vegas
-          publishedDate: '2020-02-27'
-          destinationId: 684
-          seoId: 14235
-          productCount: 1
-          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/563331_Viator_Photographer_394530.jpg
-          primaryDestinationName: Las Vegas
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/563331_Viator_Photographer_394530.jpg
-          photoCount: 14
-          primaryDestinationId: 684
-          rating: 4.5
-          attractionLatitude: 36.09215
-          attractionLongitude: -115.17665
-          attractionStreetAddress: 3950 Las Vegas Blvd South
-          attractionCity: Las Vegas
-          attractionState: Nevada
-          title: Shark Reef Aquarium at Mandalay Bay
-        - sortOrder: 3
-          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Welder-Up/d684-a24303?eap=brand-subbrand-17895&aid=vba17895en
-          pageUrlName: Welder-Up
-          primaryDestinationUrlName: Las-Vegas
-          publishedDate: '2020-02-26'
-          destinationId: 684
-          seoId: 24303
-          productCount: 3
-          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/365146_Viator_TripAdvisor_UGC_180066.jpg
-          primaryDestinationName: Las Vegas
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/365146_Viator_TripAdvisor_UGC_180066.jpg
-          photoCount: 0
-          primaryDestinationId: 684
-          rating: 4.5
-          attractionLatitude: 36.133057
-          attractionLongitude: -115.17419
-          attractionStreetAddress: 3160 South Highland Drive, Suite D
-          attractionCity: Las Vegas
-          attractionState: Nevada
-          title: Welder Up
-        dateStamp: 2020-04-20T23:46:09+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 71
         errorMessageText: null
         vmid: '331001'
     taxonomy-categories-example:
@@ -1463,6 +1387,82 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331004'
+    taxonomy-attractions-example:
+      summary: /taxonomy/attractions
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Carroll-Shelby-Museum/d684-a23402?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Carroll-Shelby-Museum
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-03-02'
+          destinationId: 684
+          seoId: 23402
+          productCount: 2
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/321988_Viator_TripAdvisor_UGC_171245.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/321988_Viator_TripAdvisor_UGC_171245.jpg
+          photoCount: 0
+          primaryDestinationId: 684
+          rating: 5
+          attractionLatitude: 36.072175
+          attractionLongitude: -115.179668
+          attractionStreetAddress: 6405 Ensworth St.
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          title: Carroll Shelby Museum
+        - sortOrder: 2
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Shark-Reef-Aquarium-at-Mandalay-Bay/d684-a14235?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Shark-Reef-Aquarium-at-Mandalay-Bay
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-02-27'
+          destinationId: 684
+          seoId: 14235
+          productCount: 1
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/563331_Viator_Photographer_394530.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/563331_Viator_Photographer_394530.jpg
+          photoCount: 14
+          primaryDestinationId: 684
+          rating: 4.5
+          attractionLatitude: 36.09215
+          attractionLongitude: -115.17665
+          attractionStreetAddress: 3950 Las Vegas Blvd South
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          title: Shark Reef Aquarium at Mandalay Bay
+        - sortOrder: 3
+          webURL: http://shop.live.rc.viator.com/Las-Vegas-attractions/Welder-Up/d684-a24303?eap=brand-subbrand-17895&aid=vba17895en
+          pageUrlName: Welder-Up
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-02-26'
+          destinationId: 684
+          seoId: 24303
+          productCount: 3
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/365146_Viator_TripAdvisor_UGC_180066.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/365146_Viator_TripAdvisor_UGC_180066.jpg
+          photoCount: 0
+          primaryDestinationId: 684
+          rating: 4.5
+          attractionLatitude: 36.133057
+          attractionLongitude: -115.17419
+          attractionStreetAddress: 3160 South Highland Drive, Suite D
+          attractionCity: Las Vegas
+          attractionState: Nevada
+          title: Welder Up
+        dateStamp: 2020-04-20T23:46:09+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 71
+        errorMessageText: null
+        vmid: '331001'
     taxonomy-destinations-example_2:
       summary: taxonomy destinations example
       value:
@@ -1531,82 +1531,6 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331001'
-    taxonomy-attractions-example_2:
-      summary: taxonomy attractions example
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          webURL: null
-          pageUrlName: Grand-Canyon-West-Rim
-          primaryDestinationUrlName: Las-Vegas
-          publishedDate: '2020-01-15'
-          attractionLatitude: 35.8808
-          attractionLongitude: -113.97048
-          attractionStreetAddress: ''
-          attractionCity: ''
-          attractionState: ''
-          destinationId: 684
-          photoCount: 157
-          primaryDestinationId: 684
-          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/44811_GrandCanyon_WestRim_d815-24.jpg
-          primaryDestinationName: Las Vegas
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/44811_GrandCanyon_WestRim_d815-24.jpg
-          seoId: 1594
-          productCount: 16
-          rating: 4.5
-          title: Grand Canyon West Rim
-        - sortOrder: 2
-          webURL: null
-          pageUrlName: Graceland-Wedding-Chapel
-          primaryDestinationUrlName: Las-Vegas
-          publishedDate: '2019-08-22'
-          attractionLatitude: 36.162683
-          attractionLongitude: -115.144685
-          attractionStreetAddress: 619 Las Vegas Boulevard South
-          attractionCity: Las Vegas
-          attractionState: ''
-          destinationId: 684
-          photoCount: 10
-          primaryDestinationId: 684
-          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/785937_Viator_Photographer_395090.jpg
-          primaryDestinationName: Las Vegas
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/785937_Viator_Photographer_395090.jpg
-          seoId: 1246
-          productCount: 2
-          rating: 4.5
-          title: Graceland Wedding Chapel
-        - sortOrder: 3
-          webURL: null
-          pageUrlName: Wynn-Las-Vegas
-          primaryDestinationUrlName: Las-Vegas
-          publishedDate: '2019-07-30'
-          attractionLatitude: 36.126374
-          attractionLongitude: -115.166749
-          attractionStreetAddress: 3131 Las Vegas Blvd South
-          attractionCity: Las Vegas
-          attractionState: ''
-          destinationId: 684
-          photoCount: 5
-          primaryDestinationId: 684
-          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/100516_Las%20Vegas_Wynn%20Hotel%20&%20Casino_d684-508.jpg
-          primaryDestinationName: Las Vegas
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/100516_Las%20Vegas_Wynn%20Hotel%20&%20Casino_d684-508.jpg
-          seoId: 1266
-          productCount: 2
-          rating: 0
-          title: Wynn Las Vegas
-        dateStamp: 2020-02-06T19:55:25+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 72
-        errorMessageText: null
-        vmid: '331004'
     taxonomy-categories-example_2:
       summary: taxonomy categories example
       value:
@@ -1750,6 +1674,82 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331001'
+    taxonomy-attractions-example_2:
+      summary: taxonomy attractions example
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          webURL: null
+          pageUrlName: Grand-Canyon-West-Rim
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2020-01-15'
+          attractionLatitude: 35.8808
+          attractionLongitude: -113.97048
+          attractionStreetAddress: ''
+          attractionCity: ''
+          attractionState: ''
+          destinationId: 684
+          photoCount: 157
+          primaryDestinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/44811_GrandCanyon_WestRim_d815-24.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/44811_GrandCanyon_WestRim_d815-24.jpg
+          seoId: 1594
+          productCount: 16
+          rating: 4.5
+          title: Grand Canyon West Rim
+        - sortOrder: 2
+          webURL: null
+          pageUrlName: Graceland-Wedding-Chapel
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2019-08-22'
+          attractionLatitude: 36.162683
+          attractionLongitude: -115.144685
+          attractionStreetAddress: 619 Las Vegas Boulevard South
+          attractionCity: Las Vegas
+          attractionState: ''
+          destinationId: 684
+          photoCount: 10
+          primaryDestinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/785937_Viator_Photographer_395090.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/785937_Viator_Photographer_395090.jpg
+          seoId: 1246
+          productCount: 2
+          rating: 4.5
+          title: Graceland Wedding Chapel
+        - sortOrder: 3
+          webURL: null
+          pageUrlName: Wynn-Las-Vegas
+          primaryDestinationUrlName: Las-Vegas
+          publishedDate: '2019-07-30'
+          attractionLatitude: 36.126374
+          attractionLongitude: -115.166749
+          attractionStreetAddress: 3131 Las Vegas Blvd South
+          attractionCity: Las Vegas
+          attractionState: ''
+          destinationId: 684
+          photoCount: 5
+          primaryDestinationId: 684
+          thumbnailHiResURL: http://cache-graphicslib.viator.com/graphicslib/page-images/742x525/100516_Las%20Vegas_Wynn%20Hotel%20&%20Casino_d684-508.jpg
+          primaryDestinationName: Las Vegas
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/page-images/100516_Las%20Vegas_Wynn%20Hotel%20&%20Casino_d684-508.jpg
+          seoId: 1266
+          productCount: 2
+          rating: 0
+          title: Wynn Las Vegas
+        dateStamp: 2020-02-06T19:55:25+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 72
+        errorMessageText: null
+        vmid: '331004'
   parameters:
     acceptLanguage:
       in: header
