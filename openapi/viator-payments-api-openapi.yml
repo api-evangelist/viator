@@ -192,6 +192,95 @@ paths:
                     responseDetail: ''
 components:
   schemas:
+    CreditCardRequest:
+      required:
+      - cvv
+      - expMonth
+      - expYear
+      - name
+      - number
+      - address
+      type: object
+      properties:
+        number:
+          type: string
+          description: The full card number, without spaces.
+          example: '4111111111111111'
+        cvv:
+          type: string
+          description: The three or four digit CVV.
+          example: '234'
+        expMonth:
+          type: string
+          description: Two digit representation of expiry month.
+          example: '03'
+        expYear:
+          type: string
+          description: Four digit representation of expiry year.
+          example: '2026'
+        name:
+          type: string
+          description: The cardholder's full name.
+          example: Jane Doe
+        address:
+          $ref: '#/components/schemas/Address'
+      description: PCI sensitive details for a debit or credit card and relevant metadata.
+    VaultCardRequest:
+      required:
+      - paymentAccounts
+      type: object
+      properties:
+        paymentAccounts:
+          $ref: '#/components/schemas/PaymentAccountsRequest'
+      description: The card submission payload.
+    AccountMetaData:
+      type: object
+      properties:
+        sessionAccountToken:
+          type: string
+          description: Token for the submitted card, to be supplied when payment is requested.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+    Address:
+      required:
+      - country
+      - postalCode
+      type: object
+      properties:
+        country:
+          type: string
+          description: The country of the registered billing address, in two character ISO_3166-1 alpha-2 format.
+          example: US
+        postalCode:
+          type: string
+          description: The post code of the registered billing address. 4-9 alphanumeric characters, optionally separated space.
+          example: 02494
+      description: Minimal billing address details for cardholder
+    VaultPaymentResponse:
+      required:
+      - paymentAccounts
+      type: object
+      properties:
+        paymentAccounts:
+          $ref: '#/components/schemas/PaymentAccounts'
+    PaymentAccounts:
+      type: object
+      properties:
+        creditCards:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/CreditCard'
+    PaymentAccountsRequest:
+      required:
+      - creditCards
+      type: object
+      properties:
+        creditCards:
+          type: array
+          description: Array of card data, normal use is single item.
+          items:
+            $ref: '#/components/schemas/CreditCardRequest'
+      description: Wrapper element around payment data.
     CreditCard:
       required:
       - accountHead
@@ -229,95 +318,6 @@ components:
           $ref: '#/components/schemas/Address'
         accountMetaData:
           $ref: '#/components/schemas/AccountMetaData'
-    CreditCardRequest:
-      required:
-      - cvv
-      - expMonth
-      - expYear
-      - name
-      - number
-      - address
-      type: object
-      properties:
-        number:
-          type: string
-          description: The full card number, without spaces.
-          example: '4111111111111111'
-        cvv:
-          type: string
-          description: The three or four digit CVV.
-          example: '234'
-        expMonth:
-          type: string
-          description: Two digit representation of expiry month.
-          example: '03'
-        expYear:
-          type: string
-          description: Four digit representation of expiry year.
-          example: '2026'
-        name:
-          type: string
-          description: The cardholder's full name.
-          example: Jane Doe
-        address:
-          $ref: '#/components/schemas/Address'
-      description: PCI sensitive details for a debit or credit card and relevant metadata.
-    Address:
-      required:
-      - country
-      - postalCode
-      type: object
-      properties:
-        country:
-          type: string
-          description: The country of the registered billing address, in two character ISO_3166-1 alpha-2 format.
-          example: US
-        postalCode:
-          type: string
-          description: The post code of the registered billing address. 4-9 alphanumeric characters, optionally separated space.
-          example: 02494
-      description: Minimal billing address details for cardholder
-    PaymentAccounts:
-      type: object
-      properties:
-        creditCards:
-          uniqueItems: true
-          type: array
-          items:
-            $ref: '#/components/schemas/CreditCard'
-    AccountMetaData:
-      type: object
-      properties:
-        sessionAccountToken:
-          type: string
-          description: Token for the submitted card, to be supplied when payment is requested.
-          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-    VaultPaymentResponse:
-      required:
-      - paymentAccounts
-      type: object
-      properties:
-        paymentAccounts:
-          $ref: '#/components/schemas/PaymentAccounts'
-    VaultCardRequest:
-      required:
-      - paymentAccounts
-      type: object
-      properties:
-        paymentAccounts:
-          $ref: '#/components/schemas/PaymentAccountsRequest'
-      description: The card submission payload.
-    PaymentAccountsRequest:
-      required:
-      - creditCards
-      type: object
-      properties:
-        creditCards:
-          type: array
-          description: Array of card data, normal use is single item.
-          items:
-            $ref: '#/components/schemas/CreditCardRequest'
-      description: Wrapper element around payment data.
   securitySchemes:
     API-key:
       type: apiKey

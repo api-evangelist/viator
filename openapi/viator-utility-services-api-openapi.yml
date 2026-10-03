@@ -328,22 +328,6 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331001'
-    util-guid-example:
-      summary: /util/guid
-      value:
-        errorReference: null
-        data: 331003-1969648698962354-6150751091453490107
-        dateStamp: 2020-04-21T17:14:06+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331003'
     util-sitedetails-example:
       summary: /util/sitedetails
       value:
@@ -396,6 +380,22 @@ components:
           id: 0
           channel: PARTNER
         dateStamp: 2020-04-21T17:22:00+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
+    util-guid-example:
+      summary: /util/guid
+      value:
+        errorReference: null
+        data: 331003-1969648698962354-6150751091453490107
+        dateStamp: 2020-04-21T17:14:06+0000
         errorType: null
         errorCodes: []
         errorMessage: null
@@ -1455,6 +1455,15 @@ components:
           example: '321050'
           description: '**unique numeric id** of the server that processed *this* request'
   parameters:
+    acceptLanguage:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
     defaultCurrencyCode:
       name: defaultCurrencyCode
       in: query
@@ -1472,15 +1481,6 @@ components:
       schema:
         type: string
       example: USD
-    acceptLanguage:
-      in: header
-      name: Accept-Language
-      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
-
-        '
-      required: true
-      schema:
-        type: string
   securitySchemes:
     Legacy-API-key:
       type: apiKey

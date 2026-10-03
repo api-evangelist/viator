@@ -230,55 +230,43 @@ paths:
         '503':
           description: Service Unavailable
 components:
-  examples:
-    error422:
-      summary: Unprocessable Content error
-      value:
-        error: INVALID_SUPPLIER
-        message: Invalid supplier ID
-    SpecialOffersRequest:
-      value:
-        supplierId: 3456
-        specialOfferIds:
-        - A Unique id
-        - A-unique-id-2
-    eventNotificationResponse:
-      value:
-        results:
-        - productOptionId: r1172330
-          status: 200
-        - productOptionId: r1172331
-          status: 422
-          error: INVALID_PRODUCT_OPTION
-    eventNotificationUnprocessableResponse:
-      value:
-        error: INVALID_PRODUCT_OPTION
-        message: All product options are invalid
-    eventNotificationRequest:
-      value:
-        supplierId: 123
-        updateType:
-        - AVAILABILITY
-        - PRICING
-        productOptionIds:
-        - r1172330
-        - r1172331
-        startDate: '2025-01-01'
-        endDate: '2025-12-31'
-    error500:
-      summary: Internal Server Error
-      value:
-        error: INTERNAL_ERROR
-        message: Unknown internal error
   schemas:
-    BaseRequest:
+    EventNotificationResponse:
       type: object
-      description: Base request object.
+      description: Response object for multi-status Event Notification
       required:
-      - supplierId
+      - results
       properties:
-        supplierId:
-          $ref: '#/components/schemas/SupplierId'
+        results:
+          type: array
+          description: List of event notifications status
+          items:
+            type: object
+            title: EventNotificationResult
+            description: List of requested event notification status.
+            required:
+            - productOptionId
+            - status
+            properties:
+              productOptionId:
+                $ref: '#/components/schemas/ProductOptionId'
+              status:
+                type: integer
+                description: HTTP status of the event notification request for the product option
+                enum:
+                - 200
+                - 422
+                example: 200
+              error:
+                type: string
+                description: "Code representing the error reason\nOne of:\n  - INVALID_PRODUCT_OPTION - The productOptionID in the request is not valid or does not exist for the supplier.\n"
+                enum:
+                - INVALID_PRODUCT_OPTION
+                example: INVALID_PRODUCT_OPTION
+    SupplierId:
+      type: integer
+      description: Viator’s unique Supplier identifier.
+      example: 3456
     EventNotificationRequest:
       allOf:
       - $ref: '#/components/schemas/BaseRequest'
@@ -321,6 +309,65 @@ components:
 
               '
             example: '2026-01-25'
+    ProductOptionId:
+      type: string
+      description: "Unique reservation system product option identifier. \nThis identifier is sourced from the [Tour List API](#operation/tourList) response.\n"
+      example: r1172330
+    EventNotificationUnprocessableContentResponse:
+      type: object
+      description: Response object for Unprocessable Content Event Notification
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          description: "Code representing error reason. \n\nOne of:\n- INVALID_SUPPLIER - The supplier in the request is not valid or does not exist.\n- API_DISABLED - API endpoint is not enabled for the requested supplier.\n- INVALID_PRODUCT_OPTION - All productOptionIds in the request are invalid or do not exist for the supplier.\n- INVALID_DATE_RANGE - The requested date range is invalid.\n"
+          enum:
+          - INVALID_SUPPLIER
+          - API_DISABLED
+          - INVALID_PRODUCT_OPTION
+          - INVALID_DATE_RANGE
+          example: INVALID_PRODUCT_OPTION
+        message:
+          type: string
+          description: Human readable description of the error reason
+          example: All product options are invalid
+    InternalErrorResponse:
+      type: object
+      description: Error response object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          description: "Code representing error reason. One of:\n  - INTERNAL_ERROR\n"
+          example: INTERNAL_ERROR
+        message:
+          type: string
+          description: Human readable description of the error reason
+          example: Unknown Error
+    BaseRequest:
+      type: object
+      description: Base request object.
+      required:
+      - supplierId
+      properties:
+        supplierId:
+          $ref: '#/components/schemas/SupplierId'
+    ContentErrorResponse:
+      type: object
+      description: Error response object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          description: "Code representing error reason. \n\nOne of:\n  - INVALID_SUPPLIER - the requested supplier is not valid.\n  - API_DISABLED - API endpoint is not enabled for the requested supplier.\n"
+          example: INVALID_SUPPLIER
+        message:
+          type: string
+          description: Human readable description of the error reason
+          example: Wrong Supplier ID
     SpecialOffersNotificationRequest:
       type: object
       description: Request object for the Special Offers Notification Operation.
@@ -342,93 +389,46 @@ components:
             type: string
             description: Unique identifier for the special offer.
             example: A Unique id
-    EventNotificationUnprocessableContentResponse:
-      type: object
-      description: Response object for Unprocessable Content Event Notification
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          description: "Code representing error reason. \n\nOne of:\n- INVALID_SUPPLIER - The supplier in the request is not valid or does not exist.\n- API_DISABLED - API endpoint is not enabled for the requested supplier.\n- INVALID_PRODUCT_OPTION - All productOptionIds in the request are invalid or do not exist for the supplier.\n- INVALID_DATE_RANGE - The requested date range is invalid.\n"
-          enum:
-          - INVALID_SUPPLIER
-          - API_DISABLED
-          - INVALID_PRODUCT_OPTION
-          - INVALID_DATE_RANGE
-          example: INVALID_PRODUCT_OPTION
-        message:
-          type: string
-          description: Human readable description of the error reason
-          example: All product options are invalid
-    EventNotificationResponse:
-      type: object
-      description: Response object for multi-status Event Notification
-      required:
-      - results
-      properties:
+  examples:
+    eventNotificationUnprocessableResponse:
+      value:
+        error: INVALID_PRODUCT_OPTION
+        message: All product options are invalid
+    error422:
+      summary: Unprocessable Content error
+      value:
+        error: INVALID_SUPPLIER
+        message: Invalid supplier ID
+    SpecialOffersRequest:
+      value:
+        supplierId: 3456
+        specialOfferIds:
+        - A Unique id
+        - A-unique-id-2
+    eventNotificationResponse:
+      value:
         results:
-          type: array
-          description: List of event notifications status
-          items:
-            type: object
-            title: EventNotificationResult
-            description: List of requested event notification status.
-            required:
-            - productOptionId
-            - status
-            properties:
-              productOptionId:
-                $ref: '#/components/schemas/ProductOptionId'
-              status:
-                type: integer
-                description: HTTP status of the event notification request for the product option
-                enum:
-                - 200
-                - 422
-                example: 200
-              error:
-                type: string
-                description: "Code representing the error reason\nOne of:\n  - INVALID_PRODUCT_OPTION - The productOptionID in the request is not valid or does not exist for the supplier.\n"
-                enum:
-                - INVALID_PRODUCT_OPTION
-                example: INVALID_PRODUCT_OPTION
-    SupplierId:
-      type: integer
-      description: Viator’s unique Supplier identifier.
-      example: 3456
-    ContentErrorResponse:
-      type: object
-      description: Error response object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          description: "Code representing error reason. \n\nOne of:\n  - INVALID_SUPPLIER - the requested supplier is not valid.\n  - API_DISABLED - API endpoint is not enabled for the requested supplier.\n"
-          example: INVALID_SUPPLIER
-        message:
-          type: string
-          description: Human readable description of the error reason
-          example: Wrong Supplier ID
-    InternalErrorResponse:
-      type: object
-      description: Error response object
-      required:
-      - error
-      properties:
-        error:
-          type: string
-          description: "Code representing error reason. One of:\n  - INTERNAL_ERROR\n"
-          example: INTERNAL_ERROR
-        message:
-          type: string
-          description: Human readable description of the error reason
-          example: Unknown Error
-    ProductOptionId:
-      type: string
-      description: "Unique reservation system product option identifier. \nThis identifier is sourced from the [Tour List API](#operation/tourList) response.\n"
-      example: r1172330
+        - productOptionId: r1172330
+          status: 200
+        - productOptionId: r1172331
+          status: 422
+          error: INVALID_PRODUCT_OPTION
+    error500:
+      summary: Internal Server Error
+      value:
+        error: INTERNAL_ERROR
+        message: Unknown internal error
+    eventNotificationRequest:
+      value:
+        supplierId: 123
+        updateType:
+        - AVAILABILITY
+        - PRICING
+        productOptionIds:
+        - r1172330
+        - r1172331
+        startDate: '2025-01-01'
+        endDate: '2025-12-31'
   securitySchemes:
     ApiKeyHeader:
       type: apiKey

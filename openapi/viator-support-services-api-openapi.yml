@@ -84,6 +84,16 @@ paths:
                 '1':
                   $ref: '#/components/examples/support-customercare-example'
 components:
+  parameters:
+    acceptLanguage:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
   examples:
     support-customercare-example:
       summary: /support/customercare
@@ -166,16 +176,6 @@ components:
           type: string
           example: '321050'
           description: '**unique numeric id** of the server that processed *this* request'
-  parameters:
-    acceptLanguage:
-      in: header
-      name: Accept-Language
-      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
-
-        '
-      required: true
-      schema:
-        type: string
   securitySchemes:
     Legacy-API-key:
       type: apiKey

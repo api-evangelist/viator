@@ -3078,124 +3078,494 @@ paths:
               schema:
                 $ref: '#/components/schemas/503_SERVICE_UNAVAILABLE'
 components:
+  schemas:
+    savingAmountFormated:
+      type: string
+      description: 'Ignore (Viator only)
+
+        '
+    CancellationReasonsResponse:
+      type: object
+      properties:
+        reasons:
+          type: array
+          description: Array of cancellation reason codes and their asssociated texts for display to the user
+          items:
+            $ref: '#/components/schemas/CancellationReason'
+    503_SERVICE_UNAVAILABLE:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - SERVICE_UNAVAILABLE
+        message:
+          type: string
+          enum:
+          - Internal server error
+        timestamp:
+          type: string
+          description: 'Timestamp of the request
+
+            e.g.: `2019-09-17T03:20:45.737043Z`
+
+            '
+        trackingId:
+          type: string
+          description: Tracking identifier for this error response
+    bookingStatus_item:
+      type: object
+      description: '**object** containing item booking status information'
+      properties:
+        status:
+          type: integer
+          description: '**numeric identifier** of *this* item''s booking status'
+        text:
+          type: string
+          description: '**natural-language description** of *this* item''s booking status; e.g., ''Waiting to be booked'''
+        type:
+          type: string
+          description: '**specifier** of *this* item''s booking status
+
+            * See: [bookingStatus fields and meanings](#section/Appendices/bookingStatus-field-values-and-meanings)
+
+            '
+          enum:
+          - WAITING
+          - CONFIRMED
+          - UNAVAILABLE
+          - PENDING
+          - FAILED
+          - CANCELLED
+          - EXPIRED
+          - AMENDED
+          - PENDING_AMEND
+          - REJECTED
+          - ON_HOLD
+        level:
+          type: string
+          description: '**level** of *this* item''s booking status'
+          enum:
+          - ITEM
+          - ITINERARY
+        confirmed:
+          type: boolean
+          description: '**indicator**: `true` if *this* item''s booking is confirmed'
+        pending:
+          type: boolean
+          description: '**indicator**: `true` if *this* item''s booking is pending'
+        amended:
+          type: boolean
+          description: '**indicator**: `true` if *this* item''s booking has been amended'
+        cancelled:
+          type: boolean
+          description: '**indicator**: `true` if *this* item''s booking has been cancelled'
+        failed:
+          type: boolean
+          description: '**indicator**: `true` if *this* item''s booking has failed'
+    savingAmount:
+      type: string
+      description: 'Ignore (Viator only)
+
+        '
+    CancelBookingQuoteResponse:
+      type: object
+      properties:
+        refundDetails:
+          $ref: '#/components/schemas/RefundDetails'
+        bookingId:
+          type: string
+          description: The booking reference number, prepended with `BR-`
+        status:
+          type: string
+          description: "String indicating the cancellation status of this itinerary item:\n\n  * `CANCELLABLE` - this booking is available to be cancelled\n  * `CANCELLED` - this booking has already been cancelled\n  * `NOT_CANCELLABLE` - this booking cannot be cancelled (because the product's operation date is now in the past)\n"
+          enum:
+          - CANCELLABLE
+          - CANCELLED
+          - NOT_CANCELLABLE
+    406_NOT_ACCEPTABLE:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - INVALID_HEADER_VALUE
+        message:
+          type: string
+          description: 'Describes which in-header parameter was not acceptable to this system; e.g., ''Invalid value for header: exp-api-key'''
+        timestamp:
+          type: string
+          description: "Timestamp of the request\n\n  * e.g.: `2019-09-17T03:20:45.737043Z`\n"
+        trackingId:
+          type: string
+          description: Tracking identifier for this error response
+    RefundDetails:
+      type: object
+      description: 'Details of the refund
+
+
+        **Note**: Bookings that have not been confirmed by the supplier and have a status of `"PENDING"` will report an `itemPrice`, `refundAmount` and `refundPercentage` of `0`, as no fees are charged until the booking has been accepted by the supplier and its status is `"CONFIRMED"`.
+
+        '
+      properties:
+        itemPrice:
+          type: number
+          description: The merchant net price at the time this product was booked
+        refundAmount:
+          type: number
+          description: Numeric currency amount that will be refunded if this booking is cancelled now
+        refundPercentage:
+          type: number
+          description: Percentage of the item price that will be refunded if this booking is cancelled now
+        currencyCode:
+          type: string
+          description: Three-letter code indicating the currency in which `itemPrice` and `refundAmount` are displayed
+    bookingEngineId-response:
+      type: string
+      enum:
+      - UF
+      - OR
+      - FO
+      description: '[booking type indicator](#section/Key-concepts/Booking-concepts) that indicates whether the booking will be `CONFIRMED` immediately or if it will remain `PENDING` even after the booking has been made
+
+
+        *one of* the following:
+
+        - `"UF"` (FreesaleBE and UnconditionalBE) – this booking will be confirmed immediately
+
+        - `"OR"` (DeferredCRMBE) – the booked product is an on-request product, will not be confirmed immediately and will have a `PENDING` status after it is booked, to be confirmed by the supplier within the time specified in the `hoursConfirmed` field available in the booking response and post-booking services
+
+        - `"FO"` (FreesaleOnRequestBE) – the booked product is freesale up until a certain number of days before the travel date, referred to as the *on-request period*.
+
+        '
+    ageBandId:
+      type: integer
+      description: '**unique numeric identifier** for the age band
+
+        - See: [Working with age bands](#section/Appendices/Working-with-age-bands)
+
+        '
+    basicErrorModel:
+      type: object
+      properties:
+        errorReference:
+          type:
+          - string
+          - 'null'
+          description: '**reference number** of *this* error'
+        dateStamp:
+          type:
+          - string
+          - 'null'
+          description: '**timestamp** of *this* response'
+        errorType:
+          type:
+          - string
+          - 'null'
+          description: '**code** specifying the type of error'
+        errorCodes:
+          type:
+          - array
+          - 'null'
+          description: '**array** of error codes pertaining to *this* error
+
+            - See: [Viator API error codes](#section/Appendices/Viator-API-error-codes) for a list of possible error codes
+
+            '
+          items:
+            type: string
+          example: []
+        errorMessage:
+          type:
+          - array
+          - 'null'
+          description: '**array** of error message strings'
+        errorName:
+          type:
+          - string
+          - 'null'
+          description: '**name** of *this* type of error'
+        extraInfo:
+          type:
+          - object
+          - 'null'
+          description: ignore (Viator only)
+        extraObject:
+          type:
+          - object
+          - 'null'
+          description: ignore (Viator only)
+        success:
+          type:
+          - boolean
+          - 'null'
+          description: '**boolean indicator** of *this* request''s outcome
+
+            - `true`: the request was successful with no errors
+
+            - `false`: an error was encountered
+
+            '
+        totalCount:
+          type:
+          - integer
+          - 'null'
+          description: '**number** of results available for *this* service
+
+            '
+        errorMessageText:
+          type:
+          - string
+          - 'null'
+          description: '**array** of error message strings in plain text'
+        vmid:
+          type:
+          - string
+          - 'null'
+          description: '**unique numeric id** of the server that processed *this* request'
+    CancelBookingResponse:
+      type: object
+      properties:
+        bookingId:
+          type: string
+          description: Booking reference number for this booking, prepended with `BR-`
+          example: BR-580254558
+        status:
+          type: string
+          description: "String indicating the outcome of the booking cancellation request.\n\n  * `ACCEPTED`: The cancellation was successful\n  * `DECLINED`: The cancellation failed\n"
+          enum:
+          - ACCEPTED
+          - DECLINED
+          example: DECLINED
+        reason:
+          type: string
+          enum:
+          - ALREADY_CANCELLED
+          - NOT_CANCELLABLE
+    500_INTERNAL_SERVER_ERROR:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - INTERNAL_SERVER_ERROR
+        message:
+          type: string
+          enum:
+          - Internal server error
+        timestamp:
+          type: string
+          description: "Timestamp of the request\n\n  * e.g.: `2019-09-17T03:20:45.737043Z`\n"
+        trackingId:
+          type: string
+          description: Tracking identifier for this error response
+    CancellationReason:
+      type: object
+      properties:
+        cancellationReasonCode:
+          type: string
+          description: Machine-interpretable identification code for this cancellation
+          example: Customer_Service.Weather
+        cancellationReasonText:
+          type: string
+          description: Natural-language description of this cancellation reason
+          example: The weather conditions were unsuitable
+    bandId:
+      type: integer
+      description: '**unique numeric identifier** for the age band
+
+        - See: [Working with age bands](#section/Appendices/Working-with-age-bands)
+
+        '
+    bookingStatus_itinerary:
+      type: object
+      description: '**object** containing itinerary booking status information'
+      properties:
+        status:
+          type: integer
+          description: '**numeric identifier** of *this* itinerary''s booking status'
+        text:
+          type: string
+          description: '**natural-language description** of *this* itinerary''s booking status'
+        type:
+          type: string
+          description: '**specifier** of *this* itinerary''s booking status
+
+            * See: [bookingStatus fields and meanings](#section/Appendices/bookingStatus-field-values-and-meanings)
+
+            '
+          enum:
+          - WAITING
+          - CONFIRMED
+          - PENDING
+          - FAILED
+          - CANCELLED
+          - AMENDED
+          - PENDING_AMEND
+        level:
+          type: string
+          description: '**level** of *this* itinerary''s booking status'
+          enum:
+          - ITEM
+          - ITINERARY
+        confirmed:
+          type: boolean
+          description: '**indicator**: `true` if *this* itinerary''s booking is confirmed'
+        pending:
+          type: boolean
+          description: '**indicator**: `true` if *this* itinerary''s booking is pending'
+        amended:
+          type: boolean
+          description: '**indicator**: `true` if *this* itinerary''s booking has been amended'
+        cancelled:
+          type: boolean
+          description: '**indicator**: `true` if *this* itinerary''s booking has been cancelled'
+        failed:
+          type: boolean
+          description: '**indicator**: `true` if *this* itinerary''s booking has failed'
+    CancellationRequest:
+      type: object
+      properties:
+        reasonCode:
+          type: string
+          description: Machine-interpretable identification code for this cancellation reason, retrieved from [cancellationReasons](#operation/cancellationReasons)
+          example: Customer_Service.I_canceled_my_entire_trip
+    401_UNAUTHORIZED:
+      type: object
+      properties:
+        code:
+          type: string
+          enum:
+          - UNAUTHORIZED
+        message:
+          type: string
+          enum:
+          - Invalid API key
+        timestamp:
+          type: string
+          description: "Timestamp of the request\n\n  * e.g.: `2019-09-17T03:20:45.737043Z`\n"
+        trackingId:
+          type: string
+          description: Tracking identifier for this error response
   examples:
-    booking-calculateprice-example:
-      summary: booking calculateprice example
+    booking-pastbooking-example:
+      summary: booking pastbooking example
       value:
         errorReference: null
         data:
+          sortOrder: 0
           rulesApplied: null
-          promoCode: null
-          itinerary:
-            sortOrder: 0
+          omniPreRuleList: []
+          bookingStatus:
+            status: 3
+            text: Confirmed
+            type: CONFIRMED
+            level: ITINERARY
+            confirmed: true
+            pending: false
+            amended: false
+            cancelled: false
+            failed: false
+          itemSummaries:
+          - sortOrder: 0
             rulesApplied: null
-            omniPreRuleList: null
             bookingStatus:
-              status: 0
-              text: Waiting to be Booked
-              type: WAITING
-              level: ITINERARY
-              confirmed: false
-              pending: false
-              amended: false
-              cancelled: false
+              status: 1
+              text: Paid &amp; Confirmed
+              type: CONFIRMED
+              level: ITEM
               failed: false
-            itemSummaries:
+              confirmed: true
+              amended: false
+              pending: false
+              cancelled: false
+            travellerAgeBands:
             - sortOrder: 0
-              rulesApplied: null
-              bookingStatus:
-                status: 0
-                text: Waiting to be Booked
-                type: WAITING
-                level: ITEM
-                failed: false
-                confirmed: false
-                amended: false
-                pending: false
-                cancelled: false
-              travellerAgeBands:
-              - sortOrder: 0
-                count: 1
-                pluralDescription: Adults
-                description: Adult
-                ageBandId: 1
-              voucherKey: ''
-              voucherURL: null
-              voucherRequirements: You can present either a paper or an electronic voucher for this activity.
-              appleWalletURL: null
-              productPulledDown: false
-              merchantCancellable: true
-              productWidgetList: null
-              savingAmount: 0
-              applePassSupported: false
-              supplierName: Big Bus Tours
-              supplierPhoneNumber: +1 123 456 7890
-              vouchers: null
-              passbooks: null
-              termsAndConditions: null
-              productCode: 5010SYDNEY
-              travelDate: '2020-03-03'
-              tourGradeCode: 24HOUR
-              distributorItemRef: null
-              startingTime: null
-              languageServicesLanguageCode: null
-              price: 31.3
-              leadTravellerSurname: null
-              itineraryId: 1005847086
-              productTitle: Big Bus Sydney and Bondi Hop-on Hop-off Tour
-              merchantNetPrice: 29.53
-              priceFormatted: $31.30
-              destId: 357
-              voucherOption: VOUCHER_E
-              itemId: 580659274
-              barcodeOption: perperson
-              barcodeType: qrcode
-              departurePoint: You may start this tour at any of the stops listed.
-              departurePointAddress: null
-              departurePointDirections: null
-              leadTravellerFirstname: ''
-              rnplInfo: null
-              obfsId: 31185
-              leadTravellerTitle: null
-              lastRetailPrice: 29.53
-              savingAmountFormated: $0.00
-              pickupHotelName: null
-              hoursConfirmed: 0
-              lastRetailPriceFormatted: $29.53
-              tourGradeDescription: 24 Hour Classic Ticket  (24HOUR)
-              bookingEngineId: UF
-              merchantNetPriceFormatted: $29.53
-              departsFrom: The Rocks, Australia
-              pickupHotelId: null
-              priceUSD: 31.3
-              currencyCode: USD
-            voucherURL: null
-            securityToken: 595798ee27965d5178ab6a800f9b796ed7efac8fd303086e4113e1e99848932c
-            paypalRedirectURL: null
-            exchangeRate: 1
-            itineraryId: 1005847086
-            bookingDate: '2020-02-10'
-            voucherKey: ''
-            bookerEmail: null
-            distributorRef: null
-            totalPrice: 31.3
-            totalPriceFormatted: $31.30
-            totalPriceUSD: 31.3
-            hasVoucher: false
-            userId: null
+              count: 1
+              pluralDescription: Adults
+              description: Adult
+              ageBandId: 1
+            voucherKey: 1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678
+            voucherURL: https://viatorapi.live.rc.viator.com/service/merchant/voucher.jspa?code=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678&embedResources=false
+            voucherRequirements: You can present either a paper or an electronic voucher for this activity.
+            appleWalletURL: null
+            productPulledDown: false
+            merchantCancellable: true
+            productWidgetList: null
+            savingAmount: 0
+            applePassSupported: false
+            supplierName: Sundance Helicopters
+            supplierPhoneNumber: +1 123 456 7890
+            vouchers: null
+            passbooks: null
+            termsAndConditions: null
+            merchantTermsAndConditions:
+              termsAndConditions: For a full refund, cancel at least 24 hours in advance of the start date of the experience.
+              merchantTermsAndConditionsType: 1
+              amountRefundable: USD 412.04
+              cancellationFromTourDate:
+              - dayRangeMin: 1
+                dayRangeMax: null
+                percentageRefundable: 100
+                policyStartTimestamp: null
+                policyEndTimestamp: 1585580400
+              - dayRangeMin: 0
+                dayRangeMax: 1
+                percentageRefundable: 0
+                policyStartTimestamp: 1585580400
+                policyEndTimestamp: 1585666800
+            productCode: 2280AAHT
+            travelDate: '2020-03-31'
+            tourGradeCode: TG1~08:00
+            distributorItemRef: itemRef1000000
+            startingTime: 8:00 AM
+            languageServicesLanguageCode: en
+            price: 412.04
+            leadTravellerSurname: Simpson test
+            itineraryId: 1005851866
+            productTitle: Grand Canyon All-American Helicopter Tour
+            merchantNetPrice: 388.72
+            priceFormatted: $412.04
+            destId: 684
+            voucherOption: VOUCHER_E
+            itemId: 580669678
+            barcodeOption: tour
+            barcodeType: code128
+            departurePoint: Traveler pickup is offered<br><br>
+            departurePointAddress: null
+            departurePointDirections: null
+            leadTravellerFirstname: Homer test
+            rnplInfo: null
+            obfsId: 362208
+            leadTravellerTitle: Mr
+            lastRetailPrice: 388.72
+            savingAmountFormated: $0.00
+            pickupHotelName: 'null'
+            hoursConfirmed: 0
+            lastRetailPriceFormatted: $388.72
+            tourGradeDescription: Morning Departure; A-Star 08:00 (TG1~08:00)
+            bookingEngineId: FO
+            merchantNetPriceFormatted: $388.72
+            departsFrom: Las Vegas, United States
+            pickupHotelId: null
+            priceUSD: 412.04
             currencyCode: USD
-          paymentGatewayInfo: null
-          promoCodeValid: false
-          promoCodeExpired: false
-          itineraryFromPrice: 29.53
-          itineraryFromPriceFormatted: $29.53
-          itineraryNewPrice: 29.53
-          itineraryNewPriceFormatted: $29.53
-          itinerarySaving: 0
-          itinerarySavingFormatted: $0.00
-          hasPromoCode: false
+          voucherURL: https://viatorapi.live.rc.viator.com/service/merchant/voucher.jspa?code=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e&embedResources=false
+          securityToken: 4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e
+          paypalRedirectURL: null
+          exchangeRate: 1
+          itineraryId: 1005851866
+          bookingDate: '2020-02-11'
+          voucherKey: 1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e
+          bookerEmail: apitest@viator.com
+          distributorRef: distributorRef100000
+          totalPrice: 412.04
+          totalPriceFormatted: $412.04
+          totalPriceUSD: 412.04
+          hasVoucher: true
+          userId: null
           currencyCode: USD
-        dateStamp: 2020-02-10T18:26:49+0000
+        dateStamp: 2020-02-11T20:06:43+0000
         errorType: null
         errorCodes: []
         errorMessage: null
@@ -3206,6 +3576,24 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331003'
+    cancel-reasons-example:
+      summary: cancel reasons example
+      value:
+        reasons:
+        - cancellationReasonText: Unexpected/medical circumstances
+          cancellationReasonCode: Customer_Service.Unexpected_medical_circumstances
+        - cancellationReasonText: Duplicate Booking
+          cancellationReasonCode: Customer_Service.Duplicate_Booking
+        - cancellationReasonText: Tour operator asked me to cancel
+          cancellationReasonCode: Customer_Service.Tour operator asked me to cancel
+        - cancellationReasonText: Chose a different/cheaper tour
+          cancellationReasonCode: Customer_Service.Chose_a_different_cheaper_tour
+        - cancellationReasonText: Weather
+          cancellationReasonCode: Customer_Service.Weather
+        - cancellationReasonText: Booked wrong tour/date
+          cancellationReasonCode: Customer_Service.Booked_wrong_tour_date
+        - cancellationReasonText: I canceled my entire trip
+          cancellationReasonCode: Customer_Service.I_canceled_my_entire_trip
     bookings-id-cancel-quote-example:
       summary: bookings cancel quote example
       value:
@@ -3216,6 +3604,1412 @@ components:
           refundPercentage: 100
           currencyCode: USD
         status: CANCELLABLE
+    booking-voucher-example:
+      summary: booking voucher example
+      value:
+        errorReference: null
+        data: "\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n    <head>\n        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n        <meta name=\"viewport\" content=\"width=device-width\" />\n        <title>Viator</title>\n    </head>\n    <body>\n        <div id=\"content\" class=\"voucher_box\">\n                <div id=\"voucher_1\">\n\n        <div class=\"section\">\n            <div class=\"voucher_title\">\n                Voucher 1\n                of 1: Homer test Simpson test\n            </div>\n        </div>\n\n        <div class=\"section bline\">\n            <div class=\"btn_box\">\n            </div>\n        </div>\n\n        <div style=\"line-height: 1.5;font-family:'Arial','Helvetica','Verdana',sans-serif; font-size: 12px; padding: 0 10px; border-bottom: 1px solid #CAE2EA;\">\n\n            <h2 style=\"font-size:16px;font-weight:bold;margin:0.5em 0;padding:0;\">\n            Grand Canyon All-American Helicopter Tour\n                    <span style=\"display: block;font-size:12px;\">\n                        Morning Departure; A-Star 08:00\n                    </span>\n            </h2>\n\n            <div class=\"barcode\">\n                <img src=\"/voucher/resource?type=barcode&itineraryItemId=580669678&voucherToken=4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e\" alt=\"\"/>\n            </div>\n\n                <h2 style=\"font-size:16px;font-weight:bold;margin:0.5em 0;padding:0;\">SAMPLE ONLY</h2>\n\n            <ul style=\"margin:0 0 1em 1em; padding:0;\">\n                <li>\n                    <strong>Date:</strong>\n                Tuesday March 31, 2020\n                </li>\n            </ul>\n\n            <ul style=\"margin:0 0 1em 1em; padding:0;\">\n                    <li>\n                        <strong>Lead traveler\n                            :\n                        </strong>Homer test Simpson test\n                    </li>\n                    <li>\n                        <strong>Number of Travelers\n                            :\n                        </strong>1 Adult</li>\n\n                <li>\n                    <strong>Booking Reference:\n                    </strong>BR-580669678</li>\n\n                <li>\n                    <strong>Product Code:\n                    </strong>2280AAHT</li>\n\n                    <li>\n                        <strong>Option Code:\n                        </strong>TG1~08:00</li>\n\n                    <li>\n                        <strong>Supplier\n                            : </strong>Sundance Helicopters</li>\n\n\n\n\n\n                <li>\n                    <strong>Location\n                        :</strong>\n                            <p>Traveler pickup is offered<br><br></p>\n                </li>\n\n                    <li>\n                        <strong>Tour Option Description\n                            :</strong>\n                    Morning departure between 8am and 11:45am on an A-Star Helicopter for the All American Helicopter Tour\n                        \n                    </li>\n            </ul>\n\n            <h3 style=\"font-size:14px;font-weight:bold;margin:0.5em 0;padding:0;\">\n            Voucher Information\n            </h3>\n\n            <ul style=\"margin:0 0 1em 1em; padding:0;\">\n                You can present either a paper or an electronic voucher for this activity.\n                    <span style=\"color:#888888;\"> / You can present either a paper or an electronic voucher for this activity.</span>\n            </ul>\n\n            <h3 style=\"font-size:14px;font-weight:bold;margin:0.5em 0;padding:0;\">\n            Important Information\n            </h3>\n                <ul>\n<li>Your local contact is Sundance Helicopters on +17027360606.</li></ul>\n• Important: due to comfort, weight and balance of the aircraft, the maximum weight per passenger to ride in an A-Star helicopter is 275lbs (125kg / 19.6st). If passengers weigh in between 275lbs and 300lbs (136kg/21.4st), you will be required to upgrade to the EC-130.<br> • Any passenger over 300lbs will be required to purchase an additional seat. This is payable directly to the tour operator on the day of the tour.<br> • Due to the nature of this tour and the safety of all guests, the tour operator reserves the right to refuse service to passengers who are intoxicated or show signs of intoxication. If, as a result, your tour is canceled, you will not be entitled to a refund.<br> • Infant children must be under the age of two and have proof of age, such as a passport and are considered lap children.<br> • Per FAA regulations, all passenger must present photo ID at check in.<br> • If you would like a vegetarian meal as your lunch option, please contact the local operator as soon as possible.<br> • Please Note: Please look for your Limo driver who will get out and will be looking for the lead traveler’s last name of whom the reservation is under. There is also a sign in the front windshield of the Limo that will say Sundance Helicopters.<br><br>Hotel pickups commence prior to this time, you must contact the local service provider to verify your exact pickup time.<br><br>All flight times are approximate and subject to change due to weather conditions and weight restrictions.<br>\n\n                <h3 style=\"font-size:14px;font-weight:bold;margin:0.5em 0;padding:0;\">\n                Inclusions\n                </h3>\n                    <ul>\n<li>45-minute (approx.) flight each way (helicopter based on option selected)</li><li>Hotel pickup and drop-off by limousine</li><li>Snacks</li><li>Glass of Champagne</li><li>All taxes and fees</li></ul>\n\n\n                <h3 style=\"font-size:14px;font-weight:bold;margin:0.5em 0;padding:0;\">\n                Exclusions\n                </h3>\n                    <ul>\n<li>Gratuities</li></ul>\n\n\n\n        </div>\n\n    </div>\n        <br/>\n\n        </div>\n\n    </body>\n</html>\n"
+        dateStamp: 2020-02-11T19:50:39+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
+    booking-pricingmatrix-example:
+      summary: booking pricing matrix example
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          pricingUnit: per person
+          bookingDate: '2020-03-11'
+          ageBandPrices:
+          - bandId: 1
+            prices:
+            - sortOrder: 1
+              currencyCode: EUR
+              price: 33.35
+              merchantNetPrice: 26.64
+              priceFormatted: €33,35
+              merchantNetPriceFormatted: €26,64
+              minNoOfTravellersRequiredForPrice: 1
+            sortOrder: 1
+            minimumCountRequired: 0
+            maximumCountRequired: 9
+          - bandId: 2
+            prices:
+            - sortOrder: 1
+              currencyCode: EUR
+              price: 22.61
+              merchantNetPrice: 18.06
+              priceFormatted: €22,61
+              merchantNetPriceFormatted: €18,06
+              minNoOfTravellersRequiredForPrice: 1
+            sortOrder: 2
+            minimumCountRequired: 0
+            maximumCountRequired: 9
+        dateStamp: 2020-02-11T16:21:23+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
+    booking-hotels-example-1:
+      summary: destId
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          destinationId: 123
+          productCodes: null
+          phone: +1 123 456 7890
+          city: Hahndorf
+          postcode: '5245'
+          latitude: -35.031216
+          longitude: 138.81102
+          notes: null
+          brand: null
+          hotelString: null
+          address: 35 Main St
+          name: The Hahndorf Inn
+          id: '1001419406'
+        - sortOrder: 2
+          destinationId: 123
+          productCodes: null
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.863453
+          longitude: 138.61
+          notes: null
+          brand: null
+          hotelString: null
+          address: Lot 112 Neagles Rock Road
+          name: Neagles Retreat Villas
+          id: '10984108'
+        - sortOrder: 3
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.831417
+          longitude: 138.60942
+          notes: null
+          brand: null
+          hotelString: null
+          address: 310 Main North Rd
+          name: The Mill Apartments
+          id: '11205163'
+        - sortOrder: 4
+          destinationId: 123
+          productCodes:
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          phone: +1 123 456 7890
+          city: Reynella
+          postcode: '5161'
+          latitude: -35.08964
+          longitude: 138.53828
+          notes: null
+          brand: null
+          hotelString: null
+          address: 14 Bridge St, Old Reynella
+          name: St. Francis Winery
+          id: '1255430'
+        - sortOrder: 5
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Enfield
+          postcode: '5094'
+          latitude: -34.845764
+          longitude: 138.60115
+          notes: null
+          brand: null
+          hotelString: null
+          address: Motel 574 Main North Rd
+          name: Adelaide Manor
+          id: '1255431'
+        - sortOrder: 6
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Enfield
+          postcode: '5085'
+          latitude: -34.85016
+          longitude: 138.60077
+          notes: null
+          brand: null
+          hotelString: null
+          address: '471 Main North Rd, '
+          name: Comfort Inn Manhattan
+          id: '1255432'
+        - sortOrder: 7
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Camden Park
+          postcode: '5038'
+          latitude: -34.97334
+          longitude: 138.54086
+          notes: null
+          brand: null
+          hotelString: null
+          address: Morphettville Motor Inn 444 - 446 Anzac Hwy
+          name: Morphettville Motor Inn
+          id: '1257946'
+        - sortOrder: 8
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 120684P5
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Medindie
+          postcode: '5081'
+          latitude: -34.89378
+          longitude: 138.60353
+          notes: null
+          brand: null
+          hotelString: null
+          address: '1 Nottage Tce, '
+          name: Comfort Inn Scottys
+          id: '1257951'
+        - sortOrder: 9
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.820854
+          longitude: 138.61382
+          notes: null
+          brand: null
+          hotelString: null
+          address: 'White Hut Road, '
+          name: Clare Country Club
+          id: '1262285'
+        - sortOrder: 10
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.848263
+          longitude: 138.6178
+          notes: null
+          brand: null
+          hotelString: null
+          address: '74a Main North Rd, '
+          name: Clare Valley Motel
+          id: '1262636'
+        - sortOrder: 11
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.87362
+          longitude: 138.6354
+          notes: null
+          brand: null
+          hotelString: null
+          address: Quarry Rd, Sevenhill via Clare Valley
+          name: Thorn Park by the Vines
+          id: '1289197'
+        - sortOrder: 12
+          destinationId: 123
+          productCodes:
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: West Lakes
+          postcode: '5021'
+          latitude: -34.88005
+          longitude: 138.48842
+          notes: null
+          brand: null
+          hotelString: null
+          address: 141 Brebner Dr
+          name: Lakes Hotel
+          id: '1301167'
+        - sortOrder: 13
+          destinationId: 123
+          productCodes:
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          phone: +1 123 456 7890
+          city: Largs Bay
+          postcode: '5016'
+          latitude: -34.825584
+          longitude: 138.4865
+          notes: null
+          brand: null
+          hotelString: null
+          address: 198 Esplanade
+          name: Largs Pier Hotel - Motel
+          id: '1301173'
+        - sortOrder: 14
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 120684P5
+          - 142696P2
+          - 142696P5
+          - 196440P1
+          - 19852P6
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 21300P2
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          - 40887P6
+          - 65854P1
+          - 65854P2
+          - 65854P3
+          - 65854P6
+          - 6763ULTIMATE
+          - 67705P1
+          - 67705P2
+          phone: +1 123 456 7890
+          city: Kent Town
+          postcode: '5067'
+          latitude: -34.924698
+          longitude: 138.6194
+          notes: null
+          brand: null
+          hotelString: null
+          address: 24 Dequetteville Tce
+          name: Adelaide Royal Coach
+          id: '1301183'
+        - sortOrder: 15
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Marion
+          postcode: '5038'
+          latitude: -34.97743
+          longitude: 138.55557
+          notes: null
+          brand: null
+          hotelString: null
+          address: 540 Marion Rd
+          name: Marion Motel and Apartments
+          id: '1320631'
+        - sortOrder: 16
+          destinationId: 123
+          productCodes: null
+          phone: +1 123 456 7890
+          city: Glenelg
+          postcode: '5045'
+          latitude: -34.97872
+          longitude: 138.51253
+          notes: null
+          brand: null
+          hotelString: null
+          address: '17 Colley Tce, '
+          name: Glenelg Beachside Apartments
+          id: '1579776'
+        - sortOrder: 17
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Glen Osmond
+          postcode: '5064'
+          latitude: -34.9604
+          longitude: 138.64185
+          notes: null
+          brand: null
+          hotelString: null
+          address: '373 Glen Osmond Rd, '
+          name: Jacksons Motor Inn
+          id: '1584919'
+        - sortOrder: 18
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Prospect
+          postcode: '5082'
+          latitude: -34.87285
+          longitude: 138.60158
+          notes: null
+          brand: null
+          hotelString: null
+          address: 288-292 Main North Rd
+          name: Comfort Inn & Suites Sombrero
+          id: '1589097'
+        - sortOrder: 19
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.854675
+          longitude: 138.62292
+          notes: null
+          brand: null
+          hotelString: null
+          address: 'Warenda Road, '
+          name: Brice Hill Country Lodge
+          id: '1626470'
+        - sortOrder: 20
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: ''
+          latitude: -33.84362
+          longitude: 138.63342
+          notes: null
+          brand: null
+          hotelString: null
+          address: 'Clare Valley, '
+          name: Springfarm Cottage
+          id: '1630042'
+        - sortOrder: 21
+          destinationId: 123
+          productCodes:
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Gilles Plains
+          postcode: '5086'
+          latitude: -34.852222
+          longitude: 138.665
+          notes: null
+          brand: null
+          hotelString: null
+          address: '647 North East Rd, '
+          name: Highlander Hotel Bar Kitchen Rooftop
+          id: '1633907'
+        - sortOrder: 22
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 120684P5
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Frewville
+          postcode: '5063'
+          latitude: -34.95136
+          longitude: 138.63423
+          notes: null
+          brand: null
+          hotelString: null
+          address: '277 Glen Osmond Road, '
+          name: Welcome Inn 277
+          id: '1661623'
+        - sortOrder: 23
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.829445
+          longitude: 138.60802
+          notes: null
+          brand: null
+          hotelString: null
+          address: '325 Main North Rd, '
+          name: Comfort Inn Clare Central
+          id: '1729496'
+        - sortOrder: 24
+          destinationId: 123
+          productCodes:
+          - 200245P4
+          phone: +1 123 456 7890
+          city: Normanville
+          postcode: '5204'
+          latitude: -35.46194
+          longitude: 138.31508
+          notes: null
+          brand: null
+          hotelString: null
+          address: '73 St Andrews Bvd, '
+          name: Links Lady Bay Resort
+          id: '1803904'
+        - sortOrder: 25
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 21300P1
+          - 21300P7
+          - 21300P9
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Brooklyn Park
+          postcode: '5032'
+          latitude: -34.93242
+          longitude: 138.5395
+          notes: null
+          brand: null
+          hotelString: null
+          address: '406 Sir Donald Bradman Dr, '
+          name: Adelaide Airport Motel
+          id: '2076447'
+        - sortOrder: 26
+          destinationId: 123
+          productCodes:
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          phone: +1 123 456 7890
+          city: Mawson Lakes
+          postcode: '5095'
+          latitude: -34.80973
+          longitude: 138.61734
+          notes: null
+          brand: null
+          hotelString: null
+          address: 10 Main St
+          name: Mawson Lakes Hotel
+          id: '2122469'
+        - sortOrder: 27
+          destinationId: 123
+          productCodes:
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Gilles Plains
+          postcode: '5086'
+          latitude: -34.85213
+          longitude: 138.6651
+          notes: null
+          brand: null
+          hotelString: null
+          address: '647 North East Rd, '
+          name: Comfort Inn Riverfront Berriedale
+          id: '2218971'
+        - sortOrder: 28
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.856297
+          longitude: 138.62358
+          notes: null
+          brand: null
+          hotelString: null
+          address: 72 Warenda Rd
+          name: St Helens Country Cottages
+          id: '2453318'
+        - sortOrder: 29
+          destinationId: 123
+          productCodes:
+          - 21300P1
+          - 21300P11
+          - 21300P14
+          - 21300P6
+          - 21300P7
+          - 21300P9
+          phone: +1 123 456 7890
+          city: null
+          postcode: '5006'
+          latitude: -34.904903
+          longitude: 138.5927
+          notes: null
+          brand: null
+          hotelString: null
+          address: '190 Gover St, '
+          name: North Adelaide Boutique Stays Accommodation
+          id: '2479967'
+        - sortOrder: 30
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 120684P5
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          - 6763ULTIMATE
+          phone: +1 123 456 7890
+          city: Frewville
+          postcode: '5063'
+          latitude: -34.94779
+          longitude: 138.62839
+          notes: null
+          brand: null
+          hotelString: null
+          address: '199 Glen Osmond Rd, '
+          name: Frewville Motor Inn
+          id: '2482535'
+        - sortOrder: 31
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 120684P5
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Glenunga
+          postcode: '5064'
+          latitude: -34.94681
+          longitude: 138.6427
+          notes: null
+          brand: null
+          hotelString: null
+          address: 493 Portrush Rd
+          name: Best Western Adelaide Granada Motor Inn
+          id: '2501758'
+        - sortOrder: 32
+          destinationId: 123
+          productCodes:
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 21300P10
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          phone: +1 123 456 7890
+          city: Mawson Lakes
+          postcode: '5095'
+          latitude: -34.806805
+          longitude: 138.61667
+          notes: null
+          brand: null
+          hotelString: null
+          address: 33 - 37 Main St
+          name: Quest Mawson Lakes
+          id: '2575802'
+        - sortOrder: 33
+          destinationId: 123
+          productCodes:
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Pooraka
+          postcode: '5095'
+          latitude: -34.82837
+          longitude: 138.61504
+          notes: null
+          brand: null
+          hotelString: null
+          address: '859 Main North Rd, '
+          name: Pavlos Motel
+          id: '2628301'
+        - sortOrder: 34
+          destinationId: 123
+          productCodes: null
+          phone: +1 123 456 7890
+          city: Penola
+          postcode: '5277'
+          latitude: -37.381992
+          longitude: 140.83783
+          notes: null
+          brand: null
+          hotelString: null
+          address: '23-25 Church St, '
+          name: Alexander Cameron Suites
+          id: '2640160'
+        - sortOrder: 35
+          destinationId: 123
+          productCodes: null
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.82023
+          longitude: 138.58174
+          notes: null
+          brand: null
+          hotelString: null
+          address: 151 St Georges Tce
+          name: Patly Hill Farm
+          id: '2773041'
+        - sortOrder: 36
+          destinationId: 123
+          productCodes:
+          - 200245P4
+          phone: +1 123 456 7890
+          city: Stansbury
+          postcode: '5582'
+          latitude: -34.91078
+          longitude: 137.79254
+          notes: null
+          brand: null
+          hotelString: null
+          address: 'corner of South & West Terrace, '
+          name: Oyster Court Motel & Holiday Units
+          id: '2774580'
+        - sortOrder: 37
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Tonsley
+          postcode: '5042'
+          latitude: -35.00457
+          longitude: 138.5747
+          notes: null
+          brand: null
+          hotelString: null
+          address: 1274 South Rd, Adelaide
+          name: Tonsley Hotel Motel
+          id: '2786536'
+        - sortOrder: 38
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Woodville Park
+          postcode: '5011'
+          latitude: -34.87638
+          longitude: 138.54959
+          notes: null
+          brand: null
+          hotelString: null
+          address: '445 Torrens Rd, '
+          name: Lindy Lodge Motel
+          id: '2853212'
+        - sortOrder: 39
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Burnside
+          postcode: '5066'
+          latitude: -34.93765
+          longitude: 138.66063
+          notes: null
+          brand: null
+          hotelString: null
+          address: 516 Glynburn Rd
+          name: The Feathers Hotel
+          id: '3002527'
+        - sortOrder: 40
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Glen Osmond
+          postcode: '5064'
+          latitude: -34.9643
+          longitude: 138.6466
+          notes: null
+          brand: null
+          hotelString: null
+          address: 20 Mount Barker Rd, (Corner Gill Terrace)
+          name: Tollgate Motel
+          id: '3235180'
+        - sortOrder: 41
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.846573
+          longitude: 138.62152
+          notes: null
+          brand: null
+          hotelString: null
+          address: '9 Warenda Rd, '
+          name: Riesling Trail and Clare Valley Cottages
+          id: '3240942'
+        - sortOrder: 42
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.90826
+          longitude: 138.6238
+          notes: null
+          brand: null
+          hotelString: null
+          address: 'Sevenhill, '
+          name: Skillogalee Cottages
+          id: '3281019'
+        - sortOrder: 43
+          destinationId: 123
+          productCodes: null
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.835503
+          longitude: 138.61389
+          notes: null
+          brand: null
+          hotelString: null
+          address: '191 Main North Rd, '
+          name: Bentleys Hotel Motel
+          id: '3516966'
+        - sortOrder: 44
+          destinationId: 123
+          productCodes: null
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.866726
+          longitude: 138.59903
+          notes: null
+          brand: null
+          hotelString: null
+          address: '220 Spring Gully Rd, '
+          name: Clare View Accommodation
+          id: '3668974'
+        - sortOrder: 45
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 120684P2
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Enfield
+          postcode: '5085'
+          latitude: -34.86265
+          longitude: 138.60156
+          notes: null
+          brand: null
+          hotelString: null
+          address: Motel 393 Main North Rd
+          name: Enfield Motel
+          id: '4257826'
+        - sortOrder: 46
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.864716
+          longitude: 138.62134
+          notes: null
+          brand: null
+          hotelString: null
+          address: Lot 136 Main North Road
+          name: Discovery Parks - Clare
+          id: '4345469'
+        - sortOrder: 47
+          destinationId: 123
+          productCodes:
+          - 200245P4
+          phone: +1 123 456 7890
+          city: Stansbury
+          postcode: '5582'
+          latitude: -34.903656
+          longitude: 137.79562
+          notes: null
+          brand: null
+          hotelString: null
+          address: 16-28 Adelaide Rd
+          name: Stansbury Holiday Motel
+          id: '4856431'
+        - sortOrder: 48
+          destinationId: 123
+          productCodes:
+          - 181322P2
+          phone: +1 123 456 7890
+          city: Brighton
+          postcode: '5048'
+          latitude: -35.01719
+          longitude: 138.51463
+          notes: null
+          brand: null
+          hotelString: null
+          address: 135 Esplanade, cnr Jetty Rd
+          name: Esplanade Hotel Adelaide
+          id: '4861044'
+        - sortOrder: 49
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5034'
+          latitude: -33.78769
+          longitude: 138.60567
+          notes: null
+          brand: null
+          hotelString: null
+          address: off Gaelic Cemetery Road, Stanley Flat
+          name: Wuthering Heights
+          id: '4971218'
+        - sortOrder: 50
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.7714
+          longitude: 138.5837
+          notes: null
+          brand: null
+          hotelString: null
+          address: 431 Bungaree Road, (Off Highway B82)
+          name: Bungaree Station
+          id: '5004100'
+        - sortOrder: 51
+          destinationId: 123
+          productCodes:
+          - 56243P2
+          - 56243P3
+          - 56243P6
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.83657
+          longitude: 138.61197
+          notes: null
+          brand: null
+          hotelString: null
+          address: 18 Victoria Rd
+          name: Clare Valley Heritage Retreat
+          id: '6029450'
+        - sortOrder: 52
+          destinationId: 123
+          productCodes: null
+          phone: +1 123 456 7890
+          city: Clare
+          postcode: '5453'
+          latitude: -33.83995
+          longitude: 138.61311
+          notes: null
+          brand: null
+          hotelString: null
+          address: 29 Hope St
+          name: The Reserve Apartment
+          id: '6461957'
+        - sortOrder: 53
+          destinationId: 123
+          productCodes:
+          - 119946P4
+          - 119946P5
+          - 119946P6
+          - 119946P8
+          - 119946P9
+          - 120684P2
+          - 120684P5
+          - 142696P2
+          - 142696P5
+          - 200245P1
+          - 200245P4
+          - 200245P5
+          - 200245P7
+          - 201625P1
+          - 215244P1
+          - 233580P1
+          - 233580P2
+          - 233580P4
+          - 238603P1
+          - 40887P5
+          phone: +1 123 456 7890
+          city: Walkerville
+          postcode: '5081'
+          latitude: -34.896725
+          longitude: 138.61743
+          notes: null
+          brand: null
+          hotelString: null
+          address: The Watson 33 Warwick St
+          name: The Watson Adelaide - Art Series
+          id: '7755816'
+        - sortOrder: 54
+          destinationId: 123
+          productCodes: null
+          phone: +1 123 456 7890
+          city: Moana
+          postcode: '5169'
+          latitude: -35.19921
+          longitude: 138.47296
+          notes: null
+          brand: null
+          hotelString: null
+          address: Moana Tourist Park 44 Nashwauk Cres
+          name: Moana Beach Tourist Park
+          id: '7870501'
+        dateStamp: 2020-02-10T18:33:02+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331004'
+    booking-status-items-example:
+      summary: booking status items example
+      value:
+        errorReference: null
+        data:
+        - itemId: 580669678
+          bookingStatus:
+            status: 1
+            text: Paid &amp; Confirmed
+            type: CONFIRMED
+            level: ITEM
+            confirmed: true
+            amended: false
+            failed: false
+            pending: false
+            cancelled: false
+          distributorItemRef: itemRef1000000
+        dateStamp: 2020-02-11T19:03:06+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        vmid: '331001'
+        errorMessageText: null
+    booking-status-example:
+      summary: booking status example
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          bookingStatus:
+            status: 3
+            text: Confirmed
+            type: CONFIRMED
+            level: ITINERARY
+            failed: false
+            confirmed: true
+            amended: false
+            pending: false
+            cancelled: false
+          itemSummaries:
+          - sortOrder: 0
+            bookingStatus:
+              status: 1
+              text: Paid &amp; Confirmed
+              type: CONFIRMED
+              level: ITEM
+              failed: false
+              confirmed: true
+              amended: false
+              pending: false
+              cancelled: false
+            travelDate: '2020-03-31'
+            distributorItemRef: itemRef1000000
+            itineraryId: 1005851866
+            itemId: 580669678
+          itineraryId: 1005851866
+          bookingDate: '2020-02-11'
+          distributorRef: distributorRef100000
+        dateStamp: 2020-02-11T18:38:25+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331004'
     booking-hotels-example-2:
       summary: productCode
       value:
@@ -3921,1259 +5715,6 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331005'
-    cancel-reasons-example:
-      summary: cancel reasons example
-      value:
-        reasons:
-        - cancellationReasonText: Unexpected/medical circumstances
-          cancellationReasonCode: Customer_Service.Unexpected_medical_circumstances
-        - cancellationReasonText: Duplicate Booking
-          cancellationReasonCode: Customer_Service.Duplicate_Booking
-        - cancellationReasonText: Tour operator asked me to cancel
-          cancellationReasonCode: Customer_Service.Tour operator asked me to cancel
-        - cancellationReasonText: Chose a different/cheaper tour
-          cancellationReasonCode: Customer_Service.Chose_a_different_cheaper_tour
-        - cancellationReasonText: Weather
-          cancellationReasonCode: Customer_Service.Weather
-        - cancellationReasonText: Booked wrong tour/date
-          cancellationReasonCode: Customer_Service.Booked_wrong_tour_date
-        - cancellationReasonText: I canceled my entire trip
-          cancellationReasonCode: Customer_Service.I_canceled_my_entire_trip
-    booking-book-example:
-      summary: booking book example
-      value:
-        errorReference: null
-        data:
-          sortOrder: 0
-          rulesApplied: null
-          omniPreRuleList: null
-          bookingStatus:
-            status: 3
-            text: Confirmed
-            type: CONFIRMED
-            level: ITINERARY
-            confirmed: true
-            pending: false
-            amended: false
-            cancelled: false
-            failed: false
-          itemSummaries:
-          - sortOrder: 0
-            rulesApplied: null
-            bookingStatus:
-              status: 1
-              text: Paid &amp; Confirmed
-              type: CONFIRMED
-              level: ITEM
-              failed: false
-              confirmed: true
-              amended: false
-              pending: false
-              cancelled: false
-            travellerAgeBands:
-            - sortOrder: 0
-              count: 1
-              pluralDescription: Adults
-              description: Adult
-              ageBandId: 1
-            voucherKey: 1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678
-            voucherURL: https://viatorapi.live.rc.viator.com/service/merchant/voucher.jspa?code=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678&embedResources=false
-            voucherRequirements: You can present either a paper or an electronic voucher for this activity.
-            appleWalletURL: null
-            productPulledDown: false
-            merchantCancellable: true
-            productWidgetList: null
-            savingAmount: 0
-            applePassSupported: false
-            supplierName: Sundance Helicopters
-            supplierPhoneNumber: +1 123 456 7890
-            vouchers: null
-            passbooks: null
-            termsAndConditions: null
-            merchantTermsAndConditions:
-              termsAndConditions: For a full refund, cancel at least 24 hours in advance of the start date of the experience.
-              merchantTermsAndConditionsType: 1
-              amountRefundable: USD 412.04
-              cancellationFromTourDate:
-              - dayRangeMin: 1
-                dayRangeMax: null
-                percentageRefundable: 100
-                policyStartTimestamp: null
-                policyEndTimestamp: 1585580400
-              - dayRangeMin: 0
-                dayRangeMax: 1
-                percentageRefundable: 0
-                policyStartTimestamp: 1585580400
-                policyEndTimestamp: 1585666800
-            productCode: 2280AAHT
-            travelDate: '2020-03-31'
-            tourGradeCode: TG1~08:00
-            distributorItemRef: itemRef1000000
-            startingTime: 8:00 AM
-            languageServicesLanguageCode: en
-            price: 412.04
-            leadTravellerSurname: Simpson test
-            itineraryId: 1005851866
-            productTitle: Grand Canyon All-American Helicopter Tour
-            merchantNetPrice: 388.72
-            priceFormatted: $412.04
-            destId: 684
-            voucherOption: VOUCHER_E
-            itemId: 580669678
-            barcodeOption: tour
-            barcodeType: code128
-            departurePoint: Traveler pickup is offered<br><br>
-            departurePointAddress: null
-            departurePointDirections: null
-            leadTravellerFirstname: Homer test
-            rnplInfo: null
-            obfsId: 362208
-            leadTravellerTitle: Mr
-            lastRetailPrice: 388.72
-            savingAmountFormated: $0.00
-            pickupHotelName: 'null'
-            hoursConfirmed: 0
-            lastRetailPriceFormatted: $388.72
-            tourGradeDescription: Morning Departure; A-Star 08:00 (TG1~08:00)
-            bookingEngineId: FO
-            merchantNetPriceFormatted: $388.72
-            departsFrom: Las Vegas, United States
-            pickupHotelId: null
-            priceUSD: 412.04
-            currencyCode: USD
-          voucherURL: https://viatorapi.live.rc.viator.com/service/merchant/voucher.jspa?code=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e&embedResources=false
-          securityToken: 4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e
-          paypalRedirectURL: null
-          exchangeRate: 1
-          itineraryId: 1005851866
-          bookingDate: '2020-02-11'
-          voucherKey: 1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e
-          bookerEmail: apitest@viator.com
-          distributorRef: distributorRef100000
-          totalPrice: 412.04
-          totalPriceFormatted: $412.04
-          totalPriceUSD: 412.04
-          hasVoucher: true
-          userId: null
-          currencyCode: USD
-        dateStamp: 2020-02-11T16:55:47+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331003'
-    booking-availability-example:
-      summary: booking availability example
-      value:
-        errorReference: null
-        data:
-          productCode: 5010SYDNEY
-          firstAvailableDate: '2020-06-01'
-          lastAvailableDate: '2021-02-10'
-          availability:
-          - sortOrder: 1
-            bookingDate: '2020-06-01'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 2
-            bookingDate: '2020-06-02'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 3
-            bookingDate: '2020-06-03'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 4
-            bookingDate: '2020-06-04'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 5
-            bookingDate: '2020-06-05'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 6
-            bookingDate: '2020-06-06'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 7
-            bookingDate: '2020-06-07'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 8
-            bookingDate: '2020-06-08'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 9
-            bookingDate: '2020-06-09'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 10
-            bookingDate: '2020-06-10'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 11
-            bookingDate: '2020-06-11'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 12
-            bookingDate: '2020-06-12'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 13
-            bookingDate: '2020-06-13'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 14
-            bookingDate: '2020-06-14'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 15
-            bookingDate: '2020-06-15'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 16
-            bookingDate: '2020-06-16'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 17
-            bookingDate: '2020-06-17'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 18
-            bookingDate: '2020-06-18'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 19
-            bookingDate: '2020-06-19'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 20
-            bookingDate: '2020-06-20'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 21
-            bookingDate: '2020-06-21'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 22
-            bookingDate: '2020-06-22'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 23
-            bookingDate: '2020-06-23'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 24
-            bookingDate: '2020-06-24'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 25
-            bookingDate: '2020-06-25'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 26
-            bookingDate: '2020-06-26'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 27
-            bookingDate: '2020-06-27'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 28
-            bookingDate: '2020-06-28'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 29
-            bookingDate: '2020-06-29'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-          - sortOrder: 30
-            bookingDate: '2020-06-30'
-            retailPrice: 53.1
-            gradeCode: 24HOUR
-            merchantNetPrice: 42.41
-            retailPriceFormatted: $53.10
-            unavailableReason: null
-            merchantNetPriceFormatted: $42.41
-            currencyCode: AUD
-            available: true
-        dateStamp: 2020-02-10T16:43:02+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331004'
-    booking-availability-dates-example:
-      summary: booking availability dates example
-      value:
-        errorReference: null
-        data:
-          2020-02:
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          2020-03:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          - '31'
-          2020-04:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          2020-05:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          - '31'
-          2020-06:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          2020-07:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          - '31'
-          2020-08:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          - '31'
-          2020-09:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          2020-10:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          - '31'
-          2020-11:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          2020-12:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          - '31'
-          2021-01:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-          - 9
-          - '10'
-          - '11'
-          - '12'
-          - '13'
-          - '14'
-          - '15'
-          - '16'
-          - '17'
-          - '18'
-          - '19'
-          - '20'
-          - '21'
-          - '22'
-          - '23'
-          - '24'
-          - '25'
-          - '26'
-          - '27'
-          - '28'
-          - '29'
-          - '30'
-          - '31'
-          2021-02:
-          - '01'
-          - '02'
-          - '03'
-          - '04'
-          - '05'
-          - '06'
-          - '07'
-          - 8
-        dateStamp: 2020-02-10T16:51:10+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331004'
-    booking-pastbooking-example:
-      summary: booking pastbooking example
-      value:
-        errorReference: null
-        data:
-          sortOrder: 0
-          rulesApplied: null
-          omniPreRuleList: []
-          bookingStatus:
-            status: 3
-            text: Confirmed
-            type: CONFIRMED
-            level: ITINERARY
-            confirmed: true
-            pending: false
-            amended: false
-            cancelled: false
-            failed: false
-          itemSummaries:
-          - sortOrder: 0
-            rulesApplied: null
-            bookingStatus:
-              status: 1
-              text: Paid &amp; Confirmed
-              type: CONFIRMED
-              level: ITEM
-              failed: false
-              confirmed: true
-              amended: false
-              pending: false
-              cancelled: false
-            travellerAgeBands:
-            - sortOrder: 0
-              count: 1
-              pluralDescription: Adults
-              description: Adult
-              ageBandId: 1
-            voucherKey: 1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678
-            voucherURL: https://viatorapi.live.rc.viator.com/service/merchant/voucher.jspa?code=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678&embedResources=false
-            voucherRequirements: You can present either a paper or an electronic voucher for this activity.
-            appleWalletURL: null
-            productPulledDown: false
-            merchantCancellable: true
-            productWidgetList: null
-            savingAmount: 0
-            applePassSupported: false
-            supplierName: Sundance Helicopters
-            supplierPhoneNumber: +1 123 456 7890
-            vouchers: null
-            passbooks: null
-            termsAndConditions: null
-            merchantTermsAndConditions:
-              termsAndConditions: For a full refund, cancel at least 24 hours in advance of the start date of the experience.
-              merchantTermsAndConditionsType: 1
-              amountRefundable: USD 412.04
-              cancellationFromTourDate:
-              - dayRangeMin: 1
-                dayRangeMax: null
-                percentageRefundable: 100
-                policyStartTimestamp: null
-                policyEndTimestamp: 1585580400
-              - dayRangeMin: 0
-                dayRangeMax: 1
-                percentageRefundable: 0
-                policyStartTimestamp: 1585580400
-                policyEndTimestamp: 1585666800
-            productCode: 2280AAHT
-            travelDate: '2020-03-31'
-            tourGradeCode: TG1~08:00
-            distributorItemRef: itemRef1000000
-            startingTime: 8:00 AM
-            languageServicesLanguageCode: en
-            price: 412.04
-            leadTravellerSurname: Simpson test
-            itineraryId: 1005851866
-            productTitle: Grand Canyon All-American Helicopter Tour
-            merchantNetPrice: 388.72
-            priceFormatted: $412.04
-            destId: 684
-            voucherOption: VOUCHER_E
-            itemId: 580669678
-            barcodeOption: tour
-            barcodeType: code128
-            departurePoint: Traveler pickup is offered<br><br>
-            departurePointAddress: null
-            departurePointDirections: null
-            leadTravellerFirstname: Homer test
-            rnplInfo: null
-            obfsId: 362208
-            leadTravellerTitle: Mr
-            lastRetailPrice: 388.72
-            savingAmountFormated: $0.00
-            pickupHotelName: 'null'
-            hoursConfirmed: 0
-            lastRetailPriceFormatted: $388.72
-            tourGradeDescription: Morning Departure; A-Star 08:00 (TG1~08:00)
-            bookingEngineId: FO
-            merchantNetPriceFormatted: $388.72
-            departsFrom: Las Vegas, United States
-            pickupHotelId: null
-            priceUSD: 412.04
-            currencyCode: USD
-          voucherURL: https://viatorapi.live.rc.viator.com/service/merchant/voucher.jspa?code=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e&embedResources=false
-          securityToken: 4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e
-          paypalRedirectURL: null
-          exchangeRate: 1
-          itineraryId: 1005851866
-          bookingDate: '2020-02-11'
-          voucherKey: 1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e
-          bookerEmail: apitest@viator.com
-          distributorRef: distributorRef100000
-          totalPrice: 412.04
-          totalPriceFormatted: $412.04
-          totalPriceUSD: 412.04
-          hasVoucher: true
-          userId: null
-          currencyCode: USD
-        dateStamp: 2020-02-11T20:06:43+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331003'
-    booking-pricingmatrix-example:
-      summary: booking pricing matrix example
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          pricingUnit: per person
-          bookingDate: '2020-03-11'
-          ageBandPrices:
-          - bandId: 1
-            prices:
-            - sortOrder: 1
-              currencyCode: EUR
-              price: 33.35
-              merchantNetPrice: 26.64
-              priceFormatted: €33,35
-              merchantNetPriceFormatted: €26,64
-              minNoOfTravellersRequiredForPrice: 1
-            sortOrder: 1
-            minimumCountRequired: 0
-            maximumCountRequired: 9
-          - bandId: 2
-            prices:
-            - sortOrder: 1
-              currencyCode: EUR
-              price: 22.61
-              merchantNetPrice: 18.06
-              priceFormatted: €22,61
-              merchantNetPriceFormatted: €18,06
-              minNoOfTravellersRequiredForPrice: 1
-            sortOrder: 2
-            minimumCountRequired: 0
-            maximumCountRequired: 9
-        dateStamp: 2020-02-11T16:21:23+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331003'
-    booking-status-example:
-      summary: booking status example
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          bookingStatus:
-            status: 3
-            text: Confirmed
-            type: CONFIRMED
-            level: ITINERARY
-            failed: false
-            confirmed: true
-            amended: false
-            pending: false
-            cancelled: false
-          itemSummaries:
-          - sortOrder: 0
-            bookingStatus:
-              status: 1
-              text: Paid &amp; Confirmed
-              type: CONFIRMED
-              level: ITEM
-              failed: false
-              confirmed: true
-              amended: false
-              pending: false
-              cancelled: false
-            travelDate: '2020-03-31'
-            distributorItemRef: itemRef1000000
-            itineraryId: 1005851866
-            itemId: 580669678
-          itineraryId: 1005851866
-          bookingDate: '2020-02-11'
-          distributorRef: distributorRef100000
-        dateStamp: 2020-02-11T18:38:25+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331004'
-    booking-status-items-example:
-      summary: booking status items example
-      value:
-        errorReference: null
-        data:
-        - itemId: 580669678
-          bookingStatus:
-            status: 1
-            text: Paid &amp; Confirmed
-            type: CONFIRMED
-            level: ITEM
-            confirmed: true
-            amended: false
-            failed: false
-            pending: false
-            cancelled: false
-          distributorItemRef: itemRef1000000
-        dateStamp: 2020-02-11T19:03:06+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        vmid: '331001'
-        errorMessageText: null
-    booking-availability-tourgrades-example:
-      summary: booking availability tourgrades example
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          bookingDate: '2020-02-28'
-          ageBands:
-          - bandId: 1
-            count: 1
-            bandTotal: 42.41
-            pricePerTravelerFormatted: $42.41
-            pricePerTraveler: 42.41
-            bandTotalFormatted: $42.41
-            currencyCode: AUD
-          ageBandsRequired: null
-          langServices:
-            en/SERVICE_AUDIO: English - Audio
-            de/SERVICE_AUDIO: German - Audio
-            fr/SERVICE_AUDIO: French - Audio
-            es/SERVICE_AUDIO: Spanish - Audio
-            ja/SERVICE_AUDIO: Japanese - Audio
-            ko/SERVICE_AUDIO: Korean - Audio
-            zh/SERVICE_AUDIO: Chinese - Audio
-          gradeCode: 24HOUR
-          unavailableReason: null
-          gradeTitle: '24 Hour Classic Ticket '
-          gradeDepartureTime: ''
-          gradeDescription: Unlimited use on Big Bus Sydney & Bondi Hop-on Hop-off Tour for 24 hours from time of first use
-          defaultLanguageCode: en
-          available: true
-          retailPrice: 53.1
-          merchantNetPrice: 42.41
-          retailPriceFormatted: $53.10
-          merchantNetPriceFormatted: $42.41
-          currencyCode: AUD
-        - sortOrder: 2
-          bookingDate: '2020-02-28'
-          ageBands:
-          - bandId: 1
-            count: 1
-            bandTotal: 56.79
-            pricePerTravelerFormatted: $56.79
-            pricePerTraveler: 56.79
-            bandTotalFormatted: $56.79
-            currencyCode: AUD
-          ageBandsRequired: null
-          langServices:
-            en/SERVICE_AUDIO: English - Audio
-            de/SERVICE_AUDIO: German - Audio
-            fr/SERVICE_AUDIO: French - Audio
-            es/SERVICE_AUDIO: Spanish - Audio
-            ja/SERVICE_AUDIO: Japanese - Audio
-            ko/SERVICE_AUDIO: Korean - Audio
-            zh/SERVICE_AUDIO: Chinese - Audio
-          gradeCode: 48HOUR
-          unavailableReason: null
-          gradeTitle: '48 Hour Premium Ticket '
-          gradeDepartureTime: ''
-          gradeDescription: '48 Hour Premium Ticket: Unlimited use on Big Bus Sydney & Bondi Tour for 48 hours from time of first use PLUS a guided walking tour of The Rocks, Syd'
-          defaultLanguageCode: en
-          available: true
-          retailPrice: 71.1
-          merchantNetPrice: 56.79
-          retailPriceFormatted: $71.10
-          merchantNetPriceFormatted: $56.79
-          currencyCode: AUD
-        - sortOrder: 3
-          bookingDate: '2020-02-28'
-          ageBands:
-          - bandId: 1
-            count: 1
-            bandTotal: 79.08
-            pricePerTravelerFormatted: $79.08
-            pricePerTraveler: 79.08
-            bandTotalFormatted: $79.08
-            currencyCode: AUD
-          ageBandsRequired: null
-          langServices:
-            en/SERVICE_AUDIO: English - Audio
-            de/SERVICE_AUDIO: German - Audio
-            fr/SERVICE_AUDIO: French - Audio
-            es/SERVICE_AUDIO: Spanish - Audio
-            ja/SERVICE_AUDIO: Japanese - Audio
-            ko/SERVICE_AUDIO: Korean - Audio
-            zh/SERVICE_AUDIO: Chinese - Audio
-          gradeCode: DELUXE
-          unavailableReason: null
-          gradeTitle: 48 Hour Deluxe Bus and Cruise
-          gradeDepartureTime: ''
-          gradeDescription: 'Big Bus and Habour Cruise: Combine two great Sydney experiences into one with a hop-on hop off Big Bus Tours and a hop-on hop-off Sydney Harbour cruise <br/>Duration: 2 days: SPECIAL OFFER: EXTRA FREE DAY when you purchase a Deluxe ticket - have 3 days to explore Sydney not 2. Limited time only.
-
-            <br/>Complimentary Walking Tour: Complimentary English-speaking 90-minute guided walking tour of “The Rocks” historic and harbourside precinct.'
-          defaultLanguageCode: en
-          available: true
-          retailPrice: 99
-          merchantNetPrice: 79.08
-          retailPriceFormatted: $99.00
-          merchantNetPriceFormatted: $79.08
-          currencyCode: AUD
-        - sortOrder: 4
-          bookingDate: '2020-02-28'
-          ageBands:
-          - bandId: 1
-            count: 1
-            bandTotal: 103.04
-            pricePerTravelerFormatted: $103.04
-            pricePerTraveler: 103.04
-            bandTotalFormatted: $103.04
-            currencyCode: AUD
-          ageBandsRequired: null
-          langServices:
-            en/SERVICE_AUDIO: English - Audio
-            de/SERVICE_AUDIO: German - Audio
-            fr/SERVICE_AUDIO: French - Audio
-            es/SERVICE_AUDIO: Spanish - Audio
-            ja/SERVICE_AUDIO: Japanese - Audio
-            ko/SERVICE_AUDIO: Korean - Audio
-            zh/SERVICE_AUDIO: Chinese - Audio
-          gradeCode: TG1
-          unavailableReason: null
-          gradeTitle: 48Hour Deluxe PLUS Attractions
-          gradeDepartureTime: ''
-          gradeDescription: 'Hop-on Hop-Off and Attractions: 48hr Big Bus Tours, 1-day Hop-On Hop-Off Harbour Cruise, 4 Attractions: Tower Eye, Madame Tussauds, Wildlife Zoo, Aquarium<br/>Duration: 2 days: SPECIAL OFFER: EXTRA FREE DAY when you purchase a Deluxe ticket - have 3 days to explore Sydney not 2. Limited time only.
-
-            <br/>Complimentary Walking Tours: Complimentary English-speaking guided walking tour of “The Rocks” historic and harbourside precinct.'
-          defaultLanguageCode: en
-          available: true
-          retailPrice: 129
-          merchantNetPrice: 103.04
-          retailPriceFormatted: $129.00
-          merchantNetPriceFormatted: $103.04
-          currencyCode: AUD
-        dateStamp: 2020-02-10T16:57:56+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject:
-          CDE_BRAINTREE:
-            APPAY: sandbox_rtg2qcnx_yx8ptb2tqsjnzdnj
-            PP: sandbox_rtg2qcnx_yx8ptb2tqsjnzdnj
-            GPAY: sandbox_rtg2qcnx_yx8ptb2tqsjnzdnj
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331003'
     booking-mybookings-example:
       summary: booking mybookings example
       value:
@@ -6485,1284 +7026,124 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331003'
-    booking-hotels-example-1:
-      summary: destId
+    booking-book-example:
+      summary: booking book example
       value:
         errorReference: null
         data:
-        - sortOrder: 1
-          destinationId: 123
-          productCodes: null
-          phone: +1 123 456 7890
-          city: Hahndorf
-          postcode: '5245'
-          latitude: -35.031216
-          longitude: 138.81102
-          notes: null
-          brand: null
-          hotelString: null
-          address: 35 Main St
-          name: The Hahndorf Inn
-          id: '1001419406'
-        - sortOrder: 2
-          destinationId: 123
-          productCodes: null
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.863453
-          longitude: 138.61
-          notes: null
-          brand: null
-          hotelString: null
-          address: Lot 112 Neagles Rock Road
-          name: Neagles Retreat Villas
-          id: '10984108'
-        - sortOrder: 3
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.831417
-          longitude: 138.60942
-          notes: null
-          brand: null
-          hotelString: null
-          address: 310 Main North Rd
-          name: The Mill Apartments
-          id: '11205163'
-        - sortOrder: 4
-          destinationId: 123
-          productCodes:
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          phone: +1 123 456 7890
-          city: Reynella
-          postcode: '5161'
-          latitude: -35.08964
-          longitude: 138.53828
-          notes: null
-          brand: null
-          hotelString: null
-          address: 14 Bridge St, Old Reynella
-          name: St. Francis Winery
-          id: '1255430'
-        - sortOrder: 5
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Enfield
-          postcode: '5094'
-          latitude: -34.845764
-          longitude: 138.60115
-          notes: null
-          brand: null
-          hotelString: null
-          address: Motel 574 Main North Rd
-          name: Adelaide Manor
-          id: '1255431'
-        - sortOrder: 6
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Enfield
-          postcode: '5085'
-          latitude: -34.85016
-          longitude: 138.60077
-          notes: null
-          brand: null
-          hotelString: null
-          address: '471 Main North Rd, '
-          name: Comfort Inn Manhattan
-          id: '1255432'
-        - sortOrder: 7
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Camden Park
-          postcode: '5038'
-          latitude: -34.97334
-          longitude: 138.54086
-          notes: null
-          brand: null
-          hotelString: null
-          address: Morphettville Motor Inn 444 - 446 Anzac Hwy
-          name: Morphettville Motor Inn
-          id: '1257946'
-        - sortOrder: 8
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 120684P5
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Medindie
-          postcode: '5081'
-          latitude: -34.89378
-          longitude: 138.60353
-          notes: null
-          brand: null
-          hotelString: null
-          address: '1 Nottage Tce, '
-          name: Comfort Inn Scottys
-          id: '1257951'
-        - sortOrder: 9
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.820854
-          longitude: 138.61382
-          notes: null
-          brand: null
-          hotelString: null
-          address: 'White Hut Road, '
-          name: Clare Country Club
-          id: '1262285'
-        - sortOrder: 10
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.848263
-          longitude: 138.6178
-          notes: null
-          brand: null
-          hotelString: null
-          address: '74a Main North Rd, '
-          name: Clare Valley Motel
-          id: '1262636'
-        - sortOrder: 11
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.87362
-          longitude: 138.6354
-          notes: null
-          brand: null
-          hotelString: null
-          address: Quarry Rd, Sevenhill via Clare Valley
-          name: Thorn Park by the Vines
-          id: '1289197'
-        - sortOrder: 12
-          destinationId: 123
-          productCodes:
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: West Lakes
-          postcode: '5021'
-          latitude: -34.88005
-          longitude: 138.48842
-          notes: null
-          brand: null
-          hotelString: null
-          address: 141 Brebner Dr
-          name: Lakes Hotel
-          id: '1301167'
-        - sortOrder: 13
-          destinationId: 123
-          productCodes:
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          phone: +1 123 456 7890
-          city: Largs Bay
-          postcode: '5016'
-          latitude: -34.825584
-          longitude: 138.4865
-          notes: null
-          brand: null
-          hotelString: null
-          address: 198 Esplanade
-          name: Largs Pier Hotel - Motel
-          id: '1301173'
-        - sortOrder: 14
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 120684P5
-          - 142696P2
-          - 142696P5
-          - 196440P1
-          - 19852P6
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 21300P2
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          - 40887P6
-          - 65854P1
-          - 65854P2
-          - 65854P3
-          - 65854P6
-          - 6763ULTIMATE
-          - 67705P1
-          - 67705P2
-          phone: +1 123 456 7890
-          city: Kent Town
-          postcode: '5067'
-          latitude: -34.924698
-          longitude: 138.6194
-          notes: null
-          brand: null
-          hotelString: null
-          address: 24 Dequetteville Tce
-          name: Adelaide Royal Coach
-          id: '1301183'
-        - sortOrder: 15
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Marion
-          postcode: '5038'
-          latitude: -34.97743
-          longitude: 138.55557
-          notes: null
-          brand: null
-          hotelString: null
-          address: 540 Marion Rd
-          name: Marion Motel and Apartments
-          id: '1320631'
-        - sortOrder: 16
-          destinationId: 123
-          productCodes: null
-          phone: +1 123 456 7890
-          city: Glenelg
-          postcode: '5045'
-          latitude: -34.97872
-          longitude: 138.51253
-          notes: null
-          brand: null
-          hotelString: null
-          address: '17 Colley Tce, '
-          name: Glenelg Beachside Apartments
-          id: '1579776'
-        - sortOrder: 17
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Glen Osmond
-          postcode: '5064'
-          latitude: -34.9604
-          longitude: 138.64185
-          notes: null
-          brand: null
-          hotelString: null
-          address: '373 Glen Osmond Rd, '
-          name: Jacksons Motor Inn
-          id: '1584919'
-        - sortOrder: 18
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Prospect
-          postcode: '5082'
-          latitude: -34.87285
-          longitude: 138.60158
-          notes: null
-          brand: null
-          hotelString: null
-          address: 288-292 Main North Rd
-          name: Comfort Inn & Suites Sombrero
-          id: '1589097'
-        - sortOrder: 19
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.854675
-          longitude: 138.62292
-          notes: null
-          brand: null
-          hotelString: null
-          address: 'Warenda Road, '
-          name: Brice Hill Country Lodge
-          id: '1626470'
-        - sortOrder: 20
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: ''
-          latitude: -33.84362
-          longitude: 138.63342
-          notes: null
-          brand: null
-          hotelString: null
-          address: 'Clare Valley, '
-          name: Springfarm Cottage
-          id: '1630042'
-        - sortOrder: 21
-          destinationId: 123
-          productCodes:
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Gilles Plains
-          postcode: '5086'
-          latitude: -34.852222
-          longitude: 138.665
-          notes: null
-          brand: null
-          hotelString: null
-          address: '647 North East Rd, '
-          name: Highlander Hotel Bar Kitchen Rooftop
-          id: '1633907'
-        - sortOrder: 22
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 120684P5
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Frewville
-          postcode: '5063'
-          latitude: -34.95136
-          longitude: 138.63423
-          notes: null
-          brand: null
-          hotelString: null
-          address: '277 Glen Osmond Road, '
-          name: Welcome Inn 277
-          id: '1661623'
-        - sortOrder: 23
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.829445
-          longitude: 138.60802
-          notes: null
-          brand: null
-          hotelString: null
-          address: '325 Main North Rd, '
-          name: Comfort Inn Clare Central
-          id: '1729496'
-        - sortOrder: 24
-          destinationId: 123
-          productCodes:
-          - 200245P4
-          phone: +1 123 456 7890
-          city: Normanville
-          postcode: '5204'
-          latitude: -35.46194
-          longitude: 138.31508
-          notes: null
-          brand: null
-          hotelString: null
-          address: '73 St Andrews Bvd, '
-          name: Links Lady Bay Resort
-          id: '1803904'
-        - sortOrder: 25
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 21300P1
-          - 21300P7
-          - 21300P9
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Brooklyn Park
-          postcode: '5032'
-          latitude: -34.93242
-          longitude: 138.5395
-          notes: null
-          brand: null
-          hotelString: null
-          address: '406 Sir Donald Bradman Dr, '
-          name: Adelaide Airport Motel
-          id: '2076447'
-        - sortOrder: 26
-          destinationId: 123
-          productCodes:
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          phone: +1 123 456 7890
-          city: Mawson Lakes
-          postcode: '5095'
-          latitude: -34.80973
-          longitude: 138.61734
-          notes: null
-          brand: null
-          hotelString: null
-          address: 10 Main St
-          name: Mawson Lakes Hotel
-          id: '2122469'
-        - sortOrder: 27
-          destinationId: 123
-          productCodes:
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Gilles Plains
-          postcode: '5086'
-          latitude: -34.85213
-          longitude: 138.6651
-          notes: null
-          brand: null
-          hotelString: null
-          address: '647 North East Rd, '
-          name: Comfort Inn Riverfront Berriedale
-          id: '2218971'
-        - sortOrder: 28
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.856297
-          longitude: 138.62358
-          notes: null
-          brand: null
-          hotelString: null
-          address: 72 Warenda Rd
-          name: St Helens Country Cottages
-          id: '2453318'
-        - sortOrder: 29
-          destinationId: 123
-          productCodes:
-          - 21300P1
-          - 21300P11
-          - 21300P14
-          - 21300P6
-          - 21300P7
-          - 21300P9
-          phone: +1 123 456 7890
-          city: null
-          postcode: '5006'
-          latitude: -34.904903
-          longitude: 138.5927
-          notes: null
-          brand: null
-          hotelString: null
-          address: '190 Gover St, '
-          name: North Adelaide Boutique Stays Accommodation
-          id: '2479967'
-        - sortOrder: 30
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 120684P5
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          - 6763ULTIMATE
-          phone: +1 123 456 7890
-          city: Frewville
-          postcode: '5063'
-          latitude: -34.94779
-          longitude: 138.62839
-          notes: null
-          brand: null
-          hotelString: null
-          address: '199 Glen Osmond Rd, '
-          name: Frewville Motor Inn
-          id: '2482535'
-        - sortOrder: 31
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 120684P5
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Glenunga
-          postcode: '5064'
-          latitude: -34.94681
-          longitude: 138.6427
-          notes: null
-          brand: null
-          hotelString: null
-          address: 493 Portrush Rd
-          name: Best Western Adelaide Granada Motor Inn
-          id: '2501758'
-        - sortOrder: 32
-          destinationId: 123
-          productCodes:
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 21300P10
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          phone: +1 123 456 7890
-          city: Mawson Lakes
-          postcode: '5095'
-          latitude: -34.806805
-          longitude: 138.61667
-          notes: null
-          brand: null
-          hotelString: null
-          address: 33 - 37 Main St
-          name: Quest Mawson Lakes
-          id: '2575802'
-        - sortOrder: 33
-          destinationId: 123
-          productCodes:
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Pooraka
-          postcode: '5095'
-          latitude: -34.82837
-          longitude: 138.61504
-          notes: null
-          brand: null
-          hotelString: null
-          address: '859 Main North Rd, '
-          name: Pavlos Motel
-          id: '2628301'
-        - sortOrder: 34
-          destinationId: 123
-          productCodes: null
-          phone: +1 123 456 7890
-          city: Penola
-          postcode: '5277'
-          latitude: -37.381992
-          longitude: 140.83783
-          notes: null
-          brand: null
-          hotelString: null
-          address: '23-25 Church St, '
-          name: Alexander Cameron Suites
-          id: '2640160'
-        - sortOrder: 35
-          destinationId: 123
-          productCodes: null
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.82023
-          longitude: 138.58174
-          notes: null
-          brand: null
-          hotelString: null
-          address: 151 St Georges Tce
-          name: Patly Hill Farm
-          id: '2773041'
-        - sortOrder: 36
-          destinationId: 123
-          productCodes:
-          - 200245P4
-          phone: +1 123 456 7890
-          city: Stansbury
-          postcode: '5582'
-          latitude: -34.91078
-          longitude: 137.79254
-          notes: null
-          brand: null
-          hotelString: null
-          address: 'corner of South & West Terrace, '
-          name: Oyster Court Motel & Holiday Units
-          id: '2774580'
-        - sortOrder: 37
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Tonsley
-          postcode: '5042'
-          latitude: -35.00457
-          longitude: 138.5747
-          notes: null
-          brand: null
-          hotelString: null
-          address: 1274 South Rd, Adelaide
-          name: Tonsley Hotel Motel
-          id: '2786536'
-        - sortOrder: 38
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Woodville Park
-          postcode: '5011'
-          latitude: -34.87638
-          longitude: 138.54959
-          notes: null
-          brand: null
-          hotelString: null
-          address: '445 Torrens Rd, '
-          name: Lindy Lodge Motel
-          id: '2853212'
-        - sortOrder: 39
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Burnside
-          postcode: '5066'
-          latitude: -34.93765
-          longitude: 138.66063
-          notes: null
-          brand: null
-          hotelString: null
-          address: 516 Glynburn Rd
-          name: The Feathers Hotel
-          id: '3002527'
-        - sortOrder: 40
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Glen Osmond
-          postcode: '5064'
-          latitude: -34.9643
-          longitude: 138.6466
-          notes: null
-          brand: null
-          hotelString: null
-          address: 20 Mount Barker Rd, (Corner Gill Terrace)
-          name: Tollgate Motel
-          id: '3235180'
-        - sortOrder: 41
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.846573
-          longitude: 138.62152
-          notes: null
-          brand: null
-          hotelString: null
-          address: '9 Warenda Rd, '
-          name: Riesling Trail and Clare Valley Cottages
-          id: '3240942'
-        - sortOrder: 42
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.90826
-          longitude: 138.6238
-          notes: null
-          brand: null
-          hotelString: null
-          address: 'Sevenhill, '
-          name: Skillogalee Cottages
-          id: '3281019'
-        - sortOrder: 43
-          destinationId: 123
-          productCodes: null
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.835503
-          longitude: 138.61389
-          notes: null
-          brand: null
-          hotelString: null
-          address: '191 Main North Rd, '
-          name: Bentleys Hotel Motel
-          id: '3516966'
-        - sortOrder: 44
-          destinationId: 123
-          productCodes: null
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.866726
-          longitude: 138.59903
-          notes: null
-          brand: null
-          hotelString: null
-          address: '220 Spring Gully Rd, '
-          name: Clare View Accommodation
-          id: '3668974'
-        - sortOrder: 45
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 120684P2
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Enfield
-          postcode: '5085'
-          latitude: -34.86265
-          longitude: 138.60156
-          notes: null
-          brand: null
-          hotelString: null
-          address: Motel 393 Main North Rd
-          name: Enfield Motel
-          id: '4257826'
-        - sortOrder: 46
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.864716
-          longitude: 138.62134
-          notes: null
-          brand: null
-          hotelString: null
-          address: Lot 136 Main North Road
-          name: Discovery Parks - Clare
-          id: '4345469'
-        - sortOrder: 47
-          destinationId: 123
-          productCodes:
-          - 200245P4
-          phone: +1 123 456 7890
-          city: Stansbury
-          postcode: '5582'
-          latitude: -34.903656
-          longitude: 137.79562
-          notes: null
-          brand: null
-          hotelString: null
-          address: 16-28 Adelaide Rd
-          name: Stansbury Holiday Motel
-          id: '4856431'
-        - sortOrder: 48
-          destinationId: 123
-          productCodes:
-          - 181322P2
-          phone: +1 123 456 7890
-          city: Brighton
-          postcode: '5048'
-          latitude: -35.01719
-          longitude: 138.51463
-          notes: null
-          brand: null
-          hotelString: null
-          address: 135 Esplanade, cnr Jetty Rd
-          name: Esplanade Hotel Adelaide
-          id: '4861044'
-        - sortOrder: 49
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5034'
-          latitude: -33.78769
-          longitude: 138.60567
-          notes: null
-          brand: null
-          hotelString: null
-          address: off Gaelic Cemetery Road, Stanley Flat
-          name: Wuthering Heights
-          id: '4971218'
-        - sortOrder: 50
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.7714
-          longitude: 138.5837
-          notes: null
-          brand: null
-          hotelString: null
-          address: 431 Bungaree Road, (Off Highway B82)
-          name: Bungaree Station
-          id: '5004100'
-        - sortOrder: 51
-          destinationId: 123
-          productCodes:
-          - 56243P2
-          - 56243P3
-          - 56243P6
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.83657
-          longitude: 138.61197
-          notes: null
-          brand: null
-          hotelString: null
-          address: 18 Victoria Rd
-          name: Clare Valley Heritage Retreat
-          id: '6029450'
-        - sortOrder: 52
-          destinationId: 123
-          productCodes: null
-          phone: +1 123 456 7890
-          city: Clare
-          postcode: '5453'
-          latitude: -33.83995
-          longitude: 138.61311
-          notes: null
-          brand: null
-          hotelString: null
-          address: 29 Hope St
-          name: The Reserve Apartment
-          id: '6461957'
-        - sortOrder: 53
-          destinationId: 123
-          productCodes:
-          - 119946P4
-          - 119946P5
-          - 119946P6
-          - 119946P8
-          - 119946P9
-          - 120684P2
-          - 120684P5
-          - 142696P2
-          - 142696P5
-          - 200245P1
-          - 200245P4
-          - 200245P5
-          - 200245P7
-          - 201625P1
-          - 215244P1
-          - 233580P1
-          - 233580P2
-          - 233580P4
-          - 238603P1
-          - 40887P5
-          phone: +1 123 456 7890
-          city: Walkerville
-          postcode: '5081'
-          latitude: -34.896725
-          longitude: 138.61743
-          notes: null
-          brand: null
-          hotelString: null
-          address: The Watson 33 Warwick St
-          name: The Watson Adelaide - Art Series
-          id: '7755816'
-        - sortOrder: 54
-          destinationId: 123
-          productCodes: null
-          phone: +1 123 456 7890
-          city: Moana
-          postcode: '5169'
-          latitude: -35.19921
-          longitude: 138.47296
-          notes: null
-          brand: null
-          hotelString: null
-          address: Moana Tourist Park 44 Nashwauk Cres
-          name: Moana Beach Tourist Park
-          id: '7870501'
-        dateStamp: 2020-02-10T18:33:02+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331004'
-    booking-voucher-example:
-      summary: booking voucher example
-      value:
-        errorReference: null
-        data: "\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\">\n    <head>\n        <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />\n        <meta name=\"viewport\" content=\"width=device-width\" />\n        <title>Viator</title>\n    </head>\n    <body>\n        <div id=\"content\" class=\"voucher_box\">\n                <div id=\"voucher_1\">\n\n        <div class=\"section\">\n            <div class=\"voucher_title\">\n                Voucher 1\n                of 1: Homer test Simpson test\n            </div>\n        </div>\n\n        <div class=\"section bline\">\n            <div class=\"btn_box\">\n            </div>\n        </div>\n\n        <div style=\"line-height: 1.5;font-family:'Arial','Helvetica','Verdana',sans-serif; font-size: 12px; padding: 0 10px; border-bottom: 1px solid #CAE2EA;\">\n\n            <h2 style=\"font-size:16px;font-weight:bold;margin:0.5em 0;padding:0;\">\n            Grand Canyon All-American Helicopter Tour\n                    <span style=\"display: block;font-size:12px;\">\n                        Morning Departure; A-Star 08:00\n                    </span>\n            </h2>\n\n            <div class=\"barcode\">\n                <img src=\"/voucher/resource?type=barcode&itineraryItemId=580669678&voucherToken=4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e\" alt=\"\"/>\n            </div>\n\n                <h2 style=\"font-size:16px;font-weight:bold;margin:0.5em 0;padding:0;\">SAMPLE ONLY</h2>\n\n            <ul style=\"margin:0 0 1em 1em; padding:0;\">\n                <li>\n                    <strong>Date:</strong>\n                Tuesday March 31, 2020\n                </li>\n            </ul>\n\n            <ul style=\"margin:0 0 1em 1em; padding:0;\">\n                    <li>\n                        <strong>Lead traveler\n                            :\n                        </strong>Homer test Simpson test\n                    </li>\n                    <li>\n                        <strong>Number of Travelers\n                            :\n                        </strong>1 Adult</li>\n\n                <li>\n                    <strong>Booking Reference:\n                    </strong>BR-580669678</li>\n\n                <li>\n                    <strong>Product Code:\n                    </strong>2280AAHT</li>\n\n                    <li>\n                        <strong>Option Code:\n                        </strong>TG1~08:00</li>\n\n                    <li>\n                        <strong>Supplier\n                            : </strong>Sundance Helicopters</li>\n\n\n\n\n\n                <li>\n                    <strong>Location\n                        :</strong>\n                            <p>Traveler pickup is offered<br><br></p>\n                </li>\n\n                    <li>\n                        <strong>Tour Option Description\n                            :</strong>\n                    Morning departure between 8am and 11:45am on an A-Star Helicopter for the All American Helicopter Tour\n                        \n                    </li>\n            </ul>\n\n            <h3 style=\"font-size:14px;font-weight:bold;margin:0.5em 0;padding:0;\">\n            Voucher Information\n            </h3>\n\n            <ul style=\"margin:0 0 1em 1em; padding:0;\">\n                You can present either a paper or an electronic voucher for this activity.\n                    <span style=\"color:#888888;\"> / You can present either a paper or an electronic voucher for this activity.</span>\n            </ul>\n\n            <h3 style=\"font-size:14px;font-weight:bold;margin:0.5em 0;padding:0;\">\n            Important Information\n            </h3>\n                <ul>\n<li>Your local contact is Sundance Helicopters on +17027360606.</li></ul>\n• Important: due to comfort, weight and balance of the aircraft, the maximum weight per passenger to ride in an A-Star helicopter is 275lbs (125kg / 19.6st). If passengers weigh in between 275lbs and 300lbs (136kg/21.4st), you will be required to upgrade to the EC-130.<br> • Any passenger over 300lbs will be required to purchase an additional seat. This is payable directly to the tour operator on the day of the tour.<br> • Due to the nature of this tour and the safety of all guests, the tour operator reserves the right to refuse service to passengers who are intoxicated or show signs of intoxication. If, as a result, your tour is canceled, you will not be entitled to a refund.<br> • Infant children must be under the age of two and have proof of age, such as a passport and are considered lap children.<br> • Per FAA regulations, all passenger must present photo ID at check in.<br> • If you would like a vegetarian meal as your lunch option, please contact the local operator as soon as possible.<br> • Please Note: Please look for your Limo driver who will get out and will be looking for the lead traveler’s last name of whom the reservation is under. There is also a sign in the front windshield of the Limo that will say Sundance Helicopters.<br><br>Hotel pickups commence prior to this time, you must contact the local service provider to verify your exact pickup time.<br><br>All flight times are approximate and subject to change due to weather conditions and weight restrictions.<br>\n\n                <h3 style=\"font-size:14px;font-weight:bold;margin:0.5em 0;padding:0;\">\n                Inclusions\n                </h3>\n                    <ul>\n<li>45-minute (approx.) flight each way (helicopter based on option selected)</li><li>Hotel pickup and drop-off by limousine</li><li>Snacks</li><li>Glass of Champagne</li><li>All taxes and fees</li></ul>\n\n\n                <h3 style=\"font-size:14px;font-weight:bold;margin:0.5em 0;padding:0;\">\n                Exclusions\n                </h3>\n                    <ul>\n<li>Gratuities</li></ul>\n\n\n\n        </div>\n\n    </div>\n        <br/>\n\n        </div>\n\n    </body>\n</html>\n"
-        dateStamp: 2020-02-11T19:50:39+0000
+          sortOrder: 0
+          rulesApplied: null
+          omniPreRuleList: null
+          bookingStatus:
+            status: 3
+            text: Confirmed
+            type: CONFIRMED
+            level: ITINERARY
+            confirmed: true
+            pending: false
+            amended: false
+            cancelled: false
+            failed: false
+          itemSummaries:
+          - sortOrder: 0
+            rulesApplied: null
+            bookingStatus:
+              status: 1
+              text: Paid &amp; Confirmed
+              type: CONFIRMED
+              level: ITEM
+              failed: false
+              confirmed: true
+              amended: false
+              pending: false
+              cancelled: false
+            travellerAgeBands:
+            - sortOrder: 0
+              count: 1
+              pluralDescription: Adults
+              description: Adult
+              ageBandId: 1
+            voucherKey: 1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678
+            voucherURL: https://viatorapi.live.rc.viator.com/service/merchant/voucher.jspa?code=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e:580669678&embedResources=false
+            voucherRequirements: You can present either a paper or an electronic voucher for this activity.
+            appleWalletURL: null
+            productPulledDown: false
+            merchantCancellable: true
+            productWidgetList: null
+            savingAmount: 0
+            applePassSupported: false
+            supplierName: Sundance Helicopters
+            supplierPhoneNumber: +1 123 456 7890
+            vouchers: null
+            passbooks: null
+            termsAndConditions: null
+            merchantTermsAndConditions:
+              termsAndConditions: For a full refund, cancel at least 24 hours in advance of the start date of the experience.
+              merchantTermsAndConditionsType: 1
+              amountRefundable: USD 412.04
+              cancellationFromTourDate:
+              - dayRangeMin: 1
+                dayRangeMax: null
+                percentageRefundable: 100
+                policyStartTimestamp: null
+                policyEndTimestamp: 1585580400
+              - dayRangeMin: 0
+                dayRangeMax: 1
+                percentageRefundable: 0
+                policyStartTimestamp: 1585580400
+                policyEndTimestamp: 1585666800
+            productCode: 2280AAHT
+            travelDate: '2020-03-31'
+            tourGradeCode: TG1~08:00
+            distributorItemRef: itemRef1000000
+            startingTime: 8:00 AM
+            languageServicesLanguageCode: en
+            price: 412.04
+            leadTravellerSurname: Simpson test
+            itineraryId: 1005851866
+            productTitle: Grand Canyon All-American Helicopter Tour
+            merchantNetPrice: 388.72
+            priceFormatted: $412.04
+            destId: 684
+            voucherOption: VOUCHER_E
+            itemId: 580669678
+            barcodeOption: tour
+            barcodeType: code128
+            departurePoint: Traveler pickup is offered<br><br>
+            departurePointAddress: null
+            departurePointDirections: null
+            leadTravellerFirstname: Homer test
+            rnplInfo: null
+            obfsId: 362208
+            leadTravellerTitle: Mr
+            lastRetailPrice: 388.72
+            savingAmountFormated: $0.00
+            pickupHotelName: 'null'
+            hoursConfirmed: 0
+            lastRetailPriceFormatted: $388.72
+            tourGradeDescription: Morning Departure; A-Star 08:00 (TG1~08:00)
+            bookingEngineId: FO
+            merchantNetPriceFormatted: $388.72
+            departsFrom: Las Vegas, United States
+            pickupHotelId: null
+            priceUSD: 412.04
+            currencyCode: USD
+          voucherURL: https://viatorapi.live.rc.viator.com/service/merchant/voucher.jspa?code=1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e&embedResources=false
+          securityToken: 4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e
+          paypalRedirectURL: null
+          exchangeRate: 1
+          itineraryId: 1005851866
+          bookingDate: '2020-02-11'
+          voucherKey: 1005851866:4af44c13ecf3f1a7d3f9ef2fc00c2257e08fa42ae20f877f3039ff9b52aba24e
+          bookerEmail: apitest@viator.com
+          distributorRef: distributorRef100000
+          totalPrice: 412.04
+          totalPriceFormatted: $412.04
+          totalPriceUSD: 412.04
+          hasVoucher: true
+          userId: null
+          currencyCode: USD
+        dateStamp: 2020-02-11T16:55:47+0000
         errorType: null
         errorCodes: []
         errorMessage: null
@@ -7773,383 +7154,995 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331003'
-  schemas:
-    RefundDetails:
-      type: object
-      description: 'Details of the refund
+    booking-availability-example:
+      summary: booking availability example
+      value:
+        errorReference: null
+        data:
+          productCode: 5010SYDNEY
+          firstAvailableDate: '2020-06-01'
+          lastAvailableDate: '2021-02-10'
+          availability:
+          - sortOrder: 1
+            bookingDate: '2020-06-01'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 2
+            bookingDate: '2020-06-02'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 3
+            bookingDate: '2020-06-03'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 4
+            bookingDate: '2020-06-04'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 5
+            bookingDate: '2020-06-05'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 6
+            bookingDate: '2020-06-06'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 7
+            bookingDate: '2020-06-07'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 8
+            bookingDate: '2020-06-08'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 9
+            bookingDate: '2020-06-09'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 10
+            bookingDate: '2020-06-10'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 11
+            bookingDate: '2020-06-11'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 12
+            bookingDate: '2020-06-12'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 13
+            bookingDate: '2020-06-13'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 14
+            bookingDate: '2020-06-14'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 15
+            bookingDate: '2020-06-15'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 16
+            bookingDate: '2020-06-16'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 17
+            bookingDate: '2020-06-17'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 18
+            bookingDate: '2020-06-18'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 19
+            bookingDate: '2020-06-19'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 20
+            bookingDate: '2020-06-20'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 21
+            bookingDate: '2020-06-21'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 22
+            bookingDate: '2020-06-22'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 23
+            bookingDate: '2020-06-23'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 24
+            bookingDate: '2020-06-24'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 25
+            bookingDate: '2020-06-25'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 26
+            bookingDate: '2020-06-26'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 27
+            bookingDate: '2020-06-27'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 28
+            bookingDate: '2020-06-28'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 29
+            bookingDate: '2020-06-29'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+          - sortOrder: 30
+            bookingDate: '2020-06-30'
+            retailPrice: 53.1
+            gradeCode: 24HOUR
+            merchantNetPrice: 42.41
+            retailPriceFormatted: $53.10
+            unavailableReason: null
+            merchantNetPriceFormatted: $42.41
+            currencyCode: AUD
+            available: true
+        dateStamp: 2020-02-10T16:43:02+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331004'
+    booking-availability-tourgrades-example:
+      summary: booking availability tourgrades example
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          bookingDate: '2020-02-28'
+          ageBands:
+          - bandId: 1
+            count: 1
+            bandTotal: 42.41
+            pricePerTravelerFormatted: $42.41
+            pricePerTraveler: 42.41
+            bandTotalFormatted: $42.41
+            currencyCode: AUD
+          ageBandsRequired: null
+          langServices:
+            en/SERVICE_AUDIO: English - Audio
+            de/SERVICE_AUDIO: German - Audio
+            fr/SERVICE_AUDIO: French - Audio
+            es/SERVICE_AUDIO: Spanish - Audio
+            ja/SERVICE_AUDIO: Japanese - Audio
+            ko/SERVICE_AUDIO: Korean - Audio
+            zh/SERVICE_AUDIO: Chinese - Audio
+          gradeCode: 24HOUR
+          unavailableReason: null
+          gradeTitle: '24 Hour Classic Ticket '
+          gradeDepartureTime: ''
+          gradeDescription: Unlimited use on Big Bus Sydney & Bondi Hop-on Hop-off Tour for 24 hours from time of first use
+          defaultLanguageCode: en
+          available: true
+          retailPrice: 53.1
+          merchantNetPrice: 42.41
+          retailPriceFormatted: $53.10
+          merchantNetPriceFormatted: $42.41
+          currencyCode: AUD
+        - sortOrder: 2
+          bookingDate: '2020-02-28'
+          ageBands:
+          - bandId: 1
+            count: 1
+            bandTotal: 56.79
+            pricePerTravelerFormatted: $56.79
+            pricePerTraveler: 56.79
+            bandTotalFormatted: $56.79
+            currencyCode: AUD
+          ageBandsRequired: null
+          langServices:
+            en/SERVICE_AUDIO: English - Audio
+            de/SERVICE_AUDIO: German - Audio
+            fr/SERVICE_AUDIO: French - Audio
+            es/SERVICE_AUDIO: Spanish - Audio
+            ja/SERVICE_AUDIO: Japanese - Audio
+            ko/SERVICE_AUDIO: Korean - Audio
+            zh/SERVICE_AUDIO: Chinese - Audio
+          gradeCode: 48HOUR
+          unavailableReason: null
+          gradeTitle: '48 Hour Premium Ticket '
+          gradeDepartureTime: ''
+          gradeDescription: '48 Hour Premium Ticket: Unlimited use on Big Bus Sydney & Bondi Tour for 48 hours from time of first use PLUS a guided walking tour of The Rocks, Syd'
+          defaultLanguageCode: en
+          available: true
+          retailPrice: 71.1
+          merchantNetPrice: 56.79
+          retailPriceFormatted: $71.10
+          merchantNetPriceFormatted: $56.79
+          currencyCode: AUD
+        - sortOrder: 3
+          bookingDate: '2020-02-28'
+          ageBands:
+          - bandId: 1
+            count: 1
+            bandTotal: 79.08
+            pricePerTravelerFormatted: $79.08
+            pricePerTraveler: 79.08
+            bandTotalFormatted: $79.08
+            currencyCode: AUD
+          ageBandsRequired: null
+          langServices:
+            en/SERVICE_AUDIO: English - Audio
+            de/SERVICE_AUDIO: German - Audio
+            fr/SERVICE_AUDIO: French - Audio
+            es/SERVICE_AUDIO: Spanish - Audio
+            ja/SERVICE_AUDIO: Japanese - Audio
+            ko/SERVICE_AUDIO: Korean - Audio
+            zh/SERVICE_AUDIO: Chinese - Audio
+          gradeCode: DELUXE
+          unavailableReason: null
+          gradeTitle: 48 Hour Deluxe Bus and Cruise
+          gradeDepartureTime: ''
+          gradeDescription: 'Big Bus and Habour Cruise: Combine two great Sydney experiences into one with a hop-on hop off Big Bus Tours and a hop-on hop-off Sydney Harbour cruise <br/>Duration: 2 days: SPECIAL OFFER: EXTRA FREE DAY when you purchase a Deluxe ticket - have 3 days to explore Sydney not 2. Limited time only.
 
+            <br/>Complimentary Walking Tour: Complimentary English-speaking 90-minute guided walking tour of “The Rocks” historic and harbourside precinct.'
+          defaultLanguageCode: en
+          available: true
+          retailPrice: 99
+          merchantNetPrice: 79.08
+          retailPriceFormatted: $99.00
+          merchantNetPriceFormatted: $79.08
+          currencyCode: AUD
+        - sortOrder: 4
+          bookingDate: '2020-02-28'
+          ageBands:
+          - bandId: 1
+            count: 1
+            bandTotal: 103.04
+            pricePerTravelerFormatted: $103.04
+            pricePerTraveler: 103.04
+            bandTotalFormatted: $103.04
+            currencyCode: AUD
+          ageBandsRequired: null
+          langServices:
+            en/SERVICE_AUDIO: English - Audio
+            de/SERVICE_AUDIO: German - Audio
+            fr/SERVICE_AUDIO: French - Audio
+            es/SERVICE_AUDIO: Spanish - Audio
+            ja/SERVICE_AUDIO: Japanese - Audio
+            ko/SERVICE_AUDIO: Korean - Audio
+            zh/SERVICE_AUDIO: Chinese - Audio
+          gradeCode: TG1
+          unavailableReason: null
+          gradeTitle: 48Hour Deluxe PLUS Attractions
+          gradeDepartureTime: ''
+          gradeDescription: 'Hop-on Hop-Off and Attractions: 48hr Big Bus Tours, 1-day Hop-On Hop-Off Harbour Cruise, 4 Attractions: Tower Eye, Madame Tussauds, Wildlife Zoo, Aquarium<br/>Duration: 2 days: SPECIAL OFFER: EXTRA FREE DAY when you purchase a Deluxe ticket - have 3 days to explore Sydney not 2. Limited time only.
 
-        **Note**: Bookings that have not been confirmed by the supplier and have a status of `"PENDING"` will report an `itemPrice`, `refundAmount` and `refundPercentage` of `0`, as no fees are charged until the booking has been accepted by the supplier and its status is `"CONFIRMED"`.
-
-        '
-      properties:
-        itemPrice:
-          type: number
-          description: The merchant net price at the time this product was booked
-        refundAmount:
-          type: number
-          description: Numeric currency amount that will be refunded if this booking is cancelled now
-        refundPercentage:
-          type: number
-          description: Percentage of the item price that will be refunded if this booking is cancelled now
-        currencyCode:
-          type: string
-          description: Three-letter code indicating the currency in which `itemPrice` and `refundAmount` are displayed
-    savingAmount:
-      type: string
-      description: 'Ignore (Viator only)
-
-        '
-    bandId:
-      type: integer
-      description: '**unique numeric identifier** for the age band
-
-        - See: [Working with age bands](#section/Appendices/Working-with-age-bands)
-
-        '
-    bookingStatus_itinerary:
-      type: object
-      description: '**object** containing itinerary booking status information'
-      properties:
-        status:
-          type: integer
-          description: '**numeric identifier** of *this* itinerary''s booking status'
-        text:
-          type: string
-          description: '**natural-language description** of *this* itinerary''s booking status'
-        type:
-          type: string
-          description: '**specifier** of *this* itinerary''s booking status
-
-            * See: [bookingStatus fields and meanings](#section/Appendices/bookingStatus-field-values-and-meanings)
-
-            '
-          enum:
-          - WAITING
-          - CONFIRMED
-          - PENDING
-          - FAILED
-          - CANCELLED
-          - AMENDED
-          - PENDING_AMEND
-        level:
-          type: string
-          description: '**level** of *this* itinerary''s booking status'
-          enum:
-          - ITEM
-          - ITINERARY
-        confirmed:
-          type: boolean
-          description: '**indicator**: `true` if *this* itinerary''s booking is confirmed'
-        pending:
-          type: boolean
-          description: '**indicator**: `true` if *this* itinerary''s booking is pending'
-        amended:
-          type: boolean
-          description: '**indicator**: `true` if *this* itinerary''s booking has been amended'
-        cancelled:
-          type: boolean
-          description: '**indicator**: `true` if *this* itinerary''s booking has been cancelled'
-        failed:
-          type: boolean
-          description: '**indicator**: `true` if *this* itinerary''s booking has failed'
-    CancellationReason:
-      type: object
-      properties:
-        cancellationReasonCode:
-          type: string
-          description: Machine-interpretable identification code for this cancellation
-          example: Customer_Service.Weather
-        cancellationReasonText:
-          type: string
-          description: Natural-language description of this cancellation reason
-          example: The weather conditions were unsuitable
-    503_SERVICE_UNAVAILABLE:
-      type: object
-      properties:
-        code:
-          type: string
-          enum:
-          - SERVICE_UNAVAILABLE
-        message:
-          type: string
-          enum:
-          - Internal server error
-        timestamp:
-          type: string
-          description: 'Timestamp of the request
-
-            e.g.: `2019-09-17T03:20:45.737043Z`
-
-            '
-        trackingId:
-          type: string
-          description: Tracking identifier for this error response
-    CancellationReasonsResponse:
-      type: object
-      properties:
-        reasons:
-          type: array
-          description: Array of cancellation reason codes and their asssociated texts for display to the user
-          items:
-            $ref: '#/components/schemas/CancellationReason'
-    basicErrorModel:
-      type: object
-      properties:
-        errorReference:
-          type:
-          - string
-          - 'null'
-          description: '**reference number** of *this* error'
-        dateStamp:
-          type:
-          - string
-          - 'null'
-          description: '**timestamp** of *this* response'
-        errorType:
-          type:
-          - string
-          - 'null'
-          description: '**code** specifying the type of error'
-        errorCodes:
-          type:
-          - array
-          - 'null'
-          description: '**array** of error codes pertaining to *this* error
-
-            - See: [Viator API error codes](#section/Appendices/Viator-API-error-codes) for a list of possible error codes
-
-            '
-          items:
-            type: string
-          example: []
-        errorMessage:
-          type:
-          - array
-          - 'null'
-          description: '**array** of error message strings'
-        errorName:
-          type:
-          - string
-          - 'null'
-          description: '**name** of *this* type of error'
-        extraInfo:
-          type:
-          - object
-          - 'null'
-          description: ignore (Viator only)
+            <br/>Complimentary Walking Tours: Complimentary English-speaking guided walking tour of “The Rocks” historic and harbourside precinct.'
+          defaultLanguageCode: en
+          available: true
+          retailPrice: 129
+          merchantNetPrice: 103.04
+          retailPriceFormatted: $129.00
+          merchantNetPriceFormatted: $103.04
+          currencyCode: AUD
+        dateStamp: 2020-02-10T16:57:56+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
         extraObject:
-          type:
-          - object
-          - 'null'
-          description: ignore (Viator only)
-        success:
-          type:
-          - boolean
-          - 'null'
-          description: '**boolean indicator** of *this* request''s outcome
-
-            - `true`: the request was successful with no errors
-
-            - `false`: an error was encountered
-
-            '
-        totalCount:
-          type:
-          - integer
-          - 'null'
-          description: '**number** of results available for *this* service
-
-            '
-        errorMessageText:
-          type:
-          - string
-          - 'null'
-          description: '**array** of error message strings in plain text'
-        vmid:
-          type:
-          - string
-          - 'null'
-          description: '**unique numeric id** of the server that processed *this* request'
-    bookingEngineId-response:
-      type: string
-      enum:
-      - UF
-      - OR
-      - FO
-      description: '[booking type indicator](#section/Key-concepts/Booking-concepts) that indicates whether the booking will be `CONFIRMED` immediately or if it will remain `PENDING` even after the booking has been made
-
-
-        *one of* the following:
-
-        - `"UF"` (FreesaleBE and UnconditionalBE) – this booking will be confirmed immediately
-
-        - `"OR"` (DeferredCRMBE) – the booked product is an on-request product, will not be confirmed immediately and will have a `PENDING` status after it is booked, to be confirmed by the supplier within the time specified in the `hoursConfirmed` field available in the booking response and post-booking services
-
-        - `"FO"` (FreesaleOnRequestBE) – the booked product is freesale up until a certain number of days before the travel date, referred to as the *on-request period*.
-
-        '
-    406_NOT_ACCEPTABLE:
-      type: object
-      properties:
-        code:
-          type: string
-          enum:
-          - INVALID_HEADER_VALUE
-        message:
-          type: string
-          description: 'Describes which in-header parameter was not acceptable to this system; e.g., ''Invalid value for header: exp-api-key'''
-        timestamp:
-          type: string
-          description: "Timestamp of the request\n\n  * e.g.: `2019-09-17T03:20:45.737043Z`\n"
-        trackingId:
-          type: string
-          description: Tracking identifier for this error response
-    bookingStatus_item:
-      type: object
-      description: '**object** containing item booking status information'
-      properties:
-        status:
-          type: integer
-          description: '**numeric identifier** of *this* item''s booking status'
-        text:
-          type: string
-          description: '**natural-language description** of *this* item''s booking status; e.g., ''Waiting to be booked'''
-        type:
-          type: string
-          description: '**specifier** of *this* item''s booking status
-
-            * See: [bookingStatus fields and meanings](#section/Appendices/bookingStatus-field-values-and-meanings)
-
-            '
-          enum:
-          - WAITING
-          - CONFIRMED
-          - UNAVAILABLE
-          - PENDING
-          - FAILED
-          - CANCELLED
-          - EXPIRED
-          - AMENDED
-          - PENDING_AMEND
-          - REJECTED
-          - ON_HOLD
-        level:
-          type: string
-          description: '**level** of *this* item''s booking status'
-          enum:
-          - ITEM
-          - ITINERARY
-        confirmed:
-          type: boolean
-          description: '**indicator**: `true` if *this* item''s booking is confirmed'
-        pending:
-          type: boolean
-          description: '**indicator**: `true` if *this* item''s booking is pending'
-        amended:
-          type: boolean
-          description: '**indicator**: `true` if *this* item''s booking has been amended'
-        cancelled:
-          type: boolean
-          description: '**indicator**: `true` if *this* item''s booking has been cancelled'
-        failed:
-          type: boolean
-          description: '**indicator**: `true` if *this* item''s booking has failed'
-    ageBandId:
-      type: integer
-      description: '**unique numeric identifier** for the age band
-
-        - See: [Working with age bands](#section/Appendices/Working-with-age-bands)
-
-        '
-    401_UNAUTHORIZED:
-      type: object
-      properties:
-        code:
-          type: string
-          enum:
-          - UNAUTHORIZED
-        message:
-          type: string
-          enum:
-          - Invalid API key
-        timestamp:
-          type: string
-          description: "Timestamp of the request\n\n  * e.g.: `2019-09-17T03:20:45.737043Z`\n"
-        trackingId:
-          type: string
-          description: Tracking identifier for this error response
-    CancelBookingResponse:
-      type: object
-      properties:
-        bookingId:
-          type: string
-          description: Booking reference number for this booking, prepended with `BR-`
-          example: BR-580254558
-        status:
-          type: string
-          description: "String indicating the outcome of the booking cancellation request.\n\n  * `ACCEPTED`: The cancellation was successful\n  * `DECLINED`: The cancellation failed\n"
-          enum:
-          - ACCEPTED
-          - DECLINED
-          example: DECLINED
-        reason:
-          type: string
-          enum:
-          - ALREADY_CANCELLED
-          - NOT_CANCELLABLE
-    500_INTERNAL_SERVER_ERROR:
-      type: object
-      properties:
-        code:
-          type: string
-          enum:
-          - INTERNAL_SERVER_ERROR
-        message:
-          type: string
-          enum:
-          - Internal server error
-        timestamp:
-          type: string
-          description: "Timestamp of the request\n\n  * e.g.: `2019-09-17T03:20:45.737043Z`\n"
-        trackingId:
-          type: string
-          description: Tracking identifier for this error response
-    CancelBookingQuoteResponse:
-      type: object
-      properties:
-        refundDetails:
-          $ref: '#/components/schemas/RefundDetails'
-        bookingId:
-          type: string
-          description: The booking reference number, prepended with `BR-`
-        status:
-          type: string
-          description: "String indicating the cancellation status of this itinerary item:\n\n  * `CANCELLABLE` - this booking is available to be cancelled\n  * `CANCELLED` - this booking has already been cancelled\n  * `NOT_CANCELLABLE` - this booking cannot be cancelled (because the product's operation date is now in the past)\n"
-          enum:
-          - CANCELLABLE
-          - CANCELLED
-          - NOT_CANCELLABLE
-    CancellationRequest:
-      type: object
-      properties:
-        reasonCode:
-          type: string
-          description: Machine-interpretable identification code for this cancellation reason, retrieved from [cancellationReasons](#operation/cancellationReasons)
-          example: Customer_Service.I_canceled_my_entire_trip
-    savingAmountFormated:
-      type: string
-      description: 'Ignore (Viator only)
-
-        '
+          CDE_BRAINTREE:
+            APPAY: sandbox_rtg2qcnx_yx8ptb2tqsjnzdnj
+            PP: sandbox_rtg2qcnx_yx8ptb2tqsjnzdnj
+            GPAY: sandbox_rtg2qcnx_yx8ptb2tqsjnzdnj
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
+    booking-calculateprice-example:
+      summary: booking calculateprice example
+      value:
+        errorReference: null
+        data:
+          rulesApplied: null
+          promoCode: null
+          itinerary:
+            sortOrder: 0
+            rulesApplied: null
+            omniPreRuleList: null
+            bookingStatus:
+              status: 0
+              text: Waiting to be Booked
+              type: WAITING
+              level: ITINERARY
+              confirmed: false
+              pending: false
+              amended: false
+              cancelled: false
+              failed: false
+            itemSummaries:
+            - sortOrder: 0
+              rulesApplied: null
+              bookingStatus:
+                status: 0
+                text: Waiting to be Booked
+                type: WAITING
+                level: ITEM
+                failed: false
+                confirmed: false
+                amended: false
+                pending: false
+                cancelled: false
+              travellerAgeBands:
+              - sortOrder: 0
+                count: 1
+                pluralDescription: Adults
+                description: Adult
+                ageBandId: 1
+              voucherKey: ''
+              voucherURL: null
+              voucherRequirements: You can present either a paper or an electronic voucher for this activity.
+              appleWalletURL: null
+              productPulledDown: false
+              merchantCancellable: true
+              productWidgetList: null
+              savingAmount: 0
+              applePassSupported: false
+              supplierName: Big Bus Tours
+              supplierPhoneNumber: +1 123 456 7890
+              vouchers: null
+              passbooks: null
+              termsAndConditions: null
+              productCode: 5010SYDNEY
+              travelDate: '2020-03-03'
+              tourGradeCode: 24HOUR
+              distributorItemRef: null
+              startingTime: null
+              languageServicesLanguageCode: null
+              price: 31.3
+              leadTravellerSurname: null
+              itineraryId: 1005847086
+              productTitle: Big Bus Sydney and Bondi Hop-on Hop-off Tour
+              merchantNetPrice: 29.53
+              priceFormatted: $31.30
+              destId: 357
+              voucherOption: VOUCHER_E
+              itemId: 580659274
+              barcodeOption: perperson
+              barcodeType: qrcode
+              departurePoint: You may start this tour at any of the stops listed.
+              departurePointAddress: null
+              departurePointDirections: null
+              leadTravellerFirstname: ''
+              rnplInfo: null
+              obfsId: 31185
+              leadTravellerTitle: null
+              lastRetailPrice: 29.53
+              savingAmountFormated: $0.00
+              pickupHotelName: null
+              hoursConfirmed: 0
+              lastRetailPriceFormatted: $29.53
+              tourGradeDescription: 24 Hour Classic Ticket  (24HOUR)
+              bookingEngineId: UF
+              merchantNetPriceFormatted: $29.53
+              departsFrom: The Rocks, Australia
+              pickupHotelId: null
+              priceUSD: 31.3
+              currencyCode: USD
+            voucherURL: null
+            securityToken: 595798ee27965d5178ab6a800f9b796ed7efac8fd303086e4113e1e99848932c
+            paypalRedirectURL: null
+            exchangeRate: 1
+            itineraryId: 1005847086
+            bookingDate: '2020-02-10'
+            voucherKey: ''
+            bookerEmail: null
+            distributorRef: null
+            totalPrice: 31.3
+            totalPriceFormatted: $31.30
+            totalPriceUSD: 31.3
+            hasVoucher: false
+            userId: null
+            currencyCode: USD
+          paymentGatewayInfo: null
+          promoCodeValid: false
+          promoCodeExpired: false
+          itineraryFromPrice: 29.53
+          itineraryFromPriceFormatted: $29.53
+          itineraryNewPrice: 29.53
+          itineraryNewPriceFormatted: $29.53
+          itinerarySaving: 0
+          itinerarySavingFormatted: $0.00
+          hasPromoCode: false
+          currencyCode: USD
+        dateStamp: 2020-02-10T18:26:49+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
+    booking-availability-dates-example:
+      summary: booking availability dates example
+      value:
+        errorReference: null
+        data:
+          2020-02:
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          2020-03:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          - '31'
+          2020-04:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          2020-05:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          - '31'
+          2020-06:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          2020-07:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          - '31'
+          2020-08:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          - '31'
+          2020-09:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          2020-10:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          - '31'
+          2020-11:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          2020-12:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          - '31'
+          2021-01:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+          - 9
+          - '10'
+          - '11'
+          - '12'
+          - '13'
+          - '14'
+          - '15'
+          - '16'
+          - '17'
+          - '18'
+          - '19'
+          - '20'
+          - '21'
+          - '22'
+          - '23'
+          - '24'
+          - '25'
+          - '26'
+          - '27'
+          - '28'
+          - '29'
+          - '30'
+          - '31'
+          2021-02:
+          - '01'
+          - '02'
+          - '03'
+          - '04'
+          - '05'
+          - '06'
+          - '07'
+          - 8
+        dateStamp: 2020-02-10T16:51:10+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331004'
   parameters:
-    destId:
-      name: destId
-      in: query
-      description: '**unique numeric identifier** of the destination'
-      schema:
-        type: integer
-      example: 123
     productCode:
       name: productCode
       in: query
@@ -8157,6 +8150,13 @@ components:
       schema:
         type: string
       example: 2280AAHT
+    destId:
+      name: destId
+      in: query
+      description: '**unique numeric identifier** of the destination'
+      schema:
+        type: integer
+      example: 123
     acceptLanguage:
       in: header
       name: Accept-Language

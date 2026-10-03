@@ -521,418 +521,28 @@ paths:
         '503':
           $ref: '#/components/responses/ServiceUnavailable'
 components:
-  responses:
-    NotFound:
-      description: Not Found
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"NOT_FOUND"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"The specified resource was not found"`
-
-                    '
-            - type: object
-              example:
-                code: NOT_FOUND
-                message: The specified resource was not found
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    InternalServerError:
-      description: Internal Server Error
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"INTERNAL_SERVER_ERROR"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Internal server error"`
-
-                    '
-            - type: object
-              example:
-                code: INTERNAL_SERVER_ERROR
-                message: Internal Server Error
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    Unauthorized:
-      description: Unauthorized
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"UNAUTHORIZED"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Invalid API Key"`
-
-                    '
-            - type: object
-              example:
-                code: UNAUTHORIZED
-                message: Invalid API Key
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    TooManyRequests:
-      description: Too Many Requests
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"TOO_MANY_REQUESTS"`
-
-
-                    See [Workflows - Rate limiting](#section/Workflows/Rate-limiting) for more information about this error.
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Too many requests, please try again"`
-
-                    '
-            - type: object
-              example:
-                code: TOO_MANY_REQUESTS
-                message: Too many requests
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    ServiceUnavailable:
-      description: Service Unavailable
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"SERVICE_UNAVAILABLE"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Service unavailable"`
-
-                    '
-            - type: object
-              example:
-                code: SERVICE_UNAVAILABLE
-                message: Service Unavailable
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    BadRequest:
-      description: Bad Request
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"BAD_REQUEST"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Invalid request"`
-
-                    '
-            - type: object
-              example:
-                code: BAD_REQUEST
-                message: Invalid request
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    NotAcceptable:
-      description: Not Acceptable
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"NOT_ACCEPTABLE"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Not acceptable"`
-
-                    '
-            - type: object
-              example:
-                code: NOT_ACCEPTABLE
-                message: Not acceptable
-                timestamp: '2019-09-17T03:20:45.737043Z'
-    Forbidden:
-      description: Forbidden
-      headers:
-        X-Unique-ID:
-          $ref: '#/components/headers/XUniqueId'
-        RateLimit-Limit:
-          $ref: '#/components/headers/RateLimit-Limit'
-        RateLimit-Remaining:
-          $ref: '#/components/headers/RateLimit-Remaining'
-        RateLimit-Reset:
-          $ref: '#/components/headers/RateLimit-Reset'
-        Retry-After:
-          $ref: '#/components/headers/Retry-After'
-      content:
-        application/json:
-          schema:
-            allOf:
-            - $ref: '#/components/schemas/ErrorResponse'
-            - type: object
-              properties:
-                code:
-                  description: 'Code for this error type
-
-
-                    **Example**: `"FORBIDDEN"`
-
-                    '
-                message:
-                  description: 'Details of this error
-
-
-                    **Example**: `"Request is forbidden"`
-
-                    '
-              example:
-                code: FORBIDDEN
-                message: Request is forbidden
-                timestamp: '2019-09-17T03:20:45.737043Z'
   schemas:
-    ExchangeRatesRequest:
+    LocationCenter:
       type: object
+      description: Geographic coordinates (latitude/longitude) for this location
       properties:
-        sourceCurrencies:
-          type: array
-          description: List of three-letter currency codes for the source currencies for which to retrieve exchange rate data
-          items:
-            type: string
-        targetCurrencies:
-          type: array
-          description: List of three-letter currency codes for the target currencies for which to retrieve exchange rate data
-          items:
-            type: string
-    Video:
-      type: object
-      description: Product video
-      required:
-      - variants
-      properties:
-        language:
-          type: string
-          description: "The language of the video content or audio track, expressed as a locale or language code (e.g., `\"en\"`, `\"es\"`, `\"fr\"`). \nIt enables localization, filtering, and correct playback selection based on user preferences.\n"
-        variants:
-          $ref: '#/components/schemas/VideoVariants'
-    ProductReviewsRequest:
+        latitude:
+          type: number
+          description: "Latitude of this location\n\n  - **Example**: `-33.870037`\n"
+        longitude:
+          type: number
+          description: "Longitude of this location\n\n  - **Example**: `151.20955`\n"
+    BulkSupplierProductRequest:
       type: object
       required:
-      - productCode
-      - start
-      - count
-      - provider
+      - productCodes
       properties:
-        productCode:
-          type: string
-          description: Retrieve reviews for the product identified by this product code
-        count:
-          type: integer
-          format: int32
-          description: Number of reviews to be returned in the response; used for pagination
-        start:
-          type: integer
-          format: int32
-          description: Position of first review to be returned in the response; used for pagination
-        provider:
-          type: string
-          description: 'Limit the reviews returned in the response to those associated with this provider; one of:
-
-
-            - `"VIATOR"` – only include reviews submitted on viator.com
-
-            - `"TRIPADVISOR"` – only include reviews submitted on tripdavisor.com
-
-            - `"ALL"` - include reviews from all providers
-
-            '
-        sortBy:
-          type: string
-          description: 'One of:
-
-
-            - `"HIGHEST_RATING_PER_LOCALE"` – sort by rating (descending) *for each locale*
-
-            - `"MOST_RECENT_PER_LOCALE"` – sort by publication date (descending) *for each locale*
-
-            - `"MOST_HELPFUL_PER_LOCALE"` – sort by the number of ''helpful'' votes (descending) *for each locale*
-
-            - `"HIGHEST_RATING"` –  sort by rating (descending) *across all locales*
-
-            - `"MOST_RECENT"` – sort by publication date (descending) *across all locales*
-
-            - `"MOST_HELPFUL"` – sort by the number of ''helpful'' votes (descending) *across all locales*
-
-
-            If this element is omitted, the default sort option is `"MOST_RECENT"`
-
-            '
-        reviewsForNonPrimaryLocale:
-          type: boolean
-          description: 'Controls whether reviews that cannot be provided in the requested language are included.
-
-
-            When `false`, returns only reviews that can be provided in the requested language, either originally or via machine translation.
-
-            When `true`, additional reviews may be returned in their original language when no requested-language version is available.
-
-            '
-        showMachineTranslated:
-          type: boolean
-          description: 'When `true`, returns machine-translated review text in the requested language, where available, based on `Accept-Language`. When `false`, reviews are returned in their original language, even if a machine translation exists. This does not filter reviews by their original language.
-
-            '
-        ratings:
+        productCodes:
           type: array
-          description: 'Only include reviews with these ratings
-
-
-            **Example**: `[3,4,5]` to receive reviews with a rating of 3 or above
-
-            '
           items:
-            type: integer
-            format: int32
+            type: string
+            pattern: (?s).*[\S].*
+            description: Product code of the product you wish to find the supplier information for
     ProductReview:
       type: object
       required:
@@ -1045,139 +655,6 @@ components:
           description: Information about any photographs that were submitted with this review
           items:
             $ref: '#/components/schemas/ReviewPhotoInfo'
-    ProductReviewCount:
-      type: object
-      description: Breakdown of number of reviews for each rating of this product
-      required:
-      - rating
-      - count
-      properties:
-        rating:
-          type: number
-          description: Rating given in the review for this product
-          format: float
-        count:
-          type: integer
-          description: How many reviews of this product have this rating
-          format: int64
-    Location:
-      type: object
-      description: Location detail
-      required:
-      - reference
-      - provider
-      properties:
-        reference:
-          type: string
-          pattern: (?s).*[\S].*
-          description: Unique identifier for this location as given in the request
-        provider:
-          $ref: '#/components/schemas/LocationProvider'
-      discriminator:
-        propertyName: provider
-        mapping:
-          TRIPADVISOR: '#/components/schemas/ResolvedLocation'
-          GOOGLE: '#/components/schemas/ProvidedLocation'
-    BulkLocationReferencesRequest:
-      type: object
-      required:
-      - locations
-      properties:
-        locations:
-          type: array
-          maxItems: 500
-          description: 'List of location reference identifiers for which to retrieve full location details.
-
-            '
-          items:
-            type: string
-            pattern: (?s).*[\S].*
-    ReviewPhoto:
-      type: object
-      required:
-      - height
-      - width
-      - url
-      properties:
-        height:
-          type: integer
-          format: int32
-          description: Height of image in pixels
-        width:
-          type: integer
-          format: int32
-          description: Width of image in pixels
-        url:
-          type: string
-          description: URL at which this image is located
-    ProductReviewSource:
-      type: object
-      required:
-      - provider
-      - totalCount
-      properties:
-        provider:
-          type: string
-          description: "Source of the review; one of:\n  - `\"VIATOR\"`\n  - `\"TRIPADVISOR\"`\n"
-        reviewCounts:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProductReviewCount'
-          description: Breakdown of ratings and counts for reviews from this source for this product
-        totalCount:
-          type: integer
-          description: Total number of reviews for all ratings of this product
-          format: int64
-        averageRating:
-          description: 'Average rating across all reviews from this source for this product
-
-
-            This average is equal to the sum of the product of each rating and its count divided by the sum of the counts.
-
-            '
-          type: number
-          format: float
-    ConfirmationType:
-      type: string
-      description: "Machine-interpretable value encoding when bookings for this product will be confirmed; one of: \n\n  - `\"INSTANT\"` (instantly) \n  - `\"MANUAL\"` (requires manual action prior to confirmation)\n  - `\"INSTANT_THEN_MANUAL\"` (combination – subject to cutoff time)\n"
-    LocationProvider:
-      type: string
-      description: "Name of the location services provider, one of:\n\n  - `\"TRIPADVISOR\"` – location details will be provided in this response\n  - `\"GOOGLE\"` – in order to retrieve details for these locations, you will need to use [Google's Places API](https://cloud.google.com/maps-platform/places).\n"
-    BulkSupplierProductRequest:
-      type: object
-      required:
-      - productCodes
-      properties:
-        productCodes:
-          type: array
-          items:
-            type: string
-            pattern: (?s).*[\S].*
-            description: Product code of the product you wish to find the supplier information for
-    ProductReviewsSummarySource:
-      type: object
-      required:
-      - provider
-      - totalCount
-      properties:
-        provider:
-          type: string
-          description: 'Provider for this set of reviews; one of:
-
-            - `"VIATOR"`
-
-            - `"TRIPADVISOR"`
-
-            '
-        reviewCounts:
-          type: array
-          description: Breakdown of number of reviews per rating for reviews sourced from this provider
-          items:
-            $ref: '#/components/schemas/ProductReviewsSummaryCount'
-        totalCount:
-          type: integer
-          format: int64
-          description: Total number of reviews for this product sourced from this provider
     ProductReviews:
       type: object
       description: "Summary of reviews and ratings for this product\n\n**Note**: \n\n  - Review data is updated daily; i.e., all reviews received on a day will be added and averages re-calculated in a single event.\n  - Viator performs checks on reviews - for more information, see [Key concepts - Review authenticity](#section/Key-concepts/Review-authenticity)\n"
@@ -1202,88 +679,30 @@ components:
           description: Average rating for all reviews from all sources for this product
           type: number
           format: float
-    AttractionResult:
+    ProductReviewsSummary:
       type: object
+      description: "Summary of reviews and ratings for this attraction\n\n**Note**:\n  - Review data is updated daily; i.e., all reviews received on a day will be added and averages re-calculated in a single event.\n  - Viator performs checks on reviews - for more information, see [Review authenticity](#section/Key-concepts/Review-authenticity)\n"
+      required:
+      - totalReviews
       properties:
-        id:
-          type: integer
-          description: unique numeric identifier of the attraction
-        name:
-          type: string
-          description: 'natural-language title of the attraction
-
-
-            **Note**: This field contains natural language suitable for display to the user; content will be translated (if necessary) into the language specified in the Accept-Language header parameter
-
-            '
-        primaryDestinationId:
-          type: integer
-          description: unique numeric identifier of this attraction's primary destination
-        description:
-          type: string
-          description: "natural-language descriptive text for this attraction\n\n**Note**: This field contains natural language suitable for display to the user; content will be translated (if necessary) into the language specified in the Accept-Language header parameter\n  - Access to this information is only available if it is enabled for your account. Please [reach out to our support team](#section/Support) if you would like to take advantage of our unique content.\n  - You must ensure that your site is configured such that **no Viator Unique Content is indexed by any search engine**. This is a requirement for site certification. For more information, see [Key concepts – Protecting unique content](#section/Key-concepts/Protecting-unique-content)\n"
-        destinationName:
-          type: string
-          description: 'natural-language name of the primary destination associated with this attraction
-
-
-            **Note**: This field contains natural language suitable for display to the user; content will be translated (if necessary) into the language specified in the Accept-Language header parameter
-
-            '
-        productsCount:
-          type: integer
-          description: Number of products associated with this attraction
-        translationInfo:
-          $ref: '#/components/schemas/TranslationDetails'
-        reviews:
-          $ref: '#/components/schemas/ProductReviewsSummary'
-        images:
+        sources:
           type: array
+          description: Breakdown of review summaries for each review source
           items:
-            $ref: '#/components/schemas/Image'
-    ImageVariant:
-      type: object
-      required:
-      - height
-      - width
-      - url
-      properties:
-        height:
+            $ref: '#/components/schemas/ProductReviewsSummarySource'
+        reviewCountTotals:
+          type: array
+          description: Breakdown of number of reviews per rating for all reviews of this product
+          items:
+            $ref: '#/components/schemas/ProductReviewsSummaryCount'
+        totalReviews:
+          description: Total number of reviews available for this product from all sources
           type: integer
-          description: "Height of this image in pixels\n\n  - Example: `'480'`\n"
-        width:
-          type: integer
-          description: 'Width of this image in pixels
-
-            - Example `''720''`
-
-            '
-        url:
-          type: string
-          pattern: (?s).*[\S].*
-          description: 'URL from which this image can be retrieved.
-
-            '
-    Destination:
-      type: object
-      description: 'Reference details about a destination associated with this product
-
-        '
-      required:
-      - ref
-      - primary
-      properties:
-        ref:
-          type: string
-          pattern: (?s).*[\S].*
-          description: 'Unique numeric identifier for this destination
-
-            - **Note**: Full details about the destination associated with this reference can be found in the response from the [/destinations](#operation/destinations) endpoint.
-
-            '
-        primary:
-          type: boolean
-          description: '**True** if this is the primary destination associated with this product'
+          format: int64
+        combinedAverageRating:
+          description: Combined average rating for this product across all reviews from all sources
+          type: number
+          format: float
     ProductReviewsResponse:
       type: object
       required:
@@ -1344,6 +763,108 @@ components:
               description: Total number of reviews available for this product from all sources
               type: integer
               format: int64
+    DestinationSearchResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: "**unique numeric identifier** of the destination\n - use this value as the `destination` input field for other Viator API services.\n"
+          format: int64
+        name:
+          type: string
+          description: '**natural-language name** of the destination
+
+            '
+        parentDestinationId:
+          type: integer
+          format: int64
+          description: '**unique numeric identifier** of the destination''s parent destination
+
+            '
+        parentDestinationName:
+          type: string
+          description: '**natural-language name** of the destination''s parent destination
+
+            '
+        translationInfo:
+          $ref: '#/components/schemas/TranslationDetails'
+        url:
+          type: string
+          description: 'URL of destination
+
+            '
+    ProductSearchFlag:
+      type: string
+      description: "One of:\n\n  - `\"NEW_ON_VIATOR\"` – products that have been added to Viator's catalogue within the past 270 days\n  - `\"SKIP_THE_LINE\"` – products that allow participants to attend a location without having to obtain a separate ticket on the occasion itself (`itinerary.skipTheLine` is `true`)\n  - `\"PRIVATE_TOUR\"` – products where only the travelers who have booked the product will be present (`itinerary.privateTour` is `true`)\n  - `\"SPECIAL_OFFER\"` – products that have a pricing discount available (i.e., `summary.fromPriceBeforeDiscount` will be present in the response from [/availability/schedules/{product-code}](#operation/availabilitySchedules))\n  - `\"LIKELY_TO_SELL_OUT\"` - popular products that routinely sell out (this is equivalent to filtering by tag `20757`).\n"
+    AvailabilityScheduleSummary:
+      type: object
+      description: 'Information about the lowest price available for this product
+
+
+        **Note**: The pricing information given here is based on the recommended retail price (RRP). While affiliate partners must sell at this price, merchant partners set their own prices according to their own margins and booking fees; therefore, merchant partners must calculate their own from-price for display, rather than using these values, unless they have elected to sell at the RRP.
+
+        '
+      required:
+      - fromPrice
+      properties:
+        fromPrice:
+          type: number
+          description: 'Lowest per-person retail price for this product, calculated according to the price for a group of at least two standard participants (or, the smallest bookable group if more than two participants are required) for a period not exceeding 384 days into the future.
+
+            This value can be used to advertise a ''from''-price; e.g., "From $99 per person"
+
+            '
+        fromPriceBeforeDiscount:
+          type: number
+          description: 'If the product is presently discounted, this field shows what the value of `fromPrice` would be if no discount had been applied; otherwise, it will be absent.
+
+            '
+    ImageVariant:
+      type: object
+      required:
+      - height
+      - width
+      - url
+      properties:
+        height:
+          type: integer
+          description: "Height of this image in pixels\n\n  - Example: `'480'`\n"
+        width:
+          type: integer
+          description: 'Width of this image in pixels
+
+            - Example `''720''`
+
+            '
+        url:
+          type: string
+          pattern: (?s).*[\S].*
+          description: 'URL from which this image can be retrieved.
+
+            '
+    ConfirmationType:
+      type: string
+      description: "Machine-interpretable value encoding when bookings for this product will be confirmed; one of: \n\n  - `\"INSTANT\"` (instantly) \n  - `\"MANUAL\"` (requires manual action prior to confirmation)\n  - `\"INSTANT_THEN_MANUAL\"` (combination – subject to cutoff time)\n"
+    Destination:
+      type: object
+      description: 'Reference details about a destination associated with this product
+
+        '
+      required:
+      - ref
+      - primary
+      properties:
+        ref:
+          type: string
+          pattern: (?s).*[\S].*
+          description: 'Unique numeric identifier for this destination
+
+            - **Note**: Full details about the destination associated with this reference can be found in the response from the [/destinations](#operation/destinations) endpoint.
+
+            '
+        primary:
+          type: boolean
+          description: '**True** if this is the primary destination associated with this product'
     StreamingVideoVariant:
       type: object
       description: Streaming video variant
@@ -1364,30 +885,96 @@ components:
           type: string
           description: The URL of the streaming playlist that serves as the entry point for video playback.
           example: https://hare-dynamic-media-cdn.tripadvisor.com/media/video-v/31/1f/5b/68/vid-693-rome-2017-vatican_1080.m3u8
-    ExchangeRatesResponse:
+    AvailabilityScheduleExtraChargesSummary:
       type: object
-      properties:
-        rates:
-          type: array
-          description: Currency exchange rates
-          items:
-            $ref: '#/components/schemas/ExchangeRateItem'
-    TranslationDetails:
-      type: object
-      description: Information about whether the text in this response was machine-translated
+      description: Information about the lowest price with extra charges available for this product
       required:
-      - containsMachineTranslatedText
-      - translationSource
+      - fromPrice
+      - extraCharges
       properties:
-        containsMachineTranslatedText:
-          type: boolean
-          description: Indicates whether this product description utilizes text in any of its natural language fields that was automatically machine-translated with no human oversight
-        translationSource:
+        fromPrice:
+          type: number
+          description: '`fromPrice` value including `extraCharges` value to be paid in destination by the traveler based on their age, day of the week, time of the year or any other criteria defined by the supplier.
+
+            This value will only be returned if the product has Extra Charges in at least one `bookableItem`.
+
+            '
+        fromPriceBeforeDiscount:
+          type: number
+          description: 'If the product is presently discounted, this field shows what the value of `fromPrice` would be if no discount had been applied; otherwise, it will be absent.
+
+            '
+        extraCharges:
+          type: number
+          description: 'The highest amount that a traveler could be asked to pay in-destination based on their age, day of the week, time of the year or any other criteria defined by the supplier for the `bookableItem` used to calculate the starting price.
+
+            '
+    AttractionResult:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: unique numeric identifier of the attraction
+        name:
           type: string
-          description: "One of:\n- `\"MACHINE\"` – The text provided by the supplier is in a **different language** and has been **automatically translated** by our systems with no human oversight.\n- `\"ORIGINAL\"` – The text provided by the supplier is in the language that is standard for their locale.\n- `\"MANUAL\"` – The text provided by the supplier was in a different language to the standard for their locale; however, whether this is a direct translation of the original text (performed either by machine or human) or whether it is a customised description for speakers of this language is not known. \n"
-        translationAttribution:
+          description: 'natural-language title of the attraction
+
+
+            **Note**: This field contains natural language suitable for display to the user; content will be translated (if necessary) into the language specified in the Accept-Language header parameter
+
+            '
+        primaryDestinationId:
+          type: integer
+          description: unique numeric identifier of this attraction's primary destination
+        description:
           type: string
-          description: "Value specifying the machine-translation service vendor. At present, translation attribution is not a requirement.\n\n  - **Example**: `\"GOOGLE\"`\n"
+          description: "natural-language descriptive text for this attraction\n\n**Note**: This field contains natural language suitable for display to the user; content will be translated (if necessary) into the language specified in the Accept-Language header parameter\n  - Access to this information is only available if it is enabled for your account. Please [reach out to our support team](#section/Support) if you would like to take advantage of our unique content.\n  - You must ensure that your site is configured such that **no Viator Unique Content is indexed by any search engine**. This is a requirement for site certification. For more information, see [Key concepts – Protecting unique content](#section/Key-concepts/Protecting-unique-content)\n"
+        destinationName:
+          type: string
+          description: 'natural-language name of the primary destination associated with this attraction
+
+
+            **Note**: This field contains natural language suitable for display to the user; content will be translated (if necessary) into the language specified in the Accept-Language header parameter
+
+            '
+        productsCount:
+          type: integer
+          description: Number of products associated with this attraction
+        translationInfo:
+          $ref: '#/components/schemas/TranslationDetails'
+        reviews:
+          $ref: '#/components/schemas/ProductReviewsSummary'
+        images:
+          type: array
+          items:
+            $ref: '#/components/schemas/Image'
+    ProductReviewSource:
+      type: object
+      required:
+      - provider
+      - totalCount
+      properties:
+        provider:
+          type: string
+          description: "Source of the review; one of:\n  - `\"VIATOR\"`\n  - `\"TRIPADVISOR\"`\n"
+        reviewCounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductReviewCount'
+          description: Breakdown of ratings and counts for reviews from this source for this product
+        totalCount:
+          type: integer
+          description: Total number of reviews for all ratings of this product
+          format: int64
+        averageRating:
+          description: 'Average rating across all reviews from this source for this product
+
+
+            This average is equal to the sum of the product of each rating and its count divided by the sum of the counts.
+
+            '
+          type: number
+          format: float
     ExchangeRateItem:
       type: object
       properties:
@@ -1412,57 +999,121 @@ components:
           description: 'Timestamp (UTC) indicating until when this rate will apply
 
             '
-    SearchType:
+    ImageSourceType:
+      type: string
+      description: "Machine-interpretable value indicating the source of this image; one of:\n\n  - `\"SUPPLIER_PROVIDED\"`\n  - `\"PROFESSIONAL\"`\n"
+    DestinationsResponse:
       type: object
       properties:
-        searchType:
+        destinations:
+          type: array
+          items:
+            $ref: '#/components/schemas/DestinationDetails'
+        totalCount:
+          type: integer
+          format: int32
+          description: Total count of Destinations returned
+    ProductSearchPricing:
+      type: object
+      description: "High-level summary of product prices\n  \n  - **Note**: This price may not be available during the date range specified in the `filtering` section of the request\n"
+      required:
+      - fromPrice
+      - currency
+      properties:
+        summary:
+          allOf:
+          - type: object
+            properties:
+              fromPriceBeforeDiscount:
+                type: number
+                description: If the product is presently discounted, this field shows what the value of `fromPrice` would be if no discount had been applied; otherwise, it will be equal to `fromPrice`.
+          - $ref: '#/components/schemas/AvailabilityScheduleSummary'
+        currency:
           type: string
-          description: 'Specifies a domain within which the search should be performed
-
-
-            One of:
-
-            - `"ATTRACTIONS"`
-
-            - `"DESTINATIONS"`
-
-            - `"PRODUCTS"`
+          description: Currency code for the currency in which the prices in `summary` are denominated
+        partnerNetFromPrice:
+          type: number
+          description: "Lowest per-person price for this product expressed as the amount (excluding the booking fee)that merchant partners using the markup/booking-fee pricing scheme would be invoiced. \n\nThis value is calculated according to the price for a group of at least two standard participants (or, the smallest bookable group if more than two participants are required) for a period not exceeding 384 days into the future.\n\n**Note**: This property is only relevant to you and will only be returned if you are a markup merchant partner (i.e., you are a merchant and are not using the commission-based pricing model).\n"
+        extraChargesSummary:
+          $ref: '#/components/schemas/AvailabilityScheduleExtraChargesSummary'
+    FreetextSearchResponse:
+      type: object
+      properties:
+        destinations:
+          type: object
+          description: 'Destinations that include the `searchTerm` when `"DESTINATIONS"` results are requested via `searchTypes`
 
             '
-        pagination:
-          $ref: '#/components/schemas/ProductSearchPagination'
-    ItineraryDuration:
+          properties:
+            totalCount:
+              type: integer
+              format: int64
+              description: Total number of destinations that may be returned if pagination is not specified in the request.
+            results:
+              type: array
+              description: 'List of matching destinations
+
+                '
+              items:
+                $ref: '#/components/schemas/DestinationSearchResult'
+        attractions:
+          type: object
+          description: 'Attractions that include the `searchTerm` when `"ATTRACTIONS"` results are requested via `searchTypes`
+
+            '
+          properties:
+            totalCount:
+              type: integer
+              format: int64
+              description: Total number of attractions that may be returned if pagination is not specified in the request.
+            results:
+              type: array
+              description: 'List of matching attractions
+
+                '
+              items:
+                $ref: '#/components/schemas/AttractionResult'
+        products:
+          type: object
+          description: 'Products that include the `searchTerm` when `"PRODUCTS"` results are requested via `searchTypes`
+
+            '
+          properties:
+            totalCount:
+              type: integer
+              format: int64
+              description: Total number of products that may be returned if pagination is not specified in the request.
+            results:
+              description: 'List of matching products
+
+                '
+              type: array
+              items:
+                $ref: '#/components/schemas/ProductSummary'
+    Image:
       type: object
-      description: 'Duration information for this itinerary
-
-
-        **Note**: Depending on whether this itinerary has a fixed or variable duration, this object will include either the `fixedValueInMinutes` element alone; or, both the `fromMinutes` and `toMinutes` elements, respectively.
-
-        '
+      description: Image information
+      required:
+      - variants
+      - isCover
       properties:
-        fixedDurationInMinutes:
-          type: integer
-          description: Duration of this itinerary (in minutes) in the case that it takes a fixed amount of time
-        variableDurationFromMinutes:
-          type: integer
-          description: Lower limit of the duration of this itinerary (in minutes) in the case that this product's duration varies
-        variableDurationToMinutes:
-          type: integer
-          description: Upper limit of the duration of this itinerary (in minutes) in the case that this product's duration varies
-        unstructuredDuration:
+        imageSource:
+          $ref: '#/components/schemas/ImageSourceType'
+        caption:
           type: string
-    FreetextSearchProductSorting:
-      type: object
-      description: 'Specify the sorting method for product results (i.e., when `searchTypes` includes `"PRODUCTS"`)
+          description: 'Description of this photo
 
-        '
-      properties:
-        sort:
-          type: string
-          description: "The method of sorting product search results. One of:\n- `\"DEFAULT\"`: sorts based on search term to result relevancy in descending order.\n  - **Note**: What Viator gets paid impacts this sort order). Custom ordering is not supported; therefore, the `order` field should be omitted when this sort order is chosen.\n- `\"ITINERARY_DURATION\"`: sort by `duration`. Allow custom order.\n- `\"PRICE\"`: sort by `fromPrice`. Allow custom order.\n- `\"REVIEW_AVG_RATING\"`: sort by average review ratings in descending order . Custom order is not allowed.\n- `\"DATE_ADDED\"`: sort according to when the product was added to the viator catalogue. Allow custom order.\n"
-        order:
-          type: string
-          description: "The direction of sorting search results.\nOne of: \n- `\"ASCENDING\"`\n- `\"DESCENDING\"`\n"
+            - **Note**: This field contains natural language suitable for display to the user; content will be translated (if necessary) into the language specified in the Accept-Language header parameter
+
+            '
+        isCover:
+          type: boolean
+          description: '`true` if this photo is considered to be the cover (leading) photo for this product from this `imageSource`'
+        variants:
+          type: array
+          description: Dimension/resolution variants available for this image
+          items:
+            $ref: '#/components/schemas/ImageVariant'
     FreetextSearchProductFiltering:
       type: object
       required:
@@ -1574,69 +1225,206 @@ components:
 
             '
           default: true
-    ErrorResponse:
+    FreetextSearchRequest:
       type: object
+      required:
+      - searchTerm
+      - currency
+      - searchTypes
       properties:
-        code:
+        searchTerm:
           type: string
-        message:
+          description: 'Return results that contain this free-text search term
+
+            '
+        productFiltering:
+          $ref: '#/components/schemas/FreetextSearchProductFiltering'
+        productSorting:
+          $ref: '#/components/schemas/FreetextSearchProductSorting'
+        searchTypes:
+          type: array
+          description: 'Specifies the domain(s) in which to search for the `searchTerm` and the respective pagination details for each type of search results
+
+            '
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/SearchType'
+        currency:
           type: string
-        timestamp:
+          format: currency
+          description: 'Currency code of price range in request filter and the prices in response.
+
+
+            One of: `"AED"`, `"ARS"`, `"AUD"`, `"BRL"`, `"CAD"`, `"CHF"`, `"CLP"`, `"CNY"`, `"COP"`, `"DKK"`, `"EUR"`, `"FJD"`, `"GBP"`, `"HKD"`, `"IDR"`, `"ILS"`, `"INR"`, `"ISK"`, `"JPY"`, `"KRW"`, `"MXN"`, `"MYR"`, `"NOK"`, `"NZD"`, `"PEN"`, `"PHP"`, `"PLN"`, `"RUB"`, `"SEK"`, `"SGD"`, `"THB"`, `"TRY"`, `"TWD"`, `"USD"`, `"VND"`, `"ZAR"`.
+
+            '
+    ItineraryDuration:
+      type: object
+      description: 'Duration information for this itinerary
+
+
+        **Note**: Depending on whether this itinerary has a fixed or variable duration, this object will include either the `fixedValueInMinutes` element alone; or, both the `fromMinutes` and `toMinutes` elements, respectively.
+
+        '
+      properties:
+        fixedDurationInMinutes:
+          type: integer
+          description: Duration of this itinerary (in minutes) in the case that it takes a fixed amount of time
+        variableDurationFromMinutes:
+          type: integer
+          description: Lower limit of the duration of this itinerary (in minutes) in the case that this product's duration varies
+        variableDurationToMinutes:
+          type: integer
+          description: Upper limit of the duration of this itinerary (in minutes) in the case that this product's duration varies
+        unstructuredDuration:
           type: string
-          format: date-time
-          description: "Timestamp of the request. \n\n**Example**: `\"2019-09-17T03:20:45.737043Z\"`\n"
-        trackingId:
+    ProductReviewsRequest:
+      type: object
+      required:
+      - productCode
+      - start
+      - count
+      - provider
+      properties:
+        productCode:
           type: string
-          description: "Tracking identifier for this error response. \n\n**Example**: `\"0A871A13:DE2A_0A8712F9:01BB_5DCCC98C_260DAA:0D5B\"`\n"
-    LocationsResponse:
+          description: Retrieve reviews for the product identified by this product code
+        count:
+          type: integer
+          format: int32
+          description: Number of reviews to be returned in the response; used for pagination
+        start:
+          type: integer
+          format: int32
+          description: Position of first review to be returned in the response; used for pagination
+        provider:
+          type: string
+          description: 'Limit the reviews returned in the response to those associated with this provider; one of:
+
+
+            - `"VIATOR"` – only include reviews submitted on viator.com
+
+            - `"TRIPADVISOR"` – only include reviews submitted on tripdavisor.com
+
+            - `"ALL"` - include reviews from all providers
+
+            '
+        sortBy:
+          type: string
+          description: 'One of:
+
+
+            - `"HIGHEST_RATING_PER_LOCALE"` – sort by rating (descending) *for each locale*
+
+            - `"MOST_RECENT_PER_LOCALE"` – sort by publication date (descending) *for each locale*
+
+            - `"MOST_HELPFUL_PER_LOCALE"` – sort by the number of ''helpful'' votes (descending) *for each locale*
+
+            - `"HIGHEST_RATING"` –  sort by rating (descending) *across all locales*
+
+            - `"MOST_RECENT"` – sort by publication date (descending) *across all locales*
+
+            - `"MOST_HELPFUL"` – sort by the number of ''helpful'' votes (descending) *across all locales*
+
+
+            If this element is omitted, the default sort option is `"MOST_RECENT"`
+
+            '
+        reviewsForNonPrimaryLocale:
+          type: boolean
+          description: 'Controls whether reviews that cannot be provided in the requested language are included.
+
+
+            When `false`, returns only reviews that can be provided in the requested language, either originally or via machine translation.
+
+            When `true`, additional reviews may be returned in their original language when no requested-language version is available.
+
+            '
+        showMachineTranslated:
+          type: boolean
+          description: 'When `true`, returns machine-translated review text in the requested language, where available, based on `Accept-Language`. When `false`, reviews are returned in their original language, even if a machine translation exists. This does not filter reviews by their original language.
+
+            '
+        ratings:
+          type: array
+          description: 'Only include reviews with these ratings
+
+
+            **Example**: `[3,4,5]` to receive reviews with a rating of 3 or above
+
+            '
+          items:
+            type: integer
+            format: int32
+    ProductReviewsSummaryCount:
+      type: object
+      required:
+      - rating
+      - count
+      properties:
+        rating:
+          type: number
+          description: This object refers to reviews with this star-rating
+          format: float
+        count:
+          type: integer
+          description: Number of reviews for this product with a star-rating of `rating`
+          format: int64
+    ItineraryType:
+      type: string
+      description: "Machine-interpretable value specifying the type of itinerary available for this product; one of:\n\n  - `\"STANDARD\"`\n  - `\"ACTIVITY\"`\n  - `\"MULTI_DAY_TOUR\"`\n  - `\"HOP_ON_HOP_OFF\"`\n  - `\"UNSTRUCTURED\"`\n"
+    ReviewPhoto:
+      type: object
+      required:
+      - height
+      - width
+      - url
+      properties:
+        height:
+          type: integer
+          format: int32
+          description: Height of image in pixels
+        width:
+          type: integer
+          format: int32
+          description: Width of image in pixels
+        url:
+          type: string
+          description: URL at which this image is located
+    BulkLocationReferencesRequest:
       type: object
       required:
       - locations
       properties:
         locations:
           type: array
-          description: Locations
+          maxItems: 500
+          description: 'List of location reference identifiers for which to retrieve full location details.
+
+            '
           items:
-            $ref: '#/components/schemas/Location'
-    VideoVariants:
+            type: string
+            pattern: (?s).*[\S].*
+    SearchType:
       type: object
-      description: 'An object of available video delivery options for the same content, structured by delivery strategy.
-
-        Each variant defines how the video can be retrieved and played, optimized for different playback capabilities and network conditions.
-
-        Clients should select the best-supported variant and ignore unknown variant keys for forward compatibility.
-
-        '
-      required:
-      - streaming
-      - progressive
       properties:
-        streaming:
-          type: array
-          description: "Streaming-optimized video source, intended for real-time playback. \nStreaming variants provide a single entry point that allows the player to automatically select bitrate and resolution based on network conditions and device capabilities.\n"
-          items:
-            $ref: '#/components/schemas/StreamingVideoVariant'
-        progressive:
-          type: array
-          description: Progressive download video source intended for immediate or offline playback
-          items:
-            $ref: '#/components/schemas/ProgressiveVideoVariant'
-    ProductSearchFlag:
-      type: string
-      description: "One of:\n\n  - `\"NEW_ON_VIATOR\"` – products that have been added to Viator's catalogue within the past 270 days\n  - `\"SKIP_THE_LINE\"` – products that allow participants to attend a location without having to obtain a separate ticket on the occasion itself (`itinerary.skipTheLine` is `true`)\n  - `\"PRIVATE_TOUR\"` – products where only the travelers who have booked the product will be present (`itinerary.privateTour` is `true`)\n  - `\"SPECIAL_OFFER\"` – products that have a pricing discount available (i.e., `summary.fromPriceBeforeDiscount` will be present in the response from [/availability/schedules/{product-code}](#operation/availabilitySchedules))\n  - `\"LIKELY_TO_SELL_OUT\"` - popular products that routinely sell out (this is equivalent to filtering by tag `20757`).\n"
-    LocationCenter:
-      type: object
-      description: Geographic coordinates (latitude/longitude) for this location
-      properties:
-        latitude:
-          type: number
-          description: "Latitude of this location\n\n  - **Example**: `-33.870037`\n"
-        longitude:
-          type: number
-          description: "Longitude of this location\n\n  - **Example**: `151.20955`\n"
-    ImageSourceType:
-      type: string
-      description: "Machine-interpretable value indicating the source of this image; one of:\n\n  - `\"SUPPLIER_PROVIDED\"`\n  - `\"PROFESSIONAL\"`\n"
+        searchType:
+          type: string
+          description: 'Specifies a domain within which the search should be performed
+
+
+            One of:
+
+            - `"ATTRACTIONS"`
+
+            - `"DESTINATIONS"`
+
+            - `"PRODUCTS"`
+
+            '
+        pagination:
+          $ref: '#/components/schemas/ProductSearchPagination'
     SupplierProductInfo:
       type: object
       required:
@@ -1690,181 +1478,112 @@ components:
           description: Product code to which this supplier search result pertains
         contact:
           $ref: '#/components/schemas/ContactDetails'
-    ReviewPhotoInfo:
+    ProductSearchPagination:
       type: object
-      required:
-      - photoVersions
+      description: Pagination details specifying which search results to return based on start position and item count
       properties:
-        photoVersions:
-          type: array
-          description: Width and height variants of this review image and associated URLs
-          items:
-            $ref: '#/components/schemas/ReviewPhoto'
-    ProgressiveVideoVariant:
-      type: object
-      description: Progressive video variant
-      required:
-      - format
-      - quality
-      - url
-      properties:
-        format:
-          type: string
-          description: File format of the video (e.g. `MP4`).
-          example: MP4
-        quality:
-          type: string
-          description: Fixed playback quality or resolution of the video (e.g. `1080`, `720`).
-          example: '1080'
-        url:
-          type: string
-          description: Direct URL to the video file.
-          example: https://hare-dynamic-media-cdn.tripadvisor.com/media/video-v/31/1f/5b/68/vid-693-rome-2017-vatican_1080.mp4
-    DestinationSearchResult:
-      type: object
-      properties:
-        id:
+        start:
           type: integer
-          description: "**unique numeric identifier** of the destination\n - use this value as the `destination` input field for other Viator API services.\n"
-          format: int64
-        name:
-          type: string
-          description: '**natural-language name** of the destination
-
-            '
-        parentDestinationId:
+          minimum: 1
+          default: 1
+          description: Position of first filtered and ordered search result to be included in the response (1-based)
+        count:
           type: integer
-          format: int64
-          description: '**unique numeric identifier** of the destination''s parent destination
-
-            '
-        parentDestinationName:
-          type: string
-          description: '**natural-language name** of the destination''s parent destination
-
-            '
-        translationInfo:
-          $ref: '#/components/schemas/TranslationDetails'
-        url:
-          type: string
-          description: 'URL of destination
-
-            '
-    AvailabilityScheduleSummary:
+          minimum: 1
+          default: 10
+          maximum: 50
+          description: Number of filtered and ordered search results to be returned in the response
+    ErrorResponse:
       type: object
-      description: 'Information about the lowest price available for this product
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+          description: "Timestamp of the request. \n\n**Example**: `\"2019-09-17T03:20:45.737043Z\"`\n"
+        trackingId:
+          type: string
+          description: "Tracking identifier for this error response. \n\n**Example**: `\"0A871A13:DE2A_0A8712F9:01BB_5DCCC98C_260DAA:0D5B\"`\n"
+    VideoVariants:
+      type: object
+      description: 'An object of available video delivery options for the same content, structured by delivery strategy.
 
+        Each variant defines how the video can be retrieved and played, optimized for different playback capabilities and network conditions.
 
-        **Note**: The pricing information given here is based on the recommended retail price (RRP). While affiliate partners must sell at this price, merchant partners set their own prices according to their own margins and booking fees; therefore, merchant partners must calculate their own from-price for display, rather than using these values, unless they have elected to sell at the RRP.
+        Clients should select the best-supported variant and ignore unknown variant keys for forward compatibility.
 
         '
       required:
-      - fromPrice
+      - streaming
+      - progressive
       properties:
-        fromPrice:
-          type: number
-          description: 'Lowest per-person retail price for this product, calculated according to the price for a group of at least two standard participants (or, the smallest bookable group if more than two participants are required) for a period not exceeding 384 days into the future.
-
-            This value can be used to advertise a ''from''-price; e.g., "From $99 per person"
-
-            '
-        fromPriceBeforeDiscount:
-          type: number
-          description: 'If the product is presently discounted, this field shows what the value of `fromPrice` would be if no discount had been applied; otherwise, it will be absent.
-
-            '
-    FreetextSearchResponse:
+        streaming:
+          type: array
+          description: "Streaming-optimized video source, intended for real-time playback. \nStreaming variants provide a single entry point that allows the player to automatically select bitrate and resolution based on network conditions and device capabilities.\n"
+          items:
+            $ref: '#/components/schemas/StreamingVideoVariant'
+        progressive:
+          type: array
+          description: Progressive download video source intended for immediate or offline playback
+          items:
+            $ref: '#/components/schemas/ProgressiveVideoVariant'
+    Location:
       type: object
+      description: Location detail
+      required:
+      - reference
+      - provider
       properties:
-        destinations:
-          type: object
-          description: 'Destinations that include the `searchTerm` when `"DESTINATIONS"` results are requested via `searchTypes`
-
-            '
-          properties:
-            totalCount:
-              type: integer
-              format: int64
-              description: Total number of destinations that may be returned if pagination is not specified in the request.
-            results:
-              type: array
-              description: 'List of matching destinations
-
-                '
-              items:
-                $ref: '#/components/schemas/DestinationSearchResult'
-        attractions:
-          type: object
-          description: 'Attractions that include the `searchTerm` when `"ATTRACTIONS"` results are requested via `searchTypes`
-
-            '
-          properties:
-            totalCount:
-              type: integer
-              format: int64
-              description: Total number of attractions that may be returned if pagination is not specified in the request.
-            results:
-              type: array
-              description: 'List of matching attractions
-
-                '
-              items:
-                $ref: '#/components/schemas/AttractionResult'
-        products:
-          type: object
-          description: 'Products that include the `searchTerm` when `"PRODUCTS"` results are requested via `searchTypes`
-
-            '
-          properties:
-            totalCount:
-              type: integer
-              format: int64
-              description: Total number of products that may be returned if pagination is not specified in the request.
-            results:
-              description: 'List of matching products
-
-                '
-              type: array
-              items:
-                $ref: '#/components/schemas/ProductSummary'
-    ProductReviewsSummaryCount:
+        reference:
+          type: string
+          pattern: (?s).*[\S].*
+          description: Unique identifier for this location as given in the request
+        provider:
+          $ref: '#/components/schemas/LocationProvider'
+      discriminator:
+        propertyName: provider
+        mapping:
+          TRIPADVISOR: '#/components/schemas/ResolvedLocation'
+          GOOGLE: '#/components/schemas/ProvidedLocation'
+    ProductReviewCount:
       type: object
+      description: Breakdown of number of reviews for each rating of this product
       required:
       - rating
       - count
       properties:
         rating:
           type: number
-          description: This object refers to reviews with this star-rating
+          description: Rating given in the review for this product
           format: float
         count:
           type: integer
-          description: Number of reviews for this product with a star-rating of `rating`
+          description: How many reviews of this product have this rating
           format: int64
-    Image:
+    ExchangeRatesResponse:
       type: object
-      description: Image information
-      required:
-      - variants
-      - isCover
       properties:
-        imageSource:
-          $ref: '#/components/schemas/ImageSourceType'
-        caption:
-          type: string
-          description: 'Description of this photo
-
-            - **Note**: This field contains natural language suitable for display to the user; content will be translated (if necessary) into the language specified in the Accept-Language header parameter
-
-            '
-        isCover:
-          type: boolean
-          description: '`true` if this photo is considered to be the cover (leading) photo for this product from this `imageSource`'
-        variants:
+        rates:
           type: array
-          description: Dimension/resolution variants available for this image
+          description: Currency exchange rates
           items:
-            $ref: '#/components/schemas/ImageVariant'
+            $ref: '#/components/schemas/ExchangeRateItem'
+    ExchangeRatesRequest:
+      type: object
+      properties:
+        sourceCurrencies:
+          type: array
+          description: List of three-letter currency codes for the source currencies for which to retrieve exchange rate data
+          items:
+            type: string
+        targetCurrencies:
+          type: array
+          description: List of three-letter currency codes for the target currencies for which to retrieve exchange rate data
+          items:
+            type: string
     SupplierProductResponse:
       type: object
       required:
@@ -1875,6 +1594,56 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SupplierProductInfo'
+    ContactDetails:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email address of this supplier (for the office managing this product)
+        address:
+          type: string
+          description: Address of this supplier (for the office managing this product)
+        phone:
+          type: string
+          description: Phone number of this supplier (for the office managing this product)
+        countryCode:
+          type: string
+          description: Country code of this supplier (for the office managing this product)
+    ReviewPhotoInfo:
+      type: object
+      required:
+      - photoVersions
+      properties:
+        photoVersions:
+          type: array
+          description: Width and height variants of this review image and associated URLs
+          items:
+            $ref: '#/components/schemas/ReviewPhoto'
+    FreetextSearchProductSorting:
+      type: object
+      description: 'Specify the sorting method for product results (i.e., when `searchTypes` includes `"PRODUCTS"`)
+
+        '
+      properties:
+        sort:
+          type: string
+          description: "The method of sorting product search results. One of:\n- `\"DEFAULT\"`: sorts based on search term to result relevancy in descending order.\n  - **Note**: What Viator gets paid impacts this sort order). Custom ordering is not supported; therefore, the `order` field should be omitted when this sort order is chosen.\n- `\"ITINERARY_DURATION\"`: sort by `duration`. Allow custom order.\n- `\"PRICE\"`: sort by `fromPrice`. Allow custom order.\n- `\"REVIEW_AVG_RATING\"`: sort by average review ratings in descending order . Custom order is not allowed.\n- `\"DATE_ADDED\"`: sort according to when the product was added to the viator catalogue. Allow custom order.\n"
+        order:
+          type: string
+          description: "The direction of sorting search results.\nOne of: \n- `\"ASCENDING\"`\n- `\"DESCENDING\"`\n"
+    LocationsResponse:
+      type: object
+      required:
+      - locations
+      properties:
+        locations:
+          type: array
+          description: Locations
+          items:
+            $ref: '#/components/schemas/Location'
+    LocationProvider:
+      type: string
+      description: "Name of the location services provider, one of:\n\n  - `\"TRIPADVISOR\"` – location details will be provided in this response\n  - `\"GOOGLE\"` – in order to retrieve details for these locations, you will need to use [Google's Places API](https://cloud.google.com/maps-platform/places).\n"
     DestinationDetails:
       type: object
       required:
@@ -2011,36 +1780,77 @@ components:
             '
         center:
           $ref: '#/components/schemas/LocationCenter'
-    ContactDetails:
+    ProductReviewsSummarySource:
       type: object
+      required:
+      - provider
+      - totalCount
       properties:
-        email:
+        provider:
           type: string
-          description: Email address of this supplier (for the office managing this product)
-        address:
-          type: string
-          description: Address of this supplier (for the office managing this product)
-        phone:
-          type: string
-          description: Phone number of this supplier (for the office managing this product)
-        countryCode:
-          type: string
-          description: Country code of this supplier (for the office managing this product)
-    ProductSearchPagination:
+          description: 'Provider for this set of reviews; one of:
+
+            - `"VIATOR"`
+
+            - `"TRIPADVISOR"`
+
+            '
+        reviewCounts:
+          type: array
+          description: Breakdown of number of reviews per rating for reviews sourced from this provider
+          items:
+            $ref: '#/components/schemas/ProductReviewsSummaryCount'
+        totalCount:
+          type: integer
+          format: int64
+          description: Total number of reviews for this product sourced from this provider
+    Video:
       type: object
-      description: Pagination details specifying which search results to return based on start position and item count
+      description: Product video
+      required:
+      - variants
       properties:
-        start:
-          type: integer
-          minimum: 1
-          default: 1
-          description: Position of first filtered and ordered search result to be included in the response (1-based)
-        count:
-          type: integer
-          minimum: 1
-          default: 10
-          maximum: 50
-          description: Number of filtered and ordered search results to be returned in the response
+        language:
+          type: string
+          description: "The language of the video content or audio track, expressed as a locale or language code (e.g., `\"en\"`, `\"es\"`, `\"fr\"`). \nIt enables localization, filtering, and correct playback selection based on user preferences.\n"
+        variants:
+          $ref: '#/components/schemas/VideoVariants'
+    TranslationDetails:
+      type: object
+      description: Information about whether the text in this response was machine-translated
+      required:
+      - containsMachineTranslatedText
+      - translationSource
+      properties:
+        containsMachineTranslatedText:
+          type: boolean
+          description: Indicates whether this product description utilizes text in any of its natural language fields that was automatically machine-translated with no human oversight
+        translationSource:
+          type: string
+          description: "One of:\n- `\"MACHINE\"` – The text provided by the supplier is in a **different language** and has been **automatically translated** by our systems with no human oversight.\n- `\"ORIGINAL\"` – The text provided by the supplier is in the language that is standard for their locale.\n- `\"MANUAL\"` – The text provided by the supplier was in a different language to the standard for their locale; however, whether this is a direct translation of the original text (performed either by machine or human) or whether it is a customised description for speakers of this language is not known. \n"
+        translationAttribution:
+          type: string
+          description: "Value specifying the machine-translation service vendor. At present, translation attribution is not a requirement.\n\n  - **Example**: `\"GOOGLE\"`\n"
+    ProgressiveVideoVariant:
+      type: object
+      description: Progressive video variant
+      required:
+      - format
+      - quality
+      - url
+      properties:
+        format:
+          type: string
+          description: File format of the video (e.g. `MP4`).
+          example: MP4
+        quality:
+          type: string
+          description: Fixed playback quality or resolution of the video (e.g. `1080`, `720`).
+          example: '1080'
+        url:
+          type: string
+          description: Direct URL to the video file.
+          example: https://hare-dynamic-media-cdn.tripadvisor.com/media/video-v/31/1f/5b/68/vid-693-rome-2017-vatican_1080.mp4
     ProductSummary:
       type: object
       required:
@@ -2115,244 +1925,363 @@ components:
           $ref: '#/components/schemas/ItineraryType'
         translationInfo:
           $ref: '#/components/schemas/TranslationDetails'
-    ProductSearchPricing:
-      type: object
-      description: "High-level summary of product prices\n  \n  - **Note**: This price may not be available during the date range specified in the `filtering` section of the request\n"
-      required:
-      - fromPrice
-      - currency
-      properties:
-        summary:
-          allOf:
-          - type: object
-            properties:
-              fromPriceBeforeDiscount:
-                type: number
-                description: If the product is presently discounted, this field shows what the value of `fromPrice` would be if no discount had been applied; otherwise, it will be equal to `fromPrice`.
-          - $ref: '#/components/schemas/AvailabilityScheduleSummary'
-        currency:
-          type: string
-          description: Currency code for the currency in which the prices in `summary` are denominated
-        partnerNetFromPrice:
-          type: number
-          description: "Lowest per-person price for this product expressed as the amount (excluding the booking fee)that merchant partners using the markup/booking-fee pricing scheme would be invoiced. \n\nThis value is calculated according to the price for a group of at least two standard participants (or, the smallest bookable group if more than two participants are required) for a period not exceeding 384 days into the future.\n\n**Note**: This property is only relevant to you and will only be returned if you are a markup merchant partner (i.e., you are a merchant and are not using the commission-based pricing model).\n"
-        extraChargesSummary:
-          $ref: '#/components/schemas/AvailabilityScheduleExtraChargesSummary'
-    AvailabilityScheduleExtraChargesSummary:
-      type: object
-      description: Information about the lowest price with extra charges available for this product
-      required:
-      - fromPrice
-      - extraCharges
-      properties:
-        fromPrice:
-          type: number
-          description: '`fromPrice` value including `extraCharges` value to be paid in destination by the traveler based on their age, day of the week, time of the year or any other criteria defined by the supplier.
-
-            This value will only be returned if the product has Extra Charges in at least one `bookableItem`.
-
-            '
-        fromPriceBeforeDiscount:
-          type: number
-          description: 'If the product is presently discounted, this field shows what the value of `fromPrice` would be if no discount had been applied; otherwise, it will be absent.
-
-            '
-        extraCharges:
-          type: number
-          description: 'The highest amount that a traveler could be asked to pay in-destination based on their age, day of the week, time of the year or any other criteria defined by the supplier for the `bookableItem` used to calculate the starting price.
-
-            '
-    ItineraryType:
-      type: string
-      description: "Machine-interpretable value specifying the type of itinerary available for this product; one of:\n\n  - `\"STANDARD\"`\n  - `\"ACTIVITY\"`\n  - `\"MULTI_DAY_TOUR\"`\n  - `\"HOP_ON_HOP_OFF\"`\n  - `\"UNSTRUCTURED\"`\n"
-    DestinationsResponse:
-      type: object
-      properties:
-        destinations:
-          type: array
-          items:
-            $ref: '#/components/schemas/DestinationDetails'
-        totalCount:
-          type: integer
-          format: int32
-          description: Total count of Destinations returned
-    FreetextSearchRequest:
-      type: object
-      required:
-      - searchTerm
-      - currency
-      - searchTypes
-      properties:
-        searchTerm:
-          type: string
-          description: 'Return results that contain this free-text search term
-
-            '
-        productFiltering:
-          $ref: '#/components/schemas/FreetextSearchProductFiltering'
-        productSorting:
-          $ref: '#/components/schemas/FreetextSearchProductSorting'
-        searchTypes:
-          type: array
-          description: 'Specifies the domain(s) in which to search for the `searchTerm` and the respective pagination details for each type of search results
-
-            '
-          minItems: 1
-          maxItems: 3
-          items:
-            $ref: '#/components/schemas/SearchType'
-        currency:
-          type: string
-          format: currency
-          description: 'Currency code of price range in request filter and the prices in response.
+  responses:
+    NotAcceptable:
+      description: Not Acceptable
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
 
 
-            One of: `"AED"`, `"ARS"`, `"AUD"`, `"BRL"`, `"CAD"`, `"CHF"`, `"CLP"`, `"CNY"`, `"COP"`, `"DKK"`, `"EUR"`, `"FJD"`, `"GBP"`, `"HKD"`, `"IDR"`, `"ILS"`, `"INR"`, `"ISK"`, `"JPY"`, `"KRW"`, `"MXN"`, `"MYR"`, `"NOK"`, `"NZD"`, `"PEN"`, `"PHP"`, `"PLN"`, `"RUB"`, `"SEK"`, `"SGD"`, `"THB"`, `"TRY"`, `"TWD"`, `"USD"`, `"VND"`, `"ZAR"`.
+                    **Example**: `"NOT_ACCEPTABLE"`
 
-            '
-    ProductReviewsSummary:
-      type: object
-      description: "Summary of reviews and ratings for this attraction\n\n**Note**:\n  - Review data is updated daily; i.e., all reviews received on a day will be added and averages re-calculated in a single event.\n  - Viator performs checks on reviews - for more information, see [Review authenticity](#section/Key-concepts/Review-authenticity)\n"
-      required:
-      - totalReviews
-      properties:
-        sources:
-          type: array
-          description: Breakdown of review summaries for each review source
-          items:
-            $ref: '#/components/schemas/ProductReviewsSummarySource'
-        reviewCountTotals:
-          type: array
-          description: Breakdown of number of reviews per rating for all reviews of this product
-          items:
-            $ref: '#/components/schemas/ProductReviewsSummaryCount'
-        totalReviews:
-          description: Total number of reviews available for this product from all sources
-          type: integer
-          format: int64
-        combinedAverageRating:
-          description: Combined average rating for this product across all reviews from all sources
-          type: number
-          format: float
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Not acceptable"`
+
+                    '
+            - type: object
+              example:
+                code: NOT_ACCEPTABLE
+                message: Not acceptable
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    TooManyRequests:
+      description: Too Many Requests
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"TOO_MANY_REQUESTS"`
+
+
+                    See [Workflows - Rate limiting](#section/Workflows/Rate-limiting) for more information about this error.
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Too many requests, please try again"`
+
+                    '
+            - type: object
+              example:
+                code: TOO_MANY_REQUESTS
+                message: Too many requests
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    BadRequest:
+      description: Bad Request
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"BAD_REQUEST"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Invalid request"`
+
+                    '
+            - type: object
+              example:
+                code: BAD_REQUEST
+                message: Invalid request
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    InternalServerError:
+      description: Internal Server Error
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"INTERNAL_SERVER_ERROR"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Internal server error"`
+
+                    '
+            - type: object
+              example:
+                code: INTERNAL_SERVER_ERROR
+                message: Internal Server Error
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    ServiceUnavailable:
+      description: Service Unavailable
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"SERVICE_UNAVAILABLE"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Service unavailable"`
+
+                    '
+            - type: object
+              example:
+                code: SERVICE_UNAVAILABLE
+                message: Service Unavailable
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    NotFound:
+      description: Not Found
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"NOT_FOUND"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"The specified resource was not found"`
+
+                    '
+            - type: object
+              example:
+                code: NOT_FOUND
+                message: The specified resource was not found
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    Forbidden:
+      description: Forbidden
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"FORBIDDEN"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Request is forbidden"`
+
+                    '
+              example:
+                code: FORBIDDEN
+                message: Request is forbidden
+                timestamp: '2019-09-17T03:20:45.737043Z'
+    Unauthorized:
+      description: Unauthorized
+      headers:
+        X-Unique-ID:
+          $ref: '#/components/headers/XUniqueId'
+        RateLimit-Limit:
+          $ref: '#/components/headers/RateLimit-Limit'
+        RateLimit-Remaining:
+          $ref: '#/components/headers/RateLimit-Remaining'
+        RateLimit-Reset:
+          $ref: '#/components/headers/RateLimit-Reset'
+        Retry-After:
+          $ref: '#/components/headers/Retry-After'
+      content:
+        application/json:
+          schema:
+            allOf:
+            - $ref: '#/components/schemas/ErrorResponse'
+            - type: object
+              properties:
+                code:
+                  description: 'Code for this error type
+
+
+                    **Example**: `"UNAUTHORIZED"`
+
+                    '
+                message:
+                  description: 'Details of this error
+
+
+                    **Example**: `"Invalid API Key"`
+
+                    '
+            - type: object
+              example:
+                code: UNAUTHORIZED
+                message: Invalid API Key
+                timestamp: '2019-09-17T03:20:45.737043Z'
+  headers:
+    RateLimit-Reset:
+      required: true
+      schema:
+        type: string
+        description: 'The fixed window in time, in seconds, which represents when a limit is fully replenished. For informational purposes only.
+
+          '
+    Retry-After:
+      required: true
+      schema:
+        type: string
+        description: 'The fixed window in time, in seconds, which represents when a limit is fully replenished. For informational purposes only.
+
+          '
+    RateLimit-Remaining:
+      required: true
+      schema:
+        type: string
+        description: 'Remaining requests for this endpoint for a given window. For informational purposes only
+
+          '
+    XUniqueId:
+      required: true
+      schema:
+        type: string
+        description: 'Tracking identifier for this response. Please include the value of this field when making help requests.
+
+          - **Example**: `"0A871A13:DE2A_0A8712F9:01BB_5DCCC98C_260DAA:0D5B"`
+
+          '
+    RateLimit-Limit:
+      required: true
+      schema:
+        type: string
+        description: 'Total limit of requests for this endpoint for a given window. For informational purposes only.
+
+          '
   examples:
-    search-freetext-extra-charges-example:
-      summary: /search/freetext - ExtraCharges
+    suppliers-search-product-codes-individual-example:
+      summary: Individual - Supplier agreed to legal compliance
       value:
-        destinations:
-          totalCount: 1
-          results:
-          - id: 50204
-            name: Abu Simbel
-            parentDestinationId: 722
-            parentDestinationName: Egypt
-            translationInfo:
-              containsMachineTranslatedText: false
-              translationSource: ORIGINAL
-            url: https://shop.live.int.viator.com/x/d50204-ttd?mcid=42383&pid=P00108950&medium=api&api_version=2.0
-        attractions:
-          totalCount: 0
-        products:
-          totalCount: 185
-          results:
-          - productCode: 128216P66
-            title: 4-Days Nile Cruise From Aswan To Luxor including Abu Simbel and Hot Air Balloon
-            description: The Beauty of Egypt Upper Nile Valley, is best appreciated from the deck of a Nile Cruise ship. Enjoy the riverside scenery and discover the ancient wonders of Egypt passing by pharaonic sites en route between Aswan and Luxor. Explore the highlights of the sightseeing in Luxor and Aswan, two stops in the way to visit the pharaonic sites of interest such as; Kom Ombo and Edfu Temples. Discover one of the most impressive temples in Egypt by visiting Abu Simbel 285 km south of Aswan. Experience the exciting trip of the Hot Air Balloon in Luxor. Have fun and enjoy plenty of night entertainments of the belly dancing show, galabiya party, Nubian show or disco and more.
-            images:
-            - imageSource: SUPPLIER_PROVIDED
-              caption: ''
-              isCover: true
-              variants:
-              - height: 50
-                width: 50
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-50x50/0b/9b/c9/c9.jpg
-              - height: 100
-                width: 100
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-100x100/0b/9b/c9/c9.jpg
-              - height: 200
-                width: 200
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-200x200/0b/9b/c9/c9.jpg
-              - height: 400
-                width: 400
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-400x400/0b/9b/c9/c9.jpg
-              - height: 40
-                width: 60
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-60x40/0b/9b/c9/c9.jpg
-              - height: 80
-                width: 120
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-120x80/0b/9b/c9/c9.jpg
-              - height: 120
-                width: 180
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-180x120/0b/9b/c9/c9.jpg
-              - height: 160
-                width: 240
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-240x160/0b/9b/c9/c9.jpg
-              - height: 240
-                width: 360
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-360x240/0b/9b/c9/c9.jpg
-              - height: 320
-                width: 480
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-480x320/0b/9b/c9/c9.jpg
-              - height: 360
-                width: 540
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-540x360/0b/9b/c9/c9.jpg
-              - height: 446
-                width: 674
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0b/9b/c9/c9.jpg
-              - height: 480
-                width: 720
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/0b/9b/c9/c9.jpg
-              - height: 118
-                width: 210
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-210x118/0b/9b/c9/c9.jpg
-              - height: 75
-                width: 75
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-75x75/0b/9b/c9/c9.jpg
-              - height: 109
-                width: 154
-                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/0b/9b/c9/c9.jpg
-            reviews:
-              sources:
-              - provider: VIATOR
-                totalCount: 903
-                averageRating: 4.7
-              - provider: TRIPADVISOR
-                totalCount: 1857
-                averageRating: 4.8
-              totalReviews: 2760
-              combinedAverageRating: 4.7710147
-            duration:
-              fixedDurationInMinutes: 5760
-            confirmationType: INSTANT
-            itineraryType: MULTI_DAY_TOUR
-            pricing:
-              summary:
-                fromPrice: 570.56
-                fromPriceBeforeDiscount: 570.56
-              extraChargesSummary:
-                fromPrice: 579.98
-                extraCharges: 9.42
-              currency: AUD
-            productUrl: https://shop.live.int.viator.com/tours/Aswan/04-Days-03-Nights-Nile-Cruise-from-Aswan-to-Luxor/d796-128216P66?mcid=42383&pid=P00108950&medium=api&api_version=2.0
-            destinations:
-            - ref: '796'
-              primary: true
-            tags:
-            - 12029
-            - 22046
-            - 12011
-            - 22169
-            - 12027
-            - 22170
-            - 11922
-            - 12028
-            - 12083
-            - 20255
-            - 21972
-            flags:
-            - FREE_CANCELLATION
-            translationInfo:
-              containsMachineTranslatedText: false
-              translationSource: ORIGINAL
+        suppliers:
+        - reference: SUPPLIER-Ydyu2Yd4RacdUHUUwvWuQA==
+          name: Phú Lành Travel
+          supplierAgreedToLegalCompliance: true
+          type: INDIVIDUAL
+          productCode: 383247P2
     suppliers-search-product-codes-certified-business-example:
       summary: Certified Business - Supplier agreed to legal compliance
       value:
@@ -2456,15 +2385,6 @@ components:
           rate: 0.7376903585645
           lastUpdated: '2020-09-10T07:00:10Z'
           expiry: '2020-09-12T07:05:10Z'
-    suppliers-search-product-codes-individual-example:
-      summary: Individual - Supplier agreed to legal compliance
-      value:
-        suppliers:
-        - reference: SUPPLIER-Ydyu2Yd4RacdUHUUwvWuQA==
-          name: Phú Lành Travel
-          supplierAgreedToLegalCompliance: true
-          type: INDIVIDUAL
-          productCode: 383247P2
     search-freetext-example:
       summary: /search/freetext
       value:
@@ -2867,19 +2787,6 @@ components:
             translationInfo:
               containsMachineTranslatedText: false
               translationSource: ORIGINAL
-    suppliers-search-product-codes-business-example:
-      summary: Business
-      value:
-        suppliers:
-        - reference: SUPPLIER-5VKSuubSdpsjjT67V9h0aA==
-          name: City Sightseeing Orlando
-          type: BUSINESS
-          productCode: 2855KENNEDY_TKTS
-          supplierInfoVerified: true
-          contact:
-            email: email@example.com
-            address: 1 Example Drive , Suite 100 Orlando Florida 32819 US
-            phone: '+1123456789'
     products-reviews-example:
       summary: /products/reviews
       value:
@@ -3100,44 +3007,137 @@ components:
         - provider: TRIPADVISOR
           reference: MEET_AT_DEPARTURE_POINT
           name: I will meet at the departure point
-  headers:
-    RateLimit-Remaining:
-      required: true
-      schema:
-        type: string
-        description: 'Remaining requests for this endpoint for a given window. For informational purposes only
-
-          '
-    RateLimit-Limit:
-      required: true
-      schema:
-        type: string
-        description: 'Total limit of requests for this endpoint for a given window. For informational purposes only.
-
-          '
-    Retry-After:
-      required: true
-      schema:
-        type: string
-        description: 'The fixed window in time, in seconds, which represents when a limit is fully replenished. For informational purposes only.
-
-          '
-    XUniqueId:
-      required: true
-      schema:
-        type: string
-        description: 'Tracking identifier for this response. Please include the value of this field when making help requests.
-
-          - **Example**: `"0A871A13:DE2A_0A8712F9:01BB_5DCCC98C_260DAA:0D5B"`
-
-          '
-    RateLimit-Reset:
-      required: true
-      schema:
-        type: string
-        description: 'The fixed window in time, in seconds, which represents when a limit is fully replenished. For informational purposes only.
-
-          '
+    search-freetext-extra-charges-example:
+      summary: /search/freetext - ExtraCharges
+      value:
+        destinations:
+          totalCount: 1
+          results:
+          - id: 50204
+            name: Abu Simbel
+            parentDestinationId: 722
+            parentDestinationName: Egypt
+            translationInfo:
+              containsMachineTranslatedText: false
+              translationSource: ORIGINAL
+            url: https://shop.live.int.viator.com/x/d50204-ttd?mcid=42383&pid=P00108950&medium=api&api_version=2.0
+        attractions:
+          totalCount: 0
+        products:
+          totalCount: 185
+          results:
+          - productCode: 128216P66
+            title: 4-Days Nile Cruise From Aswan To Luxor including Abu Simbel and Hot Air Balloon
+            description: The Beauty of Egypt Upper Nile Valley, is best appreciated from the deck of a Nile Cruise ship. Enjoy the riverside scenery and discover the ancient wonders of Egypt passing by pharaonic sites en route between Aswan and Luxor. Explore the highlights of the sightseeing in Luxor and Aswan, two stops in the way to visit the pharaonic sites of interest such as; Kom Ombo and Edfu Temples. Discover one of the most impressive temples in Egypt by visiting Abu Simbel 285 km south of Aswan. Experience the exciting trip of the Hot Air Balloon in Luxor. Have fun and enjoy plenty of night entertainments of the belly dancing show, galabiya party, Nubian show or disco and more.
+            images:
+            - imageSource: SUPPLIER_PROVIDED
+              caption: ''
+              isCover: true
+              variants:
+              - height: 50
+                width: 50
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-50x50/0b/9b/c9/c9.jpg
+              - height: 100
+                width: 100
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-100x100/0b/9b/c9/c9.jpg
+              - height: 200
+                width: 200
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-200x200/0b/9b/c9/c9.jpg
+              - height: 400
+                width: 400
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-400x400/0b/9b/c9/c9.jpg
+              - height: 40
+                width: 60
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-60x40/0b/9b/c9/c9.jpg
+              - height: 80
+                width: 120
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-120x80/0b/9b/c9/c9.jpg
+              - height: 120
+                width: 180
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-180x120/0b/9b/c9/c9.jpg
+              - height: 160
+                width: 240
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-240x160/0b/9b/c9/c9.jpg
+              - height: 240
+                width: 360
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-360x240/0b/9b/c9/c9.jpg
+              - height: 320
+                width: 480
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-480x320/0b/9b/c9/c9.jpg
+              - height: 360
+                width: 540
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-540x360/0b/9b/c9/c9.jpg
+              - height: 446
+                width: 674
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/0b/9b/c9/c9.jpg
+              - height: 480
+                width: 720
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-720x480/0b/9b/c9/c9.jpg
+              - height: 118
+                width: 210
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-210x118/0b/9b/c9/c9.jpg
+              - height: 75
+                width: 75
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-75x75/0b/9b/c9/c9.jpg
+              - height: 109
+                width: 154
+                url: https://hare-media-cdn.tripadvisor.com/media/attractions-splice-spp-154x109/0b/9b/c9/c9.jpg
+            reviews:
+              sources:
+              - provider: VIATOR
+                totalCount: 903
+                averageRating: 4.7
+              - provider: TRIPADVISOR
+                totalCount: 1857
+                averageRating: 4.8
+              totalReviews: 2760
+              combinedAverageRating: 4.7710147
+            duration:
+              fixedDurationInMinutes: 5760
+            confirmationType: INSTANT
+            itineraryType: MULTI_DAY_TOUR
+            pricing:
+              summary:
+                fromPrice: 570.56
+                fromPriceBeforeDiscount: 570.56
+              extraChargesSummary:
+                fromPrice: 579.98
+                extraCharges: 9.42
+              currency: AUD
+            productUrl: https://shop.live.int.viator.com/tours/Aswan/04-Days-03-Nights-Nile-Cruise-from-Aswan-to-Luxor/d796-128216P66?mcid=42383&pid=P00108950&medium=api&api_version=2.0
+            destinations:
+            - ref: '796'
+              primary: true
+            tags:
+            - 12029
+            - 22046
+            - 12011
+            - 22169
+            - 12027
+            - 22170
+            - 11922
+            - 12028
+            - 12083
+            - 20255
+            - 21972
+            flags:
+            - FREE_CANCELLATION
+            translationInfo:
+              containsMachineTranslatedText: false
+              translationSource: ORIGINAL
+    suppliers-search-product-codes-business-example:
+      summary: Business
+      value:
+        suppliers:
+        - reference: SUPPLIER-5VKSuubSdpsjjT67V9h0aA==
+          name: City Sightseeing Orlando
+          type: BUSINESS
+          productCode: 2855KENNEDY_TKTS
+          supplierInfoVerified: true
+          contact:
+            email: email@example.com
+            address: 1 Example Drive , Suite 100 Orlando Florida 32819 US
+            phone: '+1123456789'
   parameters:
     campaignValueProduct:
       name: campaign-value
