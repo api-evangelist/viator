@@ -84,34 +84,6 @@ paths:
                 '1':
                   $ref: '#/components/examples/support-customercare-example'
 components:
-  parameters:
-    acceptLanguage:
-      in: header
-      name: Accept-Language
-      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
-
-        '
-      required: true
-      schema:
-        type: string
-  examples:
-    support-customercare-example:
-      summary: /support/customercare
-      value:
-        errorReference: null
-        data:
-          url: '"http://www.viator.com/customer-care?eap=brand-subbrand-16721&aid=vba16721en'
-        dateStamp: 2020-04-21T17:05:27+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331002'
   schemas:
     basicErrorModel:
       type: object
@@ -176,6 +148,34 @@ components:
           type: string
           example: '321050'
           description: '**unique numeric id** of the server that processed *this* request'
+  parameters:
+    acceptLanguage:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
+  examples:
+    support-customercare-example:
+      summary: /support/customercare
+      value:
+        errorReference: null
+        data:
+          url: '"http://www.viator.com/customer-care?eap=brand-subbrand-16721&aid=vba16721en'
+        dateStamp: 2020-04-21T17:05:27+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331002'
   securitySchemes:
     Legacy-API-key:
       type: apiKey

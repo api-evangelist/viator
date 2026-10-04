@@ -305,6 +305,97 @@ paths:
                 '1':
                   $ref: '#/components/examples/util-siteBinaryData-example'
 components:
+  schemas:
+    basicErrorModel:
+      type: object
+      properties:
+        errorReference:
+          type: string
+          example: null
+          description: '**reference number** of *this* error'
+        dateStamp:
+          type: string
+          example: 2017-11-24T21:30:47+0000
+          description: '**timestamp** of *this* response'
+        errorType:
+          type: string
+          description: '**code** specifying the type of error'
+          example: null
+        errorCodes:
+          type: array
+          description: '**array** of error codes pertaining to *this* error
+
+            - See: [Exception error codes](#section/Appendices/Exception-error-codes) for a list of possible error codes
+
+            '
+          items:
+            type: string
+          example: []
+        errorMessage:
+          type: array
+          description: '**array** of error message strings'
+          example: null
+        errorName:
+          type: string
+          example: null
+          description: '**name** of *this* type of error'
+        extraInfo:
+          type: object
+          description: ignore (Viator only)
+        extraObject:
+          type: object
+          description: ignore (Viator only)
+        success:
+          type: boolean
+          example: true
+          description: '**boolean indicator** of *this* request''s outcome
+
+            - `true`: the request was successful with no errors
+
+            - `false`: an error was encountered
+
+            '
+        totalCount:
+          type: integer
+          example: 1
+          description: '**number** of results available for *this* service
+
+            '
+        errorMessageText:
+          type: string
+          example: null
+          description: '**array** of error message strings in plain text'
+        vmid:
+          type: string
+          example: '321050'
+          description: '**unique numeric id** of the server that processed *this* request'
+  parameters:
+    defaultCurrencyCode:
+      name: defaultCurrencyCode
+      in: query
+      description: '**currency code** (default) for pricing
+
+        - countries with standard currencies will default to *this* currency for pricing display prices displayed in this currency as the default currency
+
+        - other countries will default to `''USD''`
+
+        - e.g., Australia would be `''AUD''`; Vietnam would be `''USD''`
+
+        - See: [supported currencies](#section/Appendices/Supported-currency-codes)
+
+        '
+      schema:
+        type: string
+      example: USD
+    acceptLanguage:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
   examples:
     util-siteBinaryData-example:
       summary: /util/siteBinaryData
@@ -328,84 +419,6 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331001'
-    util-sitedetails-example:
-      summary: /util/sitedetails
-      value:
-        errorReference: null
-        data:
-          showLogo: false
-          showFavicon: false
-          hasCustomHeaderHtml: false
-          hasCustomFooterHtml: false
-          hasCustomCss: false
-          homepageDestIds: []
-          piiSetting: NO_PII
-          partnerPrivacyPolicyUrl: ''
-          pointsProgram: false
-          pointsProgramName: ''
-          pointsProgramUserType: ''
-          pointsProgramHelpText: ''
-          puid: '00000'
-          retailSiteId: 00000.api.partner.viator.com
-          companyName: TheName
-          defaultCurrency: USD
-          centralURL: shop.live.rc.viator.com
-          permissionsDenied:
-          - 1
-          - 42
-          - 75
-          - 46
-          - 78
-          - 15
-          - 82
-          - 116
-          - 53
-          - 85
-          - 22
-          - 118
-          - 119
-          - 120
-          - 121
-          allowMultiCurrency: false
-          mobileSiteDomain: null
-          showSupplierName: false
-          showAllLangServices: false
-          showPassbook: false
-          urlPostFixedValue: eap=brand-subbrand-00000&aid=vba00000en
-          canDisableBookEmail: false
-          clientId: PARTNER:API-en:VBA:00000
-          locale: en
-          enabled: true
-          url: shop.live.rc.viator.com
-          id: 0
-          channel: PARTNER
-        dateStamp: 2020-04-21T17:22:00+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331003'
-    util-guid-example:
-      summary: /util/guid
-      value:
-        errorReference: null
-        data: 331003-1969648698962354-6150751091453490107
-        dateStamp: 2020-04-21T17:14:06+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 1
-        errorMessageText: null
-        vmid: '331003'
     util-countrymap-example:
       summary: /util/countrymap
       value:
@@ -1390,97 +1403,84 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331001'
-  schemas:
-    basicErrorModel:
-      type: object
-      properties:
-        errorReference:
-          type: string
-          example: null
-          description: '**reference number** of *this* error'
-        dateStamp:
-          type: string
-          example: 2017-11-24T21:30:47+0000
-          description: '**timestamp** of *this* response'
-        errorType:
-          type: string
-          description: '**code** specifying the type of error'
-          example: null
-        errorCodes:
-          type: array
-          description: '**array** of error codes pertaining to *this* error
-
-            - See: [Exception error codes](#section/Appendices/Exception-error-codes) for a list of possible error codes
-
-            '
-          items:
-            type: string
-          example: []
-        errorMessage:
-          type: array
-          description: '**array** of error message strings'
-          example: null
-        errorName:
-          type: string
-          example: null
-          description: '**name** of *this* type of error'
-        extraInfo:
-          type: object
-          description: ignore (Viator only)
-        extraObject:
-          type: object
-          description: ignore (Viator only)
-        success:
-          type: boolean
-          example: true
-          description: '**boolean indicator** of *this* request''s outcome
-
-            - `true`: the request was successful with no errors
-
-            - `false`: an error was encountered
-
-            '
-        totalCount:
-          type: integer
-          example: 1
-          description: '**number** of results available for *this* service
-
-            '
-        errorMessageText:
-          type: string
-          example: null
-          description: '**array** of error message strings in plain text'
-        vmid:
-          type: string
-          example: '321050'
-          description: '**unique numeric id** of the server that processed *this* request'
-  parameters:
-    acceptLanguage:
-      in: header
-      name: Accept-Language
-      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
-
-        '
-      required: true
-      schema:
-        type: string
-    defaultCurrencyCode:
-      name: defaultCurrencyCode
-      in: query
-      description: '**currency code** (default) for pricing
-
-        - countries with standard currencies will default to *this* currency for pricing display prices displayed in this currency as the default currency
-
-        - other countries will default to `''USD''`
-
-        - e.g., Australia would be `''AUD''`; Vietnam would be `''USD''`
-
-        - See: [supported currencies](#section/Appendices/Supported-currency-codes)
-
-        '
-      schema:
-        type: string
-      example: USD
+    util-sitedetails-example:
+      summary: /util/sitedetails
+      value:
+        errorReference: null
+        data:
+          showLogo: false
+          showFavicon: false
+          hasCustomHeaderHtml: false
+          hasCustomFooterHtml: false
+          hasCustomCss: false
+          homepageDestIds: []
+          piiSetting: NO_PII
+          partnerPrivacyPolicyUrl: ''
+          pointsProgram: false
+          pointsProgramName: ''
+          pointsProgramUserType: ''
+          pointsProgramHelpText: ''
+          puid: '00000'
+          retailSiteId: 00000.api.partner.viator.com
+          companyName: TheName
+          defaultCurrency: USD
+          centralURL: shop.live.rc.viator.com
+          permissionsDenied:
+          - 1
+          - 42
+          - 75
+          - 46
+          - 78
+          - 15
+          - 82
+          - 116
+          - 53
+          - 85
+          - 22
+          - 118
+          - 119
+          - 120
+          - 121
+          allowMultiCurrency: false
+          mobileSiteDomain: null
+          showSupplierName: false
+          showAllLangServices: false
+          showPassbook: false
+          urlPostFixedValue: eap=brand-subbrand-00000&aid=vba00000en
+          canDisableBookEmail: false
+          clientId: PARTNER:API-en:VBA:00000
+          locale: en
+          enabled: true
+          url: shop.live.rc.viator.com
+          id: 0
+          channel: PARTNER
+        dateStamp: 2020-04-21T17:22:00+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
+    util-guid-example:
+      summary: /util/guid
+      value:
+        errorReference: null
+        data: 331003-1969648698962354-6150751091453490107
+        dateStamp: 2020-04-21T17:14:06+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 1
+        errorMessageText: null
+        vmid: '331003'
   securitySchemes:
     Legacy-API-key:
       type: apiKey

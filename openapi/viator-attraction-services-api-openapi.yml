@@ -1030,19 +1030,16 @@ paths:
                   $ref: '#/components/examples/attraction-products-example'
 components:
   schemas:
+    onSale:
+      type: boolean
+      description: '**indicator**: `true` if the product is ''on sale'' and a discount has been applied to the price. When a product is on sale, the `price` and `priceFormatted` fields give the discounted price, `rrp` and `rrpFormatted` give the original price, and `savingAmount`, `savingAmountFormated` give the difference between the discount and original prices. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+    rrpFormatted:
+      type: string
+      description: '**currency-formatted original price** for this product if the product is on special / a discount has been applied. Empty string if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
     savingAmountFormated:
       type: string
       description: "\n**currency-formatted price difference** of the price of this product (`price`) while on sale (`onSale` is `true`) compared to the product's original price (`rrp`)\n- if no discount has been applied, the value will be empty \n- Note: There is a typo in the spelling of this field name ('formated')\n- See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.\n"
       example: ''
-    specialOfferAvailable:
-      type: boolean
-      description: '**indicator**: `true` if a special offer is available for *this* product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
-    bookingEngineId:
-      type: string
-      description: ignore (relevant only to merchant and transactional-affiliate partners)
-    rrp:
-      type: integer
-      description: '**numeric original price** for this product if the product is on special / a discount has been applied. `0` if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
     currencyCode:
       type: string
       description: '**currency code** for the currency to use for pricing fields
@@ -1053,21 +1050,21 @@ components:
 
         '
       example: USD
+    specialOfferAvailable:
+      type: boolean
+      description: '**indicator**: `true` if a special offer is available for *this* product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
     priceFormatted:
       type: string
       description: '**currency-formatted suggested sell (''from'') price** for this product in the currency set in the `currencyCode` parameter
 
         '
+    bookingEngineId:
+      type: string
+      description: ignore (relevant only to merchant and transactional-affiliate partners)
     topX:
       type: string
       description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
       example: 1-3
-    savingAmount:
-      type: integer
-      description: '**numeric price difference** of the price of this product (`price`) while on sale (`onSale` is `true`) compared to the product''s original price (`rrp`). See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
-    onSale:
-      type: boolean
-      description: '**indicator**: `true` if the product is ''on sale'' and a discount has been applied to the price. When a product is on sale, the `price` and `priceFormatted` fields give the discounted price, `rrp` and `rrpFormatted` give the original price, and `savingAmount`, `savingAmountFormated` give the difference between the discount and original prices. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
     basicErrorModel:
       type: object
       properties:
@@ -1131,35 +1128,91 @@ components:
           type: string
           example: '321050'
           description: '**unique numeric id** of the server that processed *this* request'
-    webURL:
-      type: string
-      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
+    savingAmount:
+      type: integer
+      description: '**numeric price difference** of the price of this product (`price`) while on sale (`onSale` is `true`) compared to the product''s original price (`rrp`). See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
+    rrp:
+      type: integer
+      description: '**numeric original price** for this product if the product is on special / a discount has been applied. `0` if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
     price:
       description: '**suggested sell (''from'') price** for this product in the currency set in the `currencyCode` parameter. This is the cheapest sell price, taking into consideration off-peak periods and discounts on larger groups.
 
         '
       type: number
-    rrpFormatted:
+    webURL:
       type: string
-      description: '**currency-formatted original price** for this product if the product is on special / a discount has been applied. Empty string if there is no discount on this product. See [Special offers and on-sale pricing](#section/Key-concepts/Special-offers-and-on-sale-pricing) for more information.'
-  parameters:
-    topX:
-      name: topX
-      in: query
-      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
-      schema:
-        type: string
-      example: 1-3
-    acceptLanguage:
-      in: header
-      name: Accept-Language
-      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
-
-        '
-      required: true
-      schema:
-        type: string
+      description: "**URL** to forward users to in order to complete their purchase on the Viator site\n\nExample: \n* http://es.live.rc.viator.com/tours/Sydney/Sydney-and-Bondi-Hop-on-Hop-off-Tour/d357-5010SYDNEY?eap=brand-subbrand-24251&aid=vba24251es\n"
   examples:
+    attraction-photos-example:
+      summary: attraction/photos
+      value:
+        errorReference: null
+        data:
+        - sortOrder: 1
+          ownerName: Viator Insider
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+          sslSupported: false
+          productCode: 5156SHARK
+          timeUploaded: '2017-12-05'
+          caption: Shark Reef Aquarium at Mandalay Bay.
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-133sq.jpg
+          ownerId: 9179657
+          editorsPick: false
+          photoId: 29347647
+          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-1536tall.jpg
+          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-260tall.jpg
+          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-770tall.jpg
+          title: Viator_Photographer_394507.jpg
+        - sortOrder: 2
+          ownerName: Viator Insider
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+          sslSupported: false
+          productCode: 5156SHARK
+          timeUploaded: '2017-12-05'
+          caption: Shark Reef Aquarium at Mandalay Bay.
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-133sq.jpg
+          ownerId: 9179657
+          editorsPick: false
+          photoId: 29347642
+          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-1536tall.jpg
+          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-260tall.jpg
+          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-770tall.jpg
+          title: Viator_Photographer_394530.jpg
+        - sortOrder: 3
+          ownerName: Viator Insider
+          ownerCountry: null
+          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
+          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
+          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
+          sslSupported: false
+          productCode: 5156SHARK
+          timeUploaded: '2017-12-05'
+          caption: A stingray swimming around the Shark Reef Aquarium at Mandalay Bay.
+          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-133sq.jpg
+          ownerId: 9179657
+          editorsPick: false
+          photoId: 29347627
+          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-1536tall.jpg
+          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-260tall.jpg
+          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-770tall.jpg
+          title: Viator_Photographer_394518.jpg
+        dateStamp: 2020-04-20T22:45:36+0000
+        errorType: null
+        errorCodes: []
+        errorMessage: null
+        errorName: null
+        extraInfo: {}
+        extraObject: null
+        success: true
+        totalCount: 14
+        errorMessageText: null
+        vmid: '331002'
     attraction-reviews-example:
       summary: /attraction/reviews
       value:
@@ -1351,76 +1404,6 @@ components:
         totalCount: 71
         errorMessageText: null
         vmid: '331003'
-    attraction-photos-example:
-      summary: attraction/photos
-      value:
-        errorReference: null
-        data:
-        - sortOrder: 1
-          ownerName: Viator Insider
-          ownerCountry: null
-          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
-          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
-          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
-          sslSupported: false
-          productCode: 5156SHARK
-          timeUploaded: '2017-12-05'
-          caption: Shark Reef Aquarium at Mandalay Bay.
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-133sq.jpg
-          ownerId: 9179657
-          editorsPick: false
-          photoId: 29347647
-          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-1536tall.jpg
-          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-260tall.jpg
-          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3f/viator_photographer_394507-jpg-photo_29347647-770tall.jpg
-          title: Viator_Photographer_394507.jpg
-        - sortOrder: 2
-          ownerName: Viator Insider
-          ownerCountry: null
-          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
-          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
-          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
-          sslSupported: false
-          productCode: 5156SHARK
-          timeUploaded: '2017-12-05'
-          caption: Shark Reef Aquarium at Mandalay Bay.
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-133sq.jpg
-          ownerId: 9179657
-          editorsPick: false
-          photoId: 29347642
-          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-1536tall.jpg
-          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-260tall.jpg
-          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/3a/viator_photographer_394530-jpg-photo_29347642-770tall.jpg
-          title: Viator_Photographer_394530.jpg
-        - sortOrder: 3
-          ownerName: Viator Insider
-          ownerCountry: null
-          productTitle: Shark Reef at Mandalay Bay Hotel and Casino
-          productUrlName: Shark-Reef-at-Mandalay-Bay-Hotel-and-Casino
-          ownerAvatarURL: http://cache-graphicslib.viator.com/graphicslib/media/09/viator-insider-account_9179657-45sq.jpg
-          sslSupported: false
-          productCode: 5156SHARK
-          timeUploaded: '2017-12-05'
-          caption: A stingray swimming around the Shark Reef Aquarium at Mandalay Bay.
-          thumbnailURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-133sq.jpg
-          ownerId: 9179657
-          editorsPick: false
-          photoId: 29347627
-          photoHiResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-1536tall.jpg
-          photoMediumResURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-260tall.jpg
-          photoURL: http://cache-graphicslib.viator.com/graphicslib/media/2b/viator_photographer_394518-jpg-photo_29347627-770tall.jpg
-          title: Viator_Photographer_394518.jpg
-        dateStamp: 2020-04-20T22:45:36+0000
-        errorType: null
-        errorCodes: []
-        errorMessage: null
-        errorName: null
-        extraInfo: {}
-        extraObject: null
-        success: true
-        totalCount: 14
-        errorMessageText: null
-        vmid: '331002'
     attraction-products-example:
       summary: /attraction/products
       value:
@@ -2235,6 +2218,23 @@ components:
         totalCount: 1
         errorMessageText: null
         vmid: '331003'
+  parameters:
+    topX:
+      name: topX
+      in: query
+      description: "**start and end rows** to return in the format {start}-{end}\n- e.g. `'1-10'`, `'11-20'`\n- maximum number of rows per request is 100 \n- therefore, `'100-400'` will return the same as `'100-200'`\n- if `topX` is not specified, the default is `'1-100'`\n"
+      schema:
+        type: string
+      example: 1-3
+    acceptLanguage:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
   securitySchemes:
     Legacy-API-key:
       type: apiKey

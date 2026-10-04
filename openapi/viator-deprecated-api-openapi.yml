@@ -387,281 +387,16 @@ paths:
                   $ref: '#/components/examples/availabilityNotification2ResponseXml'
 components:
   examples:
-    batchAvailabilityRequestJson:
-      value:
-        requestType: BatchAvailabilityRequest
-        data:
-          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ResellerId: '1000'
-          SupplierId: 1004
-          ExternalReference: '1023_2936275621425724'
-          Timestamp: '2020-01-14T13:04:27.500Z'
-          StartDate: '2020-01-14'
-          EndDate: '2020-02-13'
-          Mode: ALL
     availabilitySingleDateRequestXml:
       summary: Single-date request
       value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <StartDate>2014-10-30</StartDate>\n  <EndDate />\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourOptions>\n    <SupplierOptionCode>BASIC</SupplierOptionCode>\n    <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n    <TourDepartureTime>09:00:00</TourDepartureTime>\n    <Option>\n      <Name>Room</Name>\n      <Value>dualocc</Value>\n    </Option>\n  </TourOptions>\n  <AvailabilityHold>\n    <Expiry>PT300S</Expiry>\n  </AvailabilityHold>\n  <TravellerMix>\n    <Adult>1</Adult>\n    <Child>1</Child>\n    <Youth>0</Youth>\n    <Infant>1</Infant>\n    <Senior>0</Senior>\n    <Total>3</Total>\n  </TravellerMix>\n</AvailabilityRequest>\n"
-    batchAvailabilityDateRangeResponseJson:
-      summary: Date range / single product response
-      value:
-        responseType: BatchAvailabilityResponse
-        data:
-          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ResellerId: '1000'
-          SupplierId: 1004
-          ExternalReference: '10051374722992616'
-          Timestamp: '2013-07-25T13:29:52.616+10:00'
-          RequestStatus:
-            Status: SUCCESS
-          BatchTourAvailability:
-          - Date: '2014-10-30'
-            TourOptions:
-              SupplierOptionCode: BASIC
-              SupplierOptionName: Basic Shared Accommodation
-              TourDepartureTime: 09:00:00
-              Option:
-              - Name: Room
-                Value: dualocc
-            SupplierProductCode: BLUE
-            AvailabilityStatus:
-              Status: UNAVAILABLE
-              UnavailabilityReason: SOLD_OUT
-            VersionTag:
-              Numeric: 5539573495734986
-          - Date: '2014-10-31'
-            TourOptions:
-              SupplierOptionCode: BASIC
-              SupplierOptionName: Basic Shared Accommodation
-              TourDepartureTime: 09:00:00
-              Option:
-              - Name: Room
-                Value: dualocc
-            SupplierProductCode: BLUE
-            AvailabilityStatus:
-              Status: UNAVAILABLE
-              UnavailabilityReason: SOLD_OUT
-            VersionTag:
-              Numeric: 5539573495734987
+    batchAvailabilityRequestXml:
+      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<BatchAvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>1023_2936275621425724</ExternalReference>\n  <Timestamp>2020-01-14T13:04:27.500Z</Timestamp>\n  <StartDate>2020-01-14</StartDate>\n  <EndDate>2020-02-13</EndDate>\n  <Mode>ALL</Mode>\n</BatchAvailabilityRequest>\n"
     batchPricingRequestXml:
       value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<BatchPricingRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992617</ExternalReference>\n  <Timestamp>2019-06-26T20:40:55.375Z</Timestamp>\n  <StartDate>2020-06-20</StartDate>\n  <EndDate>2020-06-21</EndDate>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n</BatchPricingRequest>\n"
-    availabilityDateRangeResponseJson:
-      summary: Date-range response
-      value:
-        responseType: AvailabilityResponse
-        data:
-          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ResellerId: '1000'
-          SupplierId: 1004
-          ExternalReference: '10051374722992616'
-          Timestamp: '2013-07-25T13:29:52.616+10:00'
-          RequestStatus:
-            Status: SUCCESS
-          SupplierProductCode: BLUE
-          TourAvailability:
-          - Date: '2014-10-30'
-            BookingCutoff:
-              ProductDateTime: '2014-10-29T12:13:14'
-            TourOptions:
-              SupplierOptionCode: BASIC
-              SupplierOptionName: Basic Shared Accommodation
-              TourDepartureTime: ''
-              Option:
-              - Name: Room
-                Value: dualocc
-            AvailabilityStatus:
-              Status: AVAILABLE
-            Capacity:
-              Simple:
-                Remaining: 10
-                ConsumedBy:
-                - ADULT
-                - YOUTH
-            VersionTag:
-              Textual: 20130705-V000000231435
-          - Date: '2014-10-31'
-            BookingCutoff:
-              ProductDateTime: '2014-10-29T12:13:14'
-            TourOptions:
-              SupplierOptionCode: BASIC
-              SupplierOptionName: Basic Shared Accommodation
-              TourDepartureTime: ''
-              Option:
-              - Name: Room
-                Value: dualocc
-            AvailabilityStatus:
-              Status: UNAVAILABLE
-              UnavailabilityReason: SOLD_OUT
-            VersionTag:
-              Textual: 20130705-V000000231436
-    availabilityNotification2ResponseXml:
-      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityNotification2Response xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10061374722913835</ExternalReference>\n  <Timestamp>2021-04-06T10:14:37.682Z</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n</AvailabilityNotification2Response>\n"
-    batchPricingRequestJson:
-      value:
-        requestType: BatchPricingRequest
-        data:
-          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ResellerId: '1000'
-          SupplierId: 1004
-          ExternalReference: '10051374722992617'
-          Timestamp: '2019-06-26T20:40:55.375Z'
-          StartDate: '2020-06-20'
-          EndDate: '2020-06-21'
-          SupplierProductCode:
-          - BLUE
-    batchAvailabilityDateRangeResponseXml:
-      summary: Date range / single product response
-      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<BatchAvailabilityResponse xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n  <BatchTourAvailability>\n    <Date>2014-10-30</Date>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <SupplierProductCode>BLUE</SupplierProductCode>\n    <AvailabilityStatus>\n      <Status>UNAVAILABLE</Status>\n      <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Numeric>5539573495734986</Numeric>\n    </VersionTag>\n  </BatchTourAvailability>\n  <BatchTourAvailability>\n    <Date>2014-10-31</Date>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <SupplierProductCode>BLUE</SupplierProductCode>\n    <AvailabilityStatus>\n      <Status>UNAVAILABLE</Status>\n      <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Numeric>5539573495734987</Numeric>\n    </VersionTag>\n  </BatchTourAvailability>\n</BatchAvailabilityResponse>\n"
     availabilityDateRangeRequestXml:
       summary: Date-range request
       value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <StartDate>2014-10-30</StartDate>\n  <EndDate>2014-10-31</EndDate>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourOptions>\n    <SupplierOptionCode>BASIC</SupplierOptionCode>\n    <Option>\n      <Name>Room</Name>\n      <Value>dualocc</Value>\n    </Option>\n  </TourOptions>\n  <TravellerMix>\n    <Adult>1</Adult>\n    <Child>1</Child>\n    <Youth>0</Youth>\n    <Infant>1</Infant>\n    <Senior>0</Senior>\n    <Total>3</Total>\n  </TravellerMix>\n</AvailabilityRequest>\n"
-    availabilityRequestWorkflow3Json:
-      summary: Workflow stage 3 - Product checkout (with availability hold)
-      value:
-        requestType: AvailabilityRequest
-        data:
-          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ResellerId: '1000'
-          SupplierId: 1004
-          ExternalReference: '10051374722992616'
-          Timestamp: '2013-07-25T13:29:52.616+10:00'
-          StartDate: '2014-10-31'
-          SupplierProductCode: BLUE
-          TourOptions:
-            SupplierOptionCode: BASIC
-            SupplierOptionName: Basic Shared Accommodation
-            TourDepartureTime: 09:00:00
-            Option:
-            - Name: Room
-              Value: dualocc
-          AvailabilityHold:
-            Expiry: PT300S
-          TravellerMix:
-            Adult: 1
-            Child: 1
-            Youth: 0
-            Infant: 0
-            Senior: 0
-            Total: 2
-    availabilityRequestWorkflow3Xml:
-      summary: Workflow stage 3 - Product checkout (with availability hold)
-      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <StartDate>2014-10-31</StartDate>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourOptions>\n    <SupplierOptionCode>BASIC</SupplierOptionCode>\n    <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n    <TourDepartureTime>09:00:00</TourDepartureTime>\n    <Option>\n      <Name>Room</Name>\n      <Value>dualocc</Value>\n    </Option>\n  </TourOptions>\n  <AvailabilityHold>\n    <Expiry>PT300S</Expiry>\n  </AvailabilityHold>\n  <TravellerMix>\n    <Adult>1</Adult>\n    <Child>1</Child>\n    <Youth>0</Youth>\n    <Infant>0</Infant>\n    <Senior>0</Senior>\n    <Total>2</Total>\n  </TravellerMix>\n</AvailabilityRequest>\n"
-    availabilityNotification2RequestJson:
-      value:
-        requestType: AvailabilityNotification2Request
-        data:
-          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ResellerId: '1000'
-          SupplierId: 1004
-          ExternalReference: '10051374722992850'
-          Timestamp: '2021-03-15T10:14:37.682Z'
-          VariantAvailability:
-            SupplierProductCode: '6482'
-            TourOptions:
-              SupplierOptionCode: r11828
-              TourDepartureTime: 08:00:00
-              Option:
-              - Name: pickup
-                Value: Y
-            DateAvailability:
-            - Date: '2021-03-15'
-              AvailabilityStatus:
-                Status: UNAVAILABLE
-                UnavailabilityReason: SOLD_OUT
-              VersionTag:
-                Textual: '2021-03-15T10:14:37.682Z'
-    batchAvailabilitySingleDateResponseJson:
-      summary: Single date / multiple products response
-      value:
-        responseType: BatchAvailabilityResponse
-        data:
-          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ResellerId: '1000'
-          SupplierId: 1004
-          ExternalReference: '10051374722992616'
-          Timestamp: '2013-07-25T13:29:52.616+10:00'
-          RequestStatus:
-            Status: SUCCESS
-          BatchTourAvailability:
-          - Date: '2014-10-01'
-            TourOptions:
-              SupplierOptionCode: BASIC
-              SupplierOptionName: Basic Shared Accommodation
-              TourDepartureTime: 09:00:00
-              Option:
-              - Name: Room
-                Value: dualocc
-            SupplierProductCode: BLUE
-            AvailabilityStatus:
-              Status: UNAVAILABLE
-              UnavailabilityReason: SOLD_OUT
-            VersionTag:
-              Numeric: 553957349573497
-          - Date: '2014-10-01'
-            TourOptions:
-              SupplierOptionCode: 9AM
-              SupplierOptionName: Bondi Beach Private Lesson 9AM
-              TourDepartureTime: 09:00:00
-              Option:
-              - Name: ''
-                Value: ''
-            SupplierProductCode: BON_GRO
-            AvailabilityStatus:
-              Status: AVAILABLE
-            VersionTag:
-              Numeric: 553957349573498
-    availabilitySingleDateResponseJson:
-      summary: Single-date response
-      value:
-        responseType: AvailabilityResponse
-        data:
-          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ResellerId: '1000'
-          SupplierId: 1004
-          ExternalReference: '10051374722992616'
-          Timestamp: '2013-07-25T13:29:52.616+10:00'
-          RequestStatus:
-            Status: SUCCESS
-          SupplierProductCode: BLUE
-          TourAvailability:
-          - Date: '2014-10-31'
-            BookingCutoff:
-              ProductDateTime: '2014-10-29T12:13:14'
-            TourOptions:
-              SupplierOptionCode: BASIC
-              SupplierOptionName: Basic Shared Accommodation
-              TourDepartureTime: 09:00:00
-              Option:
-              - Name: Room
-                Value: dualocc
-            AvailabilityStatus:
-              Status: AVAILABLE
-              TravellerMixAvailability:
-                Adult: true
-                Child: true
-                Youth: true
-                Infant: true
-                Senior: true
-            Price:
-              CurrencyCode: EUR
-              Item:
-              - RetailPrice: 112
-                AgeBand: Adult
-              - RetailPrice: 90
-                AgeBand: Child
-              - RetailPrice: 50
-                AgeBand: Infant
-            AvailabilityHold:
-              Expiry: PT300S
-              Reference: 1K883383K2S12K883383K2S57K883383K2
-            Capacity:
-              Simple:
-                Remaining: 10
-                ConsumedBy:
-                - ADULT
-                - YOUTH
-            VersionTag:
-              Textual: 20130705-V000000231434
     batchPricingResponseJson:
       value:
         responseType: BatchPricingResponse
@@ -715,11 +450,32 @@ components:
                 AgeBand: Senior
             AvailabilityStatus:
               Status: AVAILABLE
-    availabilityDateRangeResponseXml:
-      summary: Range-date response
-      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityResponse xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourAvailability>\n    <Date>2014-10-30</Date>\n    <BookingCutoff>\n      <ProductDateTime>2014-10-29T12:13:14</ProductDateTime>\n    </BookingCutoff>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime />\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <AvailabilityStatus>\n      <Status>AVAILABLE</Status>\n    </AvailabilityStatus>\n    <Capacity>\n      <Simple>\n        <Remaining>10</Remaining>\n        <ConsumedBy>ADULT</ConsumedBy>\n        <ConsumedBy>YOUTH</ConsumedBy>\n      </Simple>\n    </Capacity>\n    <VersionTag> \n      <Textual>20130705-V000000231435</Textual>\n    </VersionTag>\n  </TourAvailability>\n  <TourAvailability>\n    <Date>2014-10-31</Date>\n    <BookingCutoff>\n      <ProductDateTime>2014-10-29T12:13:14</ProductDateTime>\n    </BookingCutoff>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime />\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <AvailabilityStatus>\n      <Status>UNAVAILABLE</Status>\n      <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Textual>20130705-V000000231436</Textual>\n    </VersionTag>\n  </TourAvailability>\n</AvailabilityResponse>\n"
-    availabilityDateRangeRequestJson:
-      summary: Date-range request
+    availabilitySingleDateResponseXml:
+      summary: Single-date response
+      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityResponse xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourAvailability>\n    <Date>2014-10-31</Date>\n    <BookingCutoff>\n      <ProductDateTime>2014-10-29T12:13:14</ProductDateTime>\n    </BookingCutoff>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <AvailabilityStatus>\n      <Status>AVAILABLE</Status>\n      <TravellerMixAvailability>\n        <Adult>true</Adult>\n        <Child>true</Child>\n        <Youth>true</Youth>\n        <Infant>true</Infant>\n        <Senior>true</Senior>\n      </TravellerMixAvailability>\n    </AvailabilityStatus>\n    <AvailabilityHold>\n      <Expiry>PT300S</Expiry>\n      <Reference>1K883383K2S12K883383K2S57K883383K2</Reference>\n    </AvailabilityHold>\n    <Capacity>\n      <Simple>\n        <Remaining>10</Remaining>\n        <ConsumedBy>ADULT</ConsumedBy>\n        <ConsumedBy>YOUTH</ConsumedBy>\n      </Simple>\n    </Capacity>\n    <VersionTag> \n      <Textual>20130705-V000000231434</Textual>\n    </VersionTag>\n  </TourAvailability>\n</AvailabilityResponse>\n"
+    availabilityNotification2RequestXml:
+      value: "<AvailabilityNotification2Request xmlns=\"http://toursgds.com/api/01\">\n    <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n    <ResellerId>1000</ResellerId>\n    <SupplierId>1004</SupplierId>\n    <ExternalReference>10061374722913835</ExternalReference>\n    <Timestamp>2021-04-06T10:14:37.682Z</Timestamp>\n    <VariantAvailability>\n        <SupplierProductCode>6470</SupplierProductCode>\n        <TourOptions>\n            <SupplierOptionCode>r11811</SupplierOptionCode>\n            <TourDepartureTime>09:00:00</TourDepartureTime>\n            <Option>\n                <Name>pickup</Name>\n                <Value>Y</Value>\n            </Option>\n        </TourOptions>\n        <DateAvailability>\n            <Date>2021-04-06</Date>\n            <AvailabilityStatus>\n                <Status>UNAVAILABLE</Status>\n                <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n            </AvailabilityStatus>\n            <VersionTag>\n                <Timestamp>2021-04-06T10:14:37.682Z</Timestamp>\n            </VersionTag>\n        </DateAvailability>\n    </VariantAvailability>\n</AvailabilityNotification2Request>\n"
+    availabilityRequestWorkflow1Xml:
+      summary: Workflow stage 1 - Product and date selected
+      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <StartDate>2014-10-31</StartDate>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TravellerMix>\n    <Adult>1</Adult>\n    <Child>1</Child>\n    <Youth>0</Youth>\n    <Infant>0</Infant>\n    <Senior>0</Senior>\n    <Total>2</Total>\n  </TravellerMix>\n</AvailabilityRequest>\n"
+    availabilityRequestWorkflow3Xml:
+      summary: Workflow stage 3 - Product checkout (with availability hold)
+      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <StartDate>2014-10-31</StartDate>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourOptions>\n    <SupplierOptionCode>BASIC</SupplierOptionCode>\n    <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n    <TourDepartureTime>09:00:00</TourDepartureTime>\n    <Option>\n      <Name>Room</Name>\n      <Value>dualocc</Value>\n    </Option>\n  </TourOptions>\n  <AvailabilityHold>\n    <Expiry>PT300S</Expiry>\n  </AvailabilityHold>\n  <TravellerMix>\n    <Adult>1</Adult>\n    <Child>1</Child>\n    <Youth>0</Youth>\n    <Infant>0</Infant>\n    <Senior>0</Senior>\n    <Total>2</Total>\n  </TravellerMix>\n</AvailabilityRequest>\n"
+    batchPricingRequestJson:
+      value:
+        requestType: BatchPricingRequest
+        data:
+          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ResellerId: '1000'
+          SupplierId: 1004
+          ExternalReference: '10051374722992617'
+          Timestamp: '2019-06-26T20:40:55.375Z'
+          StartDate: '2020-06-20'
+          EndDate: '2020-06-21'
+          SupplierProductCode:
+          - BLUE
+    availabilityRequestWorkflow3Json:
+      summary: Workflow stage 3 - Product checkout (with availability hold)
       value:
         requestType: AvailabilityRequest
         data:
@@ -728,25 +484,288 @@ components:
           SupplierId: 1004
           ExternalReference: '10051374722992616'
           Timestamp: '2013-07-25T13:29:52.616+10:00'
-          StartDate: '2014-10-30'
-          EndDate: '2014-10-31'
+          StartDate: '2014-10-31'
           SupplierProductCode: BLUE
           TourOptions:
             SupplierOptionCode: BASIC
+            SupplierOptionName: Basic Shared Accommodation
+            TourDepartureTime: 09:00:00
             Option:
             - Name: Room
               Value: dualocc
+          AvailabilityHold:
+            Expiry: PT300S
           TravellerMix:
             Adult: 1
             Child: 1
             Youth: 0
-            Infant: 1
+            Infant: 0
             Senior: 0
-            Total: 3
-    availabilityNotification2RequestXml:
-      value: "<AvailabilityNotification2Request xmlns=\"http://toursgds.com/api/01\">\n    <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n    <ResellerId>1000</ResellerId>\n    <SupplierId>1004</SupplierId>\n    <ExternalReference>10061374722913835</ExternalReference>\n    <Timestamp>2021-04-06T10:14:37.682Z</Timestamp>\n    <VariantAvailability>\n        <SupplierProductCode>6470</SupplierProductCode>\n        <TourOptions>\n            <SupplierOptionCode>r11811</SupplierOptionCode>\n            <TourDepartureTime>09:00:00</TourDepartureTime>\n            <Option>\n                <Name>pickup</Name>\n                <Value>Y</Value>\n            </Option>\n        </TourOptions>\n        <DateAvailability>\n            <Date>2021-04-06</Date>\n            <AvailabilityStatus>\n                <Status>UNAVAILABLE</Status>\n                <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n            </AvailabilityStatus>\n            <VersionTag>\n                <Timestamp>2021-04-06T10:14:37.682Z</Timestamp>\n            </VersionTag>\n        </DateAvailability>\n    </VariantAvailability>\n</AvailabilityNotification2Request>\n"
+            Total: 2
+    batchAvailabilityDateRangeResponseXml:
+      summary: Date range / single product response
+      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<BatchAvailabilityResponse xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n  <BatchTourAvailability>\n    <Date>2014-10-30</Date>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <SupplierProductCode>BLUE</SupplierProductCode>\n    <AvailabilityStatus>\n      <Status>UNAVAILABLE</Status>\n      <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Numeric>5539573495734986</Numeric>\n    </VersionTag>\n  </BatchTourAvailability>\n  <BatchTourAvailability>\n    <Date>2014-10-31</Date>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <SupplierProductCode>BLUE</SupplierProductCode>\n    <AvailabilityStatus>\n      <Status>UNAVAILABLE</Status>\n      <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Numeric>5539573495734987</Numeric>\n    </VersionTag>\n  </BatchTourAvailability>\n</BatchAvailabilityResponse>\n"
+    availabilityNotification2RequestJson:
+      value:
+        requestType: AvailabilityNotification2Request
+        data:
+          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ResellerId: '1000'
+          SupplierId: 1004
+          ExternalReference: '10051374722992850'
+          Timestamp: '2021-03-15T10:14:37.682Z'
+          VariantAvailability:
+            SupplierProductCode: '6482'
+            TourOptions:
+              SupplierOptionCode: r11828
+              TourDepartureTime: 08:00:00
+              Option:
+              - Name: pickup
+                Value: Y
+            DateAvailability:
+            - Date: '2021-03-15'
+              AvailabilityStatus:
+                Status: UNAVAILABLE
+                UnavailabilityReason: SOLD_OUT
+              VersionTag:
+                Textual: '2021-03-15T10:14:37.682Z'
+    availabilityDateRangeResponseXml:
+      summary: Range-date response
+      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityResponse xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourAvailability>\n    <Date>2014-10-30</Date>\n    <BookingCutoff>\n      <ProductDateTime>2014-10-29T12:13:14</ProductDateTime>\n    </BookingCutoff>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime />\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <AvailabilityStatus>\n      <Status>AVAILABLE</Status>\n    </AvailabilityStatus>\n    <Capacity>\n      <Simple>\n        <Remaining>10</Remaining>\n        <ConsumedBy>ADULT</ConsumedBy>\n        <ConsumedBy>YOUTH</ConsumedBy>\n      </Simple>\n    </Capacity>\n    <VersionTag> \n      <Textual>20130705-V000000231435</Textual>\n    </VersionTag>\n  </TourAvailability>\n  <TourAvailability>\n    <Date>2014-10-31</Date>\n    <BookingCutoff>\n      <ProductDateTime>2014-10-29T12:13:14</ProductDateTime>\n    </BookingCutoff>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime />\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <AvailabilityStatus>\n      <Status>UNAVAILABLE</Status>\n      <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Textual>20130705-V000000231436</Textual>\n    </VersionTag>\n  </TourAvailability>\n</AvailabilityResponse>\n"
+    batchAvailabilityRequestJson:
+      value:
+        requestType: BatchAvailabilityRequest
+        data:
+          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ResellerId: '1000'
+          SupplierId: 1004
+          ExternalReference: '1023_2936275621425724'
+          Timestamp: '2020-01-14T13:04:27.500Z'
+          StartDate: '2020-01-14'
+          EndDate: '2020-02-13'
+          Mode: ALL
+    availabilityDateRangeResponseJson:
+      summary: Date-range response
+      value:
+        responseType: AvailabilityResponse
+        data:
+          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ResellerId: '1000'
+          SupplierId: 1004
+          ExternalReference: '10051374722992616'
+          Timestamp: '2013-07-25T13:29:52.616+10:00'
+          RequestStatus:
+            Status: SUCCESS
+          SupplierProductCode: BLUE
+          TourAvailability:
+          - Date: '2014-10-30'
+            BookingCutoff:
+              ProductDateTime: '2014-10-29T12:13:14'
+            TourOptions:
+              SupplierOptionCode: BASIC
+              SupplierOptionName: Basic Shared Accommodation
+              TourDepartureTime: ''
+              Option:
+              - Name: Room
+                Value: dualocc
+            AvailabilityStatus:
+              Status: AVAILABLE
+            Capacity:
+              Simple:
+                Remaining: 10
+                ConsumedBy:
+                - ADULT
+                - YOUTH
+            VersionTag:
+              Textual: 20130705-V000000231435
+          - Date: '2014-10-31'
+            BookingCutoff:
+              ProductDateTime: '2014-10-29T12:13:14'
+            TourOptions:
+              SupplierOptionCode: BASIC
+              SupplierOptionName: Basic Shared Accommodation
+              TourDepartureTime: ''
+              Option:
+              - Name: Room
+                Value: dualocc
+            AvailabilityStatus:
+              Status: UNAVAILABLE
+              UnavailabilityReason: SOLD_OUT
+            VersionTag:
+              Textual: 20130705-V000000231436
     batchPricingResponseXml:
       value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<BatchPricingResponse xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992617</ExternalReference>\n  <Timestamp>2019-06-26T20:40:55.375Z</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n  <CurrencyCode>USD</CurrencyCode>\n  <BatchTourPricing>\n    <Date>2020-06-20</Date>\n    <SupplierProductCode>BLUE</SupplierProductCode>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>17:00:00</TourDepartureTime>\n    </TourOptions>\n    <BatchPrice>\n      <Item>\n        <RetailPrice>10.0</RetailPrice>\n        <AgeBand>Infant</AgeBand>\n      </Item>\n      <Item>\n        <RetailPrice>10.0</RetailPrice>\n        <AgeBand>Child</AgeBand>\n      </Item>\n      <Item>\n        <RetailPrice>10.0</RetailPrice>\n        <AgeBand>Youth</AgeBand>\n      </Item>\n      <Item>\n        <RetailPrice>10.0</RetailPrice>\n        <AgeBand>Adult</AgeBand>\n      </Item>\n      <Item>\n        <RetailPrice>10.0</RetailPrice>\n        <AgeBand>Senior</AgeBand>\n      </Item>\n    </BatchPrice>\n    <AvailabilityStatus>\n      <Status>AVAILABLE</Status>\n    </AvailabilityStatus>\n  </BatchTourPricing>\n  <BatchTourPricing>\n    <Date>2020-06-21</Date>\n    <SupplierProductCode>BLUE</SupplierProductCode>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>17:00:00</TourDepartureTime>\n    </TourOptions>\n    <BatchPrice>\n      <Item>\n        <RetailPrice>45.99</RetailPrice>\n        <AgeBand>Infant</AgeBand>\n      </Item>\n      <Item>\n        <RetailPrice>45.99</RetailPrice>\n        <AgeBand>Child</AgeBand>\n      </Item>\n      <Item>\n        <RetailPrice>45.99</RetailPrice>\n        <AgeBand>Youth</AgeBand>\n      </Item>\n      <Item>\n        <RetailPrice>45.99</RetailPrice>\n        <AgeBand>Adult</AgeBand>\n      </Item>\n      <Item>\n        <RetailPrice>45.99</RetailPrice>\n        <AgeBand>Senior</AgeBand>\n      </Item>\n    </BatchPrice>\n    <AvailabilityStatus>\n      <Status>AVAILABLE</Status>\n    </AvailabilityStatus>\n  </BatchTourPricing>\n  <!-- The remaining BatchTourPricing tags have been removed for the sake of brevity. -->\n</BatchPricingResponse>\n"
+    availabilityNotification2ResponseXml:
+      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityNotification2Response xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10061374722913835</ExternalReference>\n  <Timestamp>2021-04-06T10:14:37.682Z</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n</AvailabilityNotification2Response>\n"
+    availabilitySingleDateResponseJson:
+      summary: Single-date response
+      value:
+        responseType: AvailabilityResponse
+        data:
+          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ResellerId: '1000'
+          SupplierId: 1004
+          ExternalReference: '10051374722992616'
+          Timestamp: '2013-07-25T13:29:52.616+10:00'
+          RequestStatus:
+            Status: SUCCESS
+          SupplierProductCode: BLUE
+          TourAvailability:
+          - Date: '2014-10-31'
+            BookingCutoff:
+              ProductDateTime: '2014-10-29T12:13:14'
+            TourOptions:
+              SupplierOptionCode: BASIC
+              SupplierOptionName: Basic Shared Accommodation
+              TourDepartureTime: 09:00:00
+              Option:
+              - Name: Room
+                Value: dualocc
+            AvailabilityStatus:
+              Status: AVAILABLE
+              TravellerMixAvailability:
+                Adult: true
+                Child: true
+                Youth: true
+                Infant: true
+                Senior: true
+            Price:
+              CurrencyCode: EUR
+              Item:
+              - RetailPrice: 112
+                AgeBand: Adult
+              - RetailPrice: 90
+                AgeBand: Child
+              - RetailPrice: 50
+                AgeBand: Infant
+            AvailabilityHold:
+              Expiry: PT300S
+              Reference: 1K883383K2S12K883383K2S57K883383K2
+            Capacity:
+              Simple:
+                Remaining: 10
+                ConsumedBy:
+                - ADULT
+                - YOUTH
+            VersionTag:
+              Textual: 20130705-V000000231434
+    availabilityNotification2ResponseJson:
+      value:
+        responseType: AvailabilityNotification2Response
+        data:
+          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ResellerId: '1000'
+          SupplierId: 1004
+          ExternalReference: '10061374722913835'
+          Timestamp: '2021-04-06T10:14:37.682Z'
+          RequestStatus:
+            Status: SUCCESS
+    availabilityRequestWorkflow2Xml:
+      summary: Workflow stage 2 - Product option selected
+      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <StartDate>2014-10-31</StartDate>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourOptions>\n    <SupplierOptionCode>BASIC</SupplierOptionCode>\n    <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n    <TourDepartureTime>09:00:00</TourDepartureTime>\n    <Option>\n      <Name>Room</Name>\n      <Value>dualocc</Value>\n    </Option>\n  </TourOptions>\n  <TravellerMix>\n    <Adult>1</Adult>\n    <Child>1</Child>\n    <Youth>0</Youth>\n    <Infant>0</Infant>\n    <Senior>0</Senior>\n    <Total>2</Total>\n  </TravellerMix>\n</AvailabilityRequest>\n"
+    batchAvailabilitySingleDateResponseJson:
+      summary: Single date / multiple products response
+      value:
+        responseType: BatchAvailabilityResponse
+        data:
+          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ResellerId: '1000'
+          SupplierId: 1004
+          ExternalReference: '10051374722992616'
+          Timestamp: '2013-07-25T13:29:52.616+10:00'
+          RequestStatus:
+            Status: SUCCESS
+          BatchTourAvailability:
+          - Date: '2014-10-01'
+            TourOptions:
+              SupplierOptionCode: BASIC
+              SupplierOptionName: Basic Shared Accommodation
+              TourDepartureTime: 09:00:00
+              Option:
+              - Name: Room
+                Value: dualocc
+            SupplierProductCode: BLUE
+            AvailabilityStatus:
+              Status: UNAVAILABLE
+              UnavailabilityReason: SOLD_OUT
+            VersionTag:
+              Numeric: 553957349573497
+          - Date: '2014-10-01'
+            TourOptions:
+              SupplierOptionCode: 9AM
+              SupplierOptionName: Bondi Beach Private Lesson 9AM
+              TourDepartureTime: 09:00:00
+              Option:
+              - Name: ''
+                Value: ''
+            SupplierProductCode: BON_GRO
+            AvailabilityStatus:
+              Status: AVAILABLE
+            VersionTag:
+              Numeric: 553957349573498
+    batchAvailabilityDateRangeResponseJson:
+      summary: Date range / single product response
+      value:
+        responseType: BatchAvailabilityResponse
+        data:
+          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ResellerId: '1000'
+          SupplierId: 1004
+          ExternalReference: '10051374722992616'
+          Timestamp: '2013-07-25T13:29:52.616+10:00'
+          RequestStatus:
+            Status: SUCCESS
+          BatchTourAvailability:
+          - Date: '2014-10-30'
+            TourOptions:
+              SupplierOptionCode: BASIC
+              SupplierOptionName: Basic Shared Accommodation
+              TourDepartureTime: 09:00:00
+              Option:
+              - Name: Room
+                Value: dualocc
+            SupplierProductCode: BLUE
+            AvailabilityStatus:
+              Status: UNAVAILABLE
+              UnavailabilityReason: SOLD_OUT
+            VersionTag:
+              Numeric: 5539573495734986
+          - Date: '2014-10-31'
+            TourOptions:
+              SupplierOptionCode: BASIC
+              SupplierOptionName: Basic Shared Accommodation
+              TourDepartureTime: 09:00:00
+              Option:
+              - Name: Room
+                Value: dualocc
+            SupplierProductCode: BLUE
+            AvailabilityStatus:
+              Status: UNAVAILABLE
+              UnavailabilityReason: SOLD_OUT
+            VersionTag:
+              Numeric: 5539573495734987
+    availabilityRequestWorkflow1Json:
+      summary: Workflow stage 1 - Product and date selected
+      value:
+        requestType: AvailabilityRequest
+        data:
+          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+          ResellerId: '1000'
+          SupplierId: 1004
+          ExternalReference: '10051374722992616'
+          Timestamp: '2013-07-25T13:29:52.616+10:00'
+          StartDate: '2014-10-31'
+          SupplierProductCode: BLUE
+          TravellerMix:
+            Adult: 1
+            Child: 1
+            Youth: 0
+            Infant: 0
+            Senior: 0
+            Total: 2
+    batchAvailabilitySingleDateResponseXml:
+      summary: Single date / multiple products response
+      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<BatchAvailabilityResponse xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n  <BatchTourAvailability>\n    <Date>2014-10-01</Date>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <SupplierProductCode>BLUE</SupplierProductCode>\n    <AvailabilityStatus>\n      <Status>UNAVAILABLE</Status>\n      <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Numeric>553957349573497</Numeric>\n    </VersionTag>\n  </BatchTourAvailability>\n  <BatchTourAvailability>\n    <Date>2014-10-01</Date>\n    <TourOptions>\n      <SupplierOptionCode>9AM</SupplierOptionCode>\n      <SupplierOptionName>Bondi Beach Private Lesson 9AM</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name />\n        <Value />\n      </Option>\n    </TourOptions>\n    <SupplierProductCode>BON_GRO</SupplierProductCode>\n    <AvailabilityStatus>\n      <Status>AVAILABLE</Status>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Numeric>553957349573498</Numeric>\n    </VersionTag>\n  </BatchTourAvailability>\n</BatchAvailabilityResponse>\n"
     availabilitySingleDateRequestJson:
       summary: Single-date request
       value:
@@ -776,31 +795,6 @@ components:
             Infant: 1
             Senior: 0
             Total: 3
-    availabilityRequestWorkflow1Json:
-      summary: Workflow stage 1 - Product and date selected
-      value:
-        requestType: AvailabilityRequest
-        data:
-          ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-          ResellerId: '1000'
-          SupplierId: 1004
-          ExternalReference: '10051374722992616'
-          Timestamp: '2013-07-25T13:29:52.616+10:00'
-          StartDate: '2014-10-31'
-          SupplierProductCode: BLUE
-          TravellerMix:
-            Adult: 1
-            Child: 1
-            Youth: 0
-            Infant: 0
-            Senior: 0
-            Total: 2
-    availabilitySingleDateResponseXml:
-      summary: Single-date response
-      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityResponse xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourAvailability>\n    <Date>2014-10-31</Date>\n    <BookingCutoff>\n      <ProductDateTime>2014-10-29T12:13:14</ProductDateTime>\n    </BookingCutoff>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <AvailabilityStatus>\n      <Status>AVAILABLE</Status>\n      <TravellerMixAvailability>\n        <Adult>true</Adult>\n        <Child>true</Child>\n        <Youth>true</Youth>\n        <Infant>true</Infant>\n        <Senior>true</Senior>\n      </TravellerMixAvailability>\n    </AvailabilityStatus>\n    <AvailabilityHold>\n      <Expiry>PT300S</Expiry>\n      <Reference>1K883383K2S12K883383K2S57K883383K2</Reference>\n    </AvailabilityHold>\n    <Capacity>\n      <Simple>\n        <Remaining>10</Remaining>\n        <ConsumedBy>ADULT</ConsumedBy>\n        <ConsumedBy>YOUTH</ConsumedBy>\n      </Simple>\n    </Capacity>\n    <VersionTag> \n      <Textual>20130705-V000000231434</Textual>\n    </VersionTag>\n  </TourAvailability>\n</AvailabilityResponse>\n"
-    batchAvailabilitySingleDateResponseXml:
-      summary: Single date / multiple products response
-      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<BatchAvailabilityResponse xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <RequestStatus>\n    <Status>SUCCESS</Status>\n  </RequestStatus>\n  <BatchTourAvailability>\n    <Date>2014-10-01</Date>\n    <TourOptions>\n      <SupplierOptionCode>BASIC</SupplierOptionCode>\n      <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name>Room</Name>\n        <Value>dualocc</Value>\n      </Option>\n    </TourOptions>\n    <SupplierProductCode>BLUE</SupplierProductCode>\n    <AvailabilityStatus>\n      <Status>UNAVAILABLE</Status>\n      <UnavailabilityReason>SOLD_OUT</UnavailabilityReason>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Numeric>553957349573497</Numeric>\n    </VersionTag>\n  </BatchTourAvailability>\n  <BatchTourAvailability>\n    <Date>2014-10-01</Date>\n    <TourOptions>\n      <SupplierOptionCode>9AM</SupplierOptionCode>\n      <SupplierOptionName>Bondi Beach Private Lesson 9AM</SupplierOptionName>\n      <TourDepartureTime>09:00:00</TourDepartureTime>\n      <Option>\n        <Name />\n        <Value />\n      </Option>\n    </TourOptions>\n    <SupplierProductCode>BON_GRO</SupplierProductCode>\n    <AvailabilityStatus>\n      <Status>AVAILABLE</Status>\n    </AvailabilityStatus>\n    <VersionTag> \n      <Numeric>553957349573498</Numeric>\n    </VersionTag>\n  </BatchTourAvailability>\n</BatchAvailabilityResponse>\n"
     availabilityRequestWorkflow2Json:
       summary: Workflow stage 2 - Product option selected
       value:
@@ -827,65 +821,59 @@ components:
             Infant: 0
             Senior: 0
             Total: 2
-    availabilityRequestWorkflow2Xml:
-      summary: Workflow stage 2 - Product option selected
-      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <StartDate>2014-10-31</StartDate>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TourOptions>\n    <SupplierOptionCode>BASIC</SupplierOptionCode>\n    <SupplierOptionName>Basic Shared Accommodation</SupplierOptionName>\n    <TourDepartureTime>09:00:00</TourDepartureTime>\n    <Option>\n      <Name>Room</Name>\n      <Value>dualocc</Value>\n    </Option>\n  </TourOptions>\n  <TravellerMix>\n    <Adult>1</Adult>\n    <Child>1</Child>\n    <Youth>0</Youth>\n    <Infant>0</Infant>\n    <Senior>0</Senior>\n    <Total>2</Total>\n  </TravellerMix>\n</AvailabilityRequest>\n"
-    availabilityRequestWorkflow1Xml:
-      summary: Workflow stage 1 - Product and date selected
-      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<AvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>10051374722992616</ExternalReference>\n  <Timestamp>2013-07-25T13:29:52.616+10:00</Timestamp>\n  <StartDate>2014-10-31</StartDate>\n  <SupplierProductCode>BLUE</SupplierProductCode>\n  <TravellerMix>\n    <Adult>1</Adult>\n    <Child>1</Child>\n    <Youth>0</Youth>\n    <Infant>0</Infant>\n    <Senior>0</Senior>\n    <Total>2</Total>\n  </TravellerMix>\n</AvailabilityRequest>\n"
-    availabilityNotification2ResponseJson:
+    availabilityDateRangeRequestJson:
+      summary: Date-range request
       value:
-        responseType: AvailabilityNotification2Response
+        requestType: AvailabilityRequest
         data:
           ApiKey: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
           ResellerId: '1000'
           SupplierId: 1004
-          ExternalReference: '10061374722913835'
-          Timestamp: '2021-04-06T10:14:37.682Z'
-          RequestStatus:
-            Status: SUCCESS
-    batchAvailabilityRequestXml:
-      value: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<BatchAvailabilityRequest xmlns=\"http://toursgds.com/api/01\">\n  <ApiKey>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</ApiKey>\n  <ResellerId>1000</ResellerId>\n  <SupplierId>1004</SupplierId>\n  <ExternalReference>1023_2936275621425724</ExternalReference>\n  <Timestamp>2020-01-14T13:04:27.500Z</Timestamp>\n  <StartDate>2020-01-14</StartDate>\n  <EndDate>2020-02-13</EndDate>\n  <Mode>ALL</Mode>\n</BatchAvailabilityRequest>\n"
+          ExternalReference: '10051374722992616'
+          Timestamp: '2013-07-25T13:29:52.616+10:00'
+          StartDate: '2014-10-30'
+          EndDate: '2014-10-31'
+          SupplierProductCode: BLUE
+          TourOptions:
+            SupplierOptionCode: BASIC
+            Option:
+            - Name: Room
+              Value: dualocc
+          TravellerMix:
+            Adult: 1
+            Child: 1
+            Youth: 0
+            Infant: 1
+            Senior: 0
+            Total: 3
   schemas:
-    RequestResponseBase:
-      type: object
-      required:
-      - ApiKey
-      - ResellerId
-      - SupplierId
-      - Timestamp
-      properties:
-        ApiKey:
-          type: string
-          description: Authentication key.
-        ResellerId:
-          type: string
-          description: Unique identifier for Viator.
-        SupplierId:
-          type: integer
-          description: Unique operator identifier within Viator's systems.
-        ExternalReference:
-          type: string
-          description: Unique transaction identifier - unique across all transactions. Used in the response to identify the initial request.
-        Timestamp:
-          type: string
-          description: 'The time of creation of the request. Date/time (timestamp) that requires timezone information along with date/time. The date should be in the following format:
+    BatchPricingRequest:
+      description: Root element for Batch Pricing Request
+      allOf:
+      - $ref: '#/components/schemas/RequestResponseBase'
+      - type: object
+        required:
+        - StartDate
+        - EndDate
+        properties:
+          StartDate:
+            type: string
+            format: date
+            description: 'The date should be in date format: **YYYY-MM-DD**.
 
+              '
+          EndDate:
+            type: string
+            format: date
+            description: 'The date should be in date format: **YYYY-MM-DD**.
 
-            - yyyy-MM-ddTHH:mm:ss.SSSZ (in UTC time), or
-
-            - yyyy-MM-ddTHH:mm:ss.SSS[+/-]hh:mm
-
-
-            **Examples:**
-
-            - 2013-04-28T13:10:12.120Z
-
-            - 2013-04-28T13:10:12.120+10:00
-
-            '
-          format: date-time
-      description: Request Response Base.
+              '
+          SupplierProductCode:
+            type: array
+            description: Array of strings specifying the operator's reservation system unique product identifiers.
+            items:
+              type: string
+              maxLength: 50
     AvailabilityRequest:
       description: Root element for Real-time Availability Request
       allOf:
@@ -952,104 +940,133 @@ components:
               Total:
                 type: integer
                 description: Total number of travelers
-    AvailabilityNotification2Response:
-      description: Root element for Availability Notification 2 Response
+    VersionTag:
+      description: "Version tag root element. Specifies the version for each changed `DateAvailability`. Version tagging allows availability responses to be tagged with one of: a time-stamp, a text-string, or a numeric identifier. \n\nAttaching this tag will allow our systems to determine which availability response should be taken as the most recent in the event that multiple availability responses for the same product arrive with differing information. \nOur systems will consider the availability response with the most recent timestamp, or highest textual or numeric value as the authoritative response.\n"
+      oneOf:
+      - type: object
+        title: Timestamp
+        required:
+        - Timestamp
+        properties:
+          Timestamp:
+            type: string
+            description: 'Timestamp to determine the order in which this availability response was generated; e.g. `2021-12-02T12:34:56.789012345Z`
+
+              '
+            format: date-time
+      - type: object
+        title: Textual
+        required:
+        - Textual
+        properties:
+          Textual:
+            type: string
+            description: 'Text string of your choosing. Our systems will consider the highest-value string to be that which was sent most recently. E.g., `20121202-V000000231434`
+
+              '
+      - type: object
+        title: Numeric
+        required:
+        - Numeric
+        properties:
+          Numeric:
+            type: integer
+            description: 'Numeric value of your choosing. Our systems will consider the highest number to be that which was sent most recently. E.g., `553957349573498`
+
+              '
+    BatchAvailabilityResponse:
+      description: Root element for Batch Availability Response
       allOf:
       - $ref: '#/components/schemas/ResponseBase'
       - type: object
-    LanguageOption:
-      type: string
-      enum:
-      - GUIDE
-      - AUDIO
-      - WRITTEN
-      example: GUIDE
-    BatchPricingRequest:
-      description: Root element for Batch Pricing Request
-      allOf:
-      - $ref: '#/components/schemas/RequestResponseBase'
-      - type: object
         required:
-        - StartDate
-        - EndDate
+        - BatchTourAvailability
         properties:
-          StartDate:
-            type: string
-            format: date
-            description: 'The date should be in date format: **YYYY-MM-DD**.
-
-              '
-          EndDate:
-            type: string
-            format: date
-            description: 'The date should be in date format: **YYYY-MM-DD**.
-
-              '
-          SupplierProductCode:
+          BatchTourAvailability:
             type: array
-            description: Array of strings specifying the operator's reservation system unique product identifiers.
+            description: "Batch availability root element. Holds availability for each product (tour) or product option (tour option). \nFor products with more than one option, multiple `TourAvailability` elements will be provided in the response, one for each option. \nIf a product has no options, then a single `BatchTourAvailability` element will be provided in the response with no `SupplierOptionCode`.\n"
             items:
-              type: string
-              maxLength: 50
-    TourLanguage:
-      type: object
-      description: Holds the language of a tour.
-      required:
-      - LanguageCode
-      - LanguageOption
-      properties:
-        LanguageCode:
-          type: string
-          description: 'ISO 639-1 two-letter code of the language used for the language option provided with the product
+              type: object
+              title: BatchTourAvailabilityItem
+              required:
+              - Date
+              - SupplierProductCode
+              - AvailabilityStatus
+              properties:
+                Date:
+                  type: string
+                  format: date
+                  description: "Date for which tour availability is being supplied. \n\nThe date should be in date format: **YYYY-MM-DD.** \n\n**Example:** 2000-01-31\n"
+                SupplierProductCode:
+                  type: string
+                  maxLength: 50
+                  description: Operator's unique product (tour) identifier in the reservation system.
+                TourOptions:
+                  $ref: '#/components/schemas/TourOptionItem'
+                AvailabilityStatus:
+                  type: object
+                  description: Availability status root element. Holds the availability status for given product (tour) or product option (tour option).
+                  required:
+                  - Status
+                  properties:
+                    Status:
+                      type: string
+                      description: "Status of availability. Valid values include:\n  * `AVAILABLE` - when product is available for the given `Date`\n  * `UNAVAILABLE` - when product is not available for the given `Date`\n"
+                      enum:
+                      - AVAILABLE
+                      - UNAVAILABLE
+                    UnavailabilityReason:
+                      enum:
+                      - SOLD_OUT
+                      - BLOCKED_OUT
+                      - INACTIVE
+                      - PAST_CUTOFF_DATE
+                      - NO_EVENT
+                      type: string
+                      description: 'Reason why product is not available; valid values include:
 
-            (Tour) / product option (Tour Option).
+                        - `SOLD_OUT` - when the product (tour) / product option (tour option) is sold out. When this reason code is received, the product or product option becomes unavailable for sale on Viator systems.
 
+                        - `BLOCKED_OUT` - when the product (tour) / product option (tour option) has been blocked out (not taking place on this date). When this reason code is received, the product or product option becomes unavailable for sale on Viator systems.
 
-            ISO 639 is a standardized nomenclature used to classify all known languages.
+                        - `INACTIVE` - when the product (tour) / product option (tour option) is no longer active. When this reason code is received, the product or product option becomes unavailable for sale on Viator systems.
 
-            For more information visit www.iso.org.
+                        - `PAST_CUTOFF_DATE` - when the booking cut-off date has been reached for this product (tour) / product option (tour option). When this reason code is received, the product or product option becomes unavailable for sale on Viator systems.
 
-            '
-          example: en
-        LanguageOption:
-          type: array
-          uniqueItems: true
-          minItems: 1
-          maxItems: 3
-          items:
-            $ref: '#/components/schemas/LanguageOption'
-    Price:
-      title: Price
-      description: Holds the information regarding the price for the associated Tour that was retrieved from the API.
-      required:
-      - CurrencyCode
-      - Item
-      type: object
-      properties:
-        CurrencyCode:
-          type: string
-          description: Holds the currency associated with prices returned.
-        Item:
-          type: array
-          description: Single price information retrieved from the API.
-          items:
-            type: object
-            required:
-            - AgeBand
-            - RetailPrice
-            properties:
-              RetailPrice:
-                type: number
-                description: Stores the price for which the booking should be made on the shop by the customer for the given age band.
-              AgeBand:
-                type: string
-                description: Age band of traveler.
-                enum:
-                - Adult
-                - Child
-                - Youth
-                - Infant
-                - Senior
+                        - `NO_EVENT` - This event is no longer valid. When this reason code is received, the product or product option becomes unavailable for sale on Viator systems
+
+                        '
+                    TravellerMixAvailability:
+                      description: Holds availability information for each age band. `True` if the traveler mix is available, `false` if sold out
+                      type: object
+                      properties:
+                        Infant:
+                          type: boolean
+                          description: '`True` if availability exists for the Infant age band.
+
+                            '
+                        Child:
+                          type: boolean
+                          description: '`True` if availability exists for the Child age band.
+
+                            '
+                        Youth:
+                          type: boolean
+                          description: '`True` if availability exists for the Youth age band.
+
+                            '
+                        Adult:
+                          type: boolean
+                          description: '`True` if availability exists for the Adult age band.
+
+                            '
+                        Senior:
+                          type: boolean
+                          description: '`True` if availability exists for the Senior age band.
+
+                            '
+                VersionTag:
+                  $ref: '#/components/schemas/VersionTag'
     AvailabilityNotification2Request:
       description: Root element for Availability Notification 2 Request
       allOf:
@@ -1168,15 +1185,127 @@ components:
                             '
                     VersionTag:
                       $ref: '#/components/schemas/VersionTag'
-    ResponseBase:
-      allOf:
-      - $ref: '#/components/schemas/RequestResponseBase'
-      - required:
-        - RequestStatus
-        type: object
-        properties:
-          RequestStatus:
-            $ref: '#/components/schemas/RequestStatus'
+    RequestResponseBase:
+      type: object
+      required:
+      - ApiKey
+      - ResellerId
+      - SupplierId
+      - Timestamp
+      properties:
+        ApiKey:
+          type: string
+          description: Authentication key.
+        ResellerId:
+          type: string
+          description: Unique identifier for Viator.
+        SupplierId:
+          type: integer
+          description: Unique operator identifier within Viator's systems.
+        ExternalReference:
+          type: string
+          description: Unique transaction identifier - unique across all transactions. Used in the response to identify the initial request.
+        Timestamp:
+          type: string
+          description: 'The time of creation of the request. Date/time (timestamp) that requires timezone information along with date/time. The date should be in the following format:
+
+
+            - yyyy-MM-ddTHH:mm:ss.SSSZ (in UTC time), or
+
+            - yyyy-MM-ddTHH:mm:ss.SSS[+/-]hh:mm
+
+
+            **Examples:**
+
+            - 2013-04-28T13:10:12.120Z
+
+            - 2013-04-28T13:10:12.120+10:00
+
+            '
+          format: date-time
+      description: Request Response Base.
+    LanguageOption:
+      type: string
+      enum:
+      - GUIDE
+      - AUDIO
+      - WRITTEN
+      example: GUIDE
+    TourLanguage:
+      type: object
+      description: Holds the language of a tour.
+      required:
+      - LanguageCode
+      - LanguageOption
+      properties:
+        LanguageCode:
+          type: string
+          description: 'ISO 639-1 two-letter code of the language used for the language option provided with the product
+
+            (Tour) / product option (Tour Option).
+
+
+            ISO 639 is a standardized nomenclature used to classify all known languages.
+
+            For more information visit www.iso.org.
+
+            '
+          example: en
+        LanguageOption:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/LanguageOption'
+    TourOptionBase:
+      title: TourOptionItem
+      description: Tour option root element. Holds details pertaining to each of the product (tour) options (including default if no tour options exist).
+      properties:
+        SupplierOptionCode:
+          type: string
+          description: 'Reservation system product option (tour option) identifier. A product option is a version or variant of the tour and each option must have a unique code.
+
+
+            **Examples:**
+
+            - A tour that is conducted by a Spanish guide and also by an English guide has two options.
+
+            - A tour that starts at three different times throughout the day may have three options. This could be because each start time is priced differently or because availability is limited for each starting time.
+
+            - A Tour that has a luxurious version and a cheaper version is considered to have two options.
+
+
+            A list of the operator''s Viator product options can be provided for mapping purposes.
+
+            '
+        SupplierOptionName:
+          type: string
+          description: Product option (tour option) name (name associated with product option identifier).
+        TourDepartureTime:
+          type: string
+          description: 'Time of tour option departure. Values should be in time format.
+
+
+            **Example:** 09:00:00.
+
+            '
+          format: time
+        Option:
+          type: array
+          description: Option root element. Contains additional optional information used to uniquely identify product options.
+          items:
+            type: object
+            required:
+            - Name
+            - Value
+            properties:
+              Name:
+                type: string
+                description: Option name
+              Value:
+                type: string
+                description: Option value
     BatchPricingResponse:
       description: Root element for Batch Pricing Response
       allOf:
@@ -1302,79 +1431,55 @@ components:
                             - Youth
                             - Infant
                             - Senior
-    VersionTag:
-      description: "Version tag root element. Specifies the version for each changed `DateAvailability`. Version tagging allows availability responses to be tagged with one of: a time-stamp, a text-string, or a numeric identifier. \n\nAttaching this tag will allow our systems to determine which availability response should be taken as the most recent in the event that multiple availability responses for the same product arrive with differing information. \nOur systems will consider the availability response with the most recent timestamp, or highest textual or numeric value as the authoritative response.\n"
-      oneOf:
-      - type: object
-        title: Timestamp
-        required:
-        - Timestamp
-        properties:
-          Timestamp:
-            type: string
-            description: 'Timestamp to determine the order in which this availability response was generated; e.g. `2021-12-02T12:34:56.789012345Z`
+    RequestStatus:
+      description: Request status root element. Holds the status information for the requested transaction.
+      required:
+      - Status
+      type: object
+      properties:
+        Status:
+          enum:
+          - SUCCESS
+          - ERROR
+          type: string
+          description: 'Status of the request. Valid values are:
 
-              '
-            format: date-time
-      - type: object
-        title: Textual
-        required:
-        - Textual
-        properties:
-          Textual:
-            type: string
-            description: 'Text string of your choosing. Our systems will consider the highest-value string to be that which was sent most recently. E.g., `20121202-V000000231434`
+            - `"SUCCESS"` for a successful transaction, or
 
-              '
-      - type: object
-        title: Numeric
-        required:
-        - Numeric
-        properties:
-          Numeric:
-            type: integer
-            description: 'Numeric value of your choosing. Our systems will consider the highest number to be that which was sent most recently. E.g., `553957349573498`
+            - `"ERROR"` for an unsuccessful transaction. (`Error` node must be populated)
 
-              '
-    BatchAvailabilityRequest:
-      description: Root element for Batch Availability Request
+            '
+        Error:
+          required:
+          - ErrorCode
+          type: object
+          properties:
+            ErrorCode:
+              type: string
+              description: Represents the error code.
+            ErrorMessage:
+              type: string
+              description: Error message in a friendly format.
+            ErrorDetails:
+              type: string
+              description: Technical error cause and details.
+          description: Error root element.
+    ResponseBase:
       allOf:
       - $ref: '#/components/schemas/RequestResponseBase'
-      - type: object
-        required:
-        - StartDate
-        - Mode
+      - required:
+        - RequestStatus
+        type: object
         properties:
-          StartDate:
-            type: string
-            format: date
-            description: 'Date for which tour availability is being requested from the reservation system.
-
-              * If supplied without an `EndDate`, then a single date availability request is being made.
-
-              * If supplied with an `EndDate`, then availability request is for a date range.
-
-
-              The date should be in date format: **YYYY-MM-DD**.
-
-
-              **Example:** 2000-01-31
-
-              '
-          EndDate:
-            type: string
-            format: date
-            description: "End date of date range for which tour availability is being requested from the reservation system. If this is empty, availability will be searched for the given `StartDate` only. \n\nThe date should be in date format: **YYYY-MM-DD**.\n\n**Example:** 2000-01-31\n"
-          Mode:
-            type: string
-            enum:
-            - ALL
-            description: 'Availability request mode. Valid values include:
-
-
-              * `"ALL"` - This mode requests that all dates are returned with appropriate availability status.
-
-              '
+          RequestStatus:
+            $ref: '#/components/schemas/RequestStatus'
+    TourOptionItem:
+      allOf:
+      - $ref: '#/components/schemas/TourOptionBase'
+      - type: object
+        properties:
+          Language:
+            $ref: '#/components/schemas/TourLanguage'
     AvailabilityResponse:
       description: Root element for Real-time Availability Response
       allOf:
@@ -1574,187 +1679,82 @@ components:
                             - SENIOR
                 VersionTag:
                   $ref: '#/components/schemas/VersionTag'
-    RequestStatus:
-      description: Request status root element. Holds the status information for the requested transaction.
-      required:
-      - Status
-      type: object
-      properties:
-        Status:
-          enum:
-          - SUCCESS
-          - ERROR
-          type: string
-          description: 'Status of the request. Valid values are:
+    BatchAvailabilityRequest:
+      description: Root element for Batch Availability Request
+      allOf:
+      - $ref: '#/components/schemas/RequestResponseBase'
+      - type: object
+        required:
+        - StartDate
+        - Mode
+        properties:
+          StartDate:
+            type: string
+            format: date
+            description: 'Date for which tour availability is being requested from the reservation system.
 
-            - `"SUCCESS"` for a successful transaction, or
+              * If supplied without an `EndDate`, then a single date availability request is being made.
 
-            - `"ERROR"` for an unsuccessful transaction. (`Error` node must be populated)
-
-            '
-        Error:
-          required:
-          - ErrorCode
-          type: object
-          properties:
-            ErrorCode:
-              type: string
-              description: Represents the error code.
-            ErrorMessage:
-              type: string
-              description: Error message in a friendly format.
-            ErrorDetails:
-              type: string
-              description: Technical error cause and details.
-          description: Error root element.
-    TourOptionBase:
-      title: TourOptionItem
-      description: Tour option root element. Holds details pertaining to each of the product (tour) options (including default if no tour options exist).
-      properties:
-        SupplierOptionCode:
-          type: string
-          description: 'Reservation system product option (tour option) identifier. A product option is a version or variant of the tour and each option must have a unique code.
+              * If supplied with an `EndDate`, then availability request is for a date range.
 
 
-            **Examples:**
-
-            - A tour that is conducted by a Spanish guide and also by an English guide has two options.
-
-            - A tour that starts at three different times throughout the day may have three options. This could be because each start time is priced differently or because availability is limited for each starting time.
-
-            - A Tour that has a luxurious version and a cheaper version is considered to have two options.
+              The date should be in date format: **YYYY-MM-DD**.
 
 
-            A list of the operator''s Viator product options can be provided for mapping purposes.
+              **Example:** 2000-01-31
 
-            '
-        SupplierOptionName:
-          type: string
-          description: Product option (tour option) name (name associated with product option identifier).
-        TourDepartureTime:
-          type: string
-          description: 'Time of tour option departure. Values should be in time format.
+              '
+          EndDate:
+            type: string
+            format: date
+            description: "End date of date range for which tour availability is being requested from the reservation system. If this is empty, availability will be searched for the given `StartDate` only. \n\nThe date should be in date format: **YYYY-MM-DD**.\n\n**Example:** 2000-01-31\n"
+          Mode:
+            type: string
+            enum:
+            - ALL
+            description: 'Availability request mode. Valid values include:
 
 
-            **Example:** 09:00:00.
+              * `"ALL"` - This mode requests that all dates are returned with appropriate availability status.
 
-            '
-          format: time
-        Option:
-          type: array
-          description: Option root element. Contains additional optional information used to uniquely identify product options.
-          items:
-            type: object
-            required:
-            - Name
-            - Value
-            properties:
-              Name:
-                type: string
-                description: Option name
-              Value:
-                type: string
-                description: Option value
-    BatchAvailabilityResponse:
-      description: Root element for Batch Availability Response
+              '
+    AvailabilityNotification2Response:
+      description: Root element for Availability Notification 2 Response
       allOf:
       - $ref: '#/components/schemas/ResponseBase'
       - type: object
-        required:
-        - BatchTourAvailability
-        properties:
-          BatchTourAvailability:
-            type: array
-            description: "Batch availability root element. Holds availability for each product (tour) or product option (tour option). \nFor products with more than one option, multiple `TourAvailability` elements will be provided in the response, one for each option. \nIf a product has no options, then a single `BatchTourAvailability` element will be provided in the response with no `SupplierOptionCode`.\n"
-            items:
-              type: object
-              title: BatchTourAvailabilityItem
-              required:
-              - Date
-              - SupplierProductCode
-              - AvailabilityStatus
-              properties:
-                Date:
-                  type: string
-                  format: date
-                  description: "Date for which tour availability is being supplied. \n\nThe date should be in date format: **YYYY-MM-DD.** \n\n**Example:** 2000-01-31\n"
-                SupplierProductCode:
-                  type: string
-                  maxLength: 50
-                  description: Operator's unique product (tour) identifier in the reservation system.
-                TourOptions:
-                  $ref: '#/components/schemas/TourOptionItem'
-                AvailabilityStatus:
-                  type: object
-                  description: Availability status root element. Holds the availability status for given product (tour) or product option (tour option).
-                  required:
-                  - Status
-                  properties:
-                    Status:
-                      type: string
-                      description: "Status of availability. Valid values include:\n  * `AVAILABLE` - when product is available for the given `Date`\n  * `UNAVAILABLE` - when product is not available for the given `Date`\n"
-                      enum:
-                      - AVAILABLE
-                      - UNAVAILABLE
-                    UnavailabilityReason:
-                      enum:
-                      - SOLD_OUT
-                      - BLOCKED_OUT
-                      - INACTIVE
-                      - PAST_CUTOFF_DATE
-                      - NO_EVENT
-                      type: string
-                      description: 'Reason why product is not available; valid values include:
-
-                        - `SOLD_OUT` - when the product (tour) / product option (tour option) is sold out. When this reason code is received, the product or product option becomes unavailable for sale on Viator systems.
-
-                        - `BLOCKED_OUT` - when the product (tour) / product option (tour option) has been blocked out (not taking place on this date). When this reason code is received, the product or product option becomes unavailable for sale on Viator systems.
-
-                        - `INACTIVE` - when the product (tour) / product option (tour option) is no longer active. When this reason code is received, the product or product option becomes unavailable for sale on Viator systems.
-
-                        - `PAST_CUTOFF_DATE` - when the booking cut-off date has been reached for this product (tour) / product option (tour option). When this reason code is received, the product or product option becomes unavailable for sale on Viator systems.
-
-                        - `NO_EVENT` - This event is no longer valid. When this reason code is received, the product or product option becomes unavailable for sale on Viator systems
-
-                        '
-                    TravellerMixAvailability:
-                      description: Holds availability information for each age band. `True` if the traveler mix is available, `false` if sold out
-                      type: object
-                      properties:
-                        Infant:
-                          type: boolean
-                          description: '`True` if availability exists for the Infant age band.
-
-                            '
-                        Child:
-                          type: boolean
-                          description: '`True` if availability exists for the Child age band.
-
-                            '
-                        Youth:
-                          type: boolean
-                          description: '`True` if availability exists for the Youth age band.
-
-                            '
-                        Adult:
-                          type: boolean
-                          description: '`True` if availability exists for the Adult age band.
-
-                            '
-                        Senior:
-                          type: boolean
-                          description: '`True` if availability exists for the Senior age band.
-
-                            '
-                VersionTag:
-                  $ref: '#/components/schemas/VersionTag'
-    TourOptionItem:
-      allOf:
-      - $ref: '#/components/schemas/TourOptionBase'
-      - type: object
-        properties:
-          Language:
-            $ref: '#/components/schemas/TourLanguage'
+    Price:
+      title: Price
+      description: Holds the information regarding the price for the associated Tour that was retrieved from the API.
+      required:
+      - CurrencyCode
+      - Item
+      type: object
+      properties:
+        CurrencyCode:
+          type: string
+          description: Holds the currency associated with prices returned.
+        Item:
+          type: array
+          description: Single price information retrieved from the API.
+          items:
+            type: object
+            required:
+            - AgeBand
+            - RetailPrice
+            properties:
+              RetailPrice:
+                type: number
+                description: Stores the price for which the booking should be made on the shop by the customer for the given age band.
+              AgeBand:
+                type: string
+                description: Age band of traveler.
+                enum:
+                - Adult
+                - Child
+                - Youth
+                - Infant
+                - Senior
   securitySchemes:
     ApiKeyHeader:
       type: apiKey

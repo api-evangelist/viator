@@ -184,17 +184,6 @@ paths:
                           example: ItinItemRef012
                           description: '**alphanumeric reference code** of the distributor item'
 components:
-  parameters:
-    acceptLanguage:
-      in: header
-      name: Accept-Language
-      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
-
-        '
-      required: true
-      schema:
-        type: string
-        example: en-US
   schemas:
     basicErrorModel:
       type: object
@@ -274,6 +263,17 @@ components:
           - string
           - 'null'
           description: '**unique numeric id** of the server that processed *this* request'
+  parameters:
+    acceptLanguage:
+      in: header
+      name: Accept-Language
+      description: 'Specifies the language into which the natural-language fields in the response from this service will be translated (see [Accept-Language header](#section/Appendices/Accept-Language-header) for available language codes)
+
+        '
+      required: true
+      schema:
+        type: string
+        example: en-US
   securitySchemes:
     API-key:
       type: apiKey
